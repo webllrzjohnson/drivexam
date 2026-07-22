@@ -1,2 +1,14 @@
 import Link from "next/link";
-export function AdminNav() { const items = ["Users", "Questions", "Lessons", "Assets", "Blog", "Reports", "Settings"]; return <nav className="flex flex-wrap gap-2 text-sm">{items.map((item) => <Link className="rounded-lg border px-3 py-2" href="/admin" key={item}>{item}</Link>)}</nav>; }
+import { adminModules } from "@/lib/admin/cms-config";
+
+export function AdminNav() {
+  return (
+    <nav className="grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
+      {adminModules.map((module) => (
+        <Link className="rounded-lg border bg-white px-3 py-2 font-medium hover:bg-slate-50" href={`/admin/${module.slug}`} key={module.slug}>
+          {module.title}
+        </Link>
+      ))}
+    </nav>
+  );
+}

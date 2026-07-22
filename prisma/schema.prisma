@@ -27,6 +27,47 @@ enum UploadAssetType {
   OTHER
 }
 
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ContentPostKind {
+  BLOG
+  NEWS
+}
+
+enum ManagedPageKind {
+  TERMS
+  PRIVACY
+  CONTACT
+  DISCLAIMER
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  MULTI_SELECT
+}
+
+enum QuestionReportReason {
+  INCORRECT_ANSWER
+  CONFUSING_EXPLANATION
+  TYPO_GRAMMAR
+  OUTDATED_RULE
+  IMAGE_SIGN_ISSUE
+  OTHER
+}
+
+enum RoadTestChecklistSection {
+  BEFORE_TEST
+  DURING_TEST
+  COMMON_FAIL_REASONS
+  SELF_ASSESSMENT
+}
+
 model User {
   id             String    @id @default(cuid())
   name           String?
@@ -45,6 +86,13 @@ model User {
   sessions Session[]
   uploads  UploadAsset[]
   passwordResetTokens PasswordResetToken[]
+  authoredPosts ContentPost[] @relation("ContentPostAuthor")
+  reviewedPosts ContentPost[] @relation("ContentPostReviewer")
+  authoredLessons Lesson[] @relation("LessonAuthor")
+  reviewedLessons Lesson[] @relation("LessonReviewer")
+  authoredQuestions Question[] @relation("QuestionAuthor")
+  reviewedQuestions Question[] @relation("QuestionReviewer")
+  contactSubmissions ContactSubmission[]
 }
 
 model Account {
@@ -112,6 +160,7 @@ model UploadAsset {
   mimeType     String
   sizeBytes    Int
   title        String?
+  category     String?
   description  String?
   sourceCredit String?
   uploadedById String?
@@ -119,7 +168,207 @@ model UploadAsset {
   updatedAt    DateTime @updatedAt
 
   uploadedBy User? @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  questionAssets QuestionAsset[]
+  answerChoices AnswerChoice[]
+  featuredPosts ContentPost[]
 
   @@index([type])
   @@index([uploadedById])
+}
+
+model Category {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  description String?
+  stage       LicenseStage?
+  sortOrder   Int           @default(0)
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  lessons   Lesson[]
+  questions Question[]
+  checklistItems RoadTestChecklistItem[]
+
+  @@index([stage])
+  @@index([isActive])
+}
+
+model Lesson {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  title         String
+  summary       String?
+  body          String        @db.Text
+  stage         LicenseStage
+  categoryId    String?
+  status        ContentStatus @default(DRAFT)
+  sortOrder     Int           @default(0)
+  authorId      String?
+  reviewedById  String?
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  author     User?     @relation("LessonAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  reviewedBy User?     @relation("LessonReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([stage, status])
+  @@index([categoryId])
+}
+
+model Question {
+  id              String        @id @default(cuid())
+  type            QuestionType
+  prompt          String        @db.Text
+  explanation     String        @db.Text
+  stage           LicenseStage
+  categoryId      String?
+  status          ContentStatus @default(DRAFT)
+  selectCount     Int?
+  sourceReference String?
+  authorId        String?
+  reviewedById    String?
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  category    Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  author      User?          @relation("QuestionAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  reviewedBy  User?          @relation("QuestionReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  choices     AnswerChoice[]
+  assets      QuestionAsset[]
+  reports     QuestionReport[]
+
+  @@index([stage, status])
+  @@index([categoryId])
+}
+
+model AnswerChoice {
+  id          String  @id @default(cuid())
+  questionId  String
+  text        String?
+  assetId     String?
+  isCorrect   Boolean @default(false)
+  sortOrder   Int     @default(0)
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  asset    UploadAsset? @relation(fields: [assetId], references: [id], onDelete: SetNull)
+
+  @@index([questionId])
+  @@index([assetId])
+}
+
+model QuestionAsset {
+  questionId String
+  assetId    String
+  sortOrder  Int @default(0)
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  asset    UploadAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, assetId])
+  @@index([assetId])
+}
+
+model RoadTestChecklistItem {
+  id          String                   @id @default(cuid())
+  stage       LicenseStage
+  section     RoadTestChecklistSection
+  title       String
+  description String?                  @db.Text
+  categoryId  String?
+  sortOrder   Int                      @default(0)
+  isActive    Boolean                  @default(true)
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
+
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([stage, section])
+  @@index([isActive])
+}
+
+model ContentPost {
+  id              String          @id @default(cuid())
+  kind            ContentPostKind
+  status          ContentStatus   @default(DRAFT)
+  title           String
+  slug            String          @unique
+  excerpt         String?
+  body            String          @db.Text
+  seoTitle        String?
+  metaDescription String?
+  tags            String[]
+  featuredImageId String?
+  authorId        String?
+  reviewedById    String?
+  publishedAt     DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  featuredImage UploadAsset? @relation(fields: [featuredImageId], references: [id], onDelete: SetNull)
+  author        User?        @relation("ContentPostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  reviewedBy    User?        @relation("ContentPostReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([kind, status])
+  @@index([publishedAt])
+}
+
+model ManagedPage {
+  id              String          @id @default(cuid())
+  kind            ManagedPageKind @unique
+  title           String
+  slug            String          @unique
+  body            String          @db.Text
+  seoTitle        String?
+  metaDescription String?
+  updatedAt       DateTime        @updatedAt
+  createdAt       DateTime        @default(now())
+}
+
+model FaqItem {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String   @db.Text
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+}
+
+model QuestionReport {
+  id            String               @id @default(cuid())
+  questionId    String
+  reason        QuestionReportReason
+  comment       String?              @db.Text
+  reporterEmail String?
+  reporterUserId String?
+  ipHash        String?
+  userAgent     String?
+  resolvedAt    DateTime?
+  createdAt     DateTime             @default(now())
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId, resolvedAt])
+  @@index([ipHash, createdAt])
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  userId    String
+  subject   String
+  message   String   @db.Text
+  resolvedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([resolvedAt])
 }
