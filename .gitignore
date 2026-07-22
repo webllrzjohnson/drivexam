@@ -25,6 +25,9 @@
 /uploads/*
 !/uploads/.gitkeep
 
+# local development services/data
+/.local/
+
 # env files
 .env
 .env.*
