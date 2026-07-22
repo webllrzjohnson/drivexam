@@ -1,0 +1,2 @@
+import Link from "next/link";
+export function SiteFooter() { return <footer className="mt-auto border-t bg-white"><div className="mx-auto grid max-w-6xl gap-4 px-4 py-8 text-sm text-slate-600 md:grid-cols-2"><p>© {new Date().getFullYear()} drivexam. Ontario driving exam prep companion.</p><nav className="flex flex-wrap gap-4 md:justify-end"><Link href="/terms">Terms</Link><Link href="/privacy">Privacy</Link><Link href="/disclaimer">Disclaimer</Link><Link href="/contact">Contact</Link></nav></div></footer>; }

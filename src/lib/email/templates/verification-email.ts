@@ -1,0 +1,1 @@
+export function verificationEmailTemplate(url: string) { return { subject: "Verify your drivexam email", text: `Welcome to drivexam. Verify your email here: ${url}`, html: `<p>Welcome to drivexam.</p><p><a href="${url}">Verify your email</a></p>` }; }

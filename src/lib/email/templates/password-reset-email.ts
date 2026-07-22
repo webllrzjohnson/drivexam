@@ -1,0 +1,1 @@
+export function passwordResetEmailTemplate(url: string) { return { subject: "Reset your drivexam password", text: `Reset your drivexam password here: ${url}`, html: `<p>Reset your drivexam password using the secure link below.</p><p><a href="${url}">Reset password</a></p>` }; }
