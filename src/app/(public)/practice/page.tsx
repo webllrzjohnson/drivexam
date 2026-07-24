@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buildQuizQuestionViews } from "@/lib/learner/quiz";
 import { db } from "@/lib/db";
+import { auth } from "@/auth";
 
 type PracticePageProps = {
   searchParams: Promise<{ stage?: string; categoryId?: string }>;
@@ -26,7 +27,8 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
   const params = await searchParams;
   const stage = getStage(params.stage);
   const categoryId = params.categoryId || undefined;
-  const [categories, questions] = await Promise.all([
+  const [session, categories, questions] = await Promise.all([
+    auth(),
     db.category.findMany({ where: { isActive: true, OR: [{ stage }, { stage: null }] }, orderBy: [{ sortOrder: "asc" }, { name: "asc" }] }),
     db.question.findMany({
       where: {
@@ -83,7 +85,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
           </CardContent>
         </Card>
 
-        <PracticeQuiz questions={quizQuestions} />
+        <PracticeQuiz canSaveProgress={Boolean(session?.user?.emailVerified)} questions={quizQuestions} stage={stage} />
       </main>
       <SiteFooter />
     </>

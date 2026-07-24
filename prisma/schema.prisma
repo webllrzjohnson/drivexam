@@ -93,6 +93,7 @@ model User {
   authoredQuestions Question[] @relation("QuestionAuthor")
   reviewedQuestions Question[] @relation("QuestionReviewer")
   contactSubmissions ContactSubmission[]
+  quizAttempts QuizAttempt[]
 }
 
 model Account {
@@ -190,6 +191,7 @@ model Category {
   lessons   Lesson[]
   questions Question[]
   checklistItems RoadTestChecklistItem[]
+  quizAttemptAnswers QuizAttemptAnswer[]
 
   @@index([stage])
   @@index([isActive])
@@ -241,6 +243,7 @@ model Question {
   choices     AnswerChoice[]
   assets      QuestionAsset[]
   reports     QuestionReport[]
+  attemptAnswers QuizAttemptAnswer[]
 
   @@index([stage, status])
   @@index([categoryId])
@@ -289,6 +292,43 @@ model RoadTestChecklistItem {
 
   @@index([stage, section])
   @@index([isActive])
+}
+
+model QuizAttempt {
+  id           String       @id @default(cuid())
+  userId       String
+  stage        LicenseStage
+  correctCount Int
+  totalCount   Int
+  percent      Int
+  createdAt    DateTime     @default(now())
+
+  user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers QuizAttemptAnswer[]
+
+  @@index([userId, createdAt])
+  @@index([stage, createdAt])
+}
+
+model QuizAttemptAnswer {
+  id                String   @id @default(cuid())
+  attemptId         String
+  questionId        String
+  categoryId        String?
+  categoryName      String?
+  isCorrect         Boolean
+  selectedChoiceIds String[]
+  correctChoiceIds  String[]
+  createdAt         DateTime @default(now())
+
+  attempt  QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([attemptId])
+  @@index([questionId])
+  @@index([categoryId])
+  @@index([isCorrect])
 }
 
 model ContentPost {

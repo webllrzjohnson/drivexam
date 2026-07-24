@@ -2,13 +2,17 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
+import { saveQuizAttempt } from "@/app/(public)/practice/actions";
 import { scoreQuizAnswers, type QuizQuestionView } from "@/lib/learner/quiz";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type PracticeQuizProps = {
   questions: QuizQuestionView[];
+  canSaveProgress: boolean;
+  stage: "G1" | "G2" | "G";
 };
 
 function hasChoice(selection: Record<string, string[]>, questionId: string, choiceId: string) {
@@ -25,7 +29,7 @@ function toggleMultiChoice(selection: Record<string, string[]>, questionId: stri
   return { ...selection, [questionId]: next };
 }
 
-export function PracticeQuiz({ questions }: PracticeQuizProps) {
+export function PracticeQuiz({ canSaveProgress, questions, stage }: PracticeQuizProps) {
   const [selection, setSelection] = useState<Record<string, string[]>>({});
   const [submitted, setSubmitted] = useState(false);
   const result = useMemo(() => scoreQuizAnswers(questions, selection), [questions, selection]);
@@ -48,8 +52,18 @@ export function PracticeQuiz({ questions }: PracticeQuizProps) {
           <CardHeader>
             <CardTitle>Score: {result.correctCount}/{result.totalCount} ({result.percent}%)</CardTitle>
           </CardHeader>
-          <CardContent className="text-sm text-green-950">
-            Review each explanation below, then try again when ready.
+          <CardContent className="space-y-3 text-sm text-green-950">
+            <p>Review each explanation below, then save progress or try again.</p>
+            {canSaveProgress ? (
+              <form action={saveQuizAttempt}>
+                <input name="stage" type="hidden" value={stage} />
+                <input name="questionIds" type="hidden" value={JSON.stringify(questions.map((question) => question.id))} />
+                <input name="selectedChoiceIdsByQuestion" type="hidden" value={JSON.stringify(selection)} />
+                <Button type="submit">Save progress</Button>
+              </form>
+            ) : (
+              <Button asChild variant="outline"><Link href="/sign-in">Sign in to save progress</Link></Button>
+            )}
           </CardContent>
         </Card>
       ) : null}
