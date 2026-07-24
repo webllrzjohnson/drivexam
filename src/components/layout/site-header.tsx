@@ -13,6 +13,7 @@ export async function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <Link href="/" className="text-xl font-bold tracking-tight text-green-900">drivexam</Link>
         <nav className="hidden items-center gap-6 text-sm text-slate-600 md:flex">
+          <Link href="/practice">Practice</Link>
           <Link href="/blog">Blog</Link>
           <Link href="/news">News</Link>
           <Link href="/faq">FAQ</Link>
