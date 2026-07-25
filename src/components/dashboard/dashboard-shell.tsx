@@ -3,12 +3,14 @@ import type { QuizAttempt } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { summarizeQuizProgress } from "@/lib/learner/progress";
+import type { buildDailyStudyPlan, summarizeQuizProgress } from "@/lib/learner/progress";
 
 type ProgressSummary = ReturnType<typeof summarizeQuizProgress>;
+type DailyStudyPlan = ReturnType<typeof buildDailyStudyPlan>;
 
 type DashboardShellProps = {
   attempts: Array<Pick<QuizAttempt, "id" | "stage" | "correctCount" | "totalCount" | "percent" | "createdAt">>;
+  plan: DailyStudyPlan;
   summary: ProgressSummary;
 };
 
@@ -24,11 +26,30 @@ function MetricCard({ title, value, detail }: { title: string; value: string; de
   );
 }
 
-export function DashboardShell({ attempts, summary }: DashboardShellProps) {
+export function DashboardShell({ attempts, plan, summary }: DashboardShellProps) {
   const recentAttempts = attempts.slice(0, 5);
 
   return (
     <div className="space-y-6">
+      <Card className="border-green-200 bg-gradient-to-br from-green-50 to-white">
+        <CardHeader>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-green-800">Today&apos;s study plan</p>
+          <CardTitle className="text-2xl">Focus on {plan.focusArea}</CardTitle>
+          <p className="text-sm text-slate-600">
+            {plan.stageLabel}{plan.daysUntilTest === null ? "" : ` · ${plan.daysUntilTest} day${plan.daysUntilTest === 1 ? "" : "s"} until test`} · {plan.readinessTone} pace
+          </p>
+        </CardHeader>
+        <CardContent className="grid gap-3 md:grid-cols-3">
+          {plan.actions.map((action, index) => (
+            <Link className="rounded-xl border bg-white p-4 shadow-sm transition hover:border-green-300 hover:shadow" href={action.href} key={action.title}>
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-900 text-sm font-bold text-white">{index + 1}</span>
+              <h2 className="mt-3 font-semibold text-slate-950">{action.title}</h2>
+              <p className="mt-1 text-sm leading-6 text-slate-600">{action.detail}</p>
+            </Link>
+          ))}
+        </CardContent>
+      </Card>
+
       <div className="grid gap-4 md:grid-cols-4">
         <MetricCard detail={`${summary.attemptCount} saved attempt${summary.attemptCount === 1 ? "" : "s"}`} title="Average score" value={`${summary.averagePercent}%`} />
         <MetricCard detail="Best saved practice result" title="Readiness score" value={`${summary.bestPercent}%`} />

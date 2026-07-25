@@ -6,7 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth/permissions";
 import { db } from "@/lib/db";
-import { summarizeQuizProgress } from "@/lib/learner/progress";
+import { buildDailyStudyPlan, summarizeQuizProgress } from "@/lib/learner/progress";
 
 type DashboardPageProps = {
   searchParams: Promise<{ saved?: string }>;
@@ -28,6 +28,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     );
   }
 
+  const learnerProfile = await db.user.findUnique({
+    where: { id: user.id },
+    select: { currentStage: true, targetTestDate: true },
+  });
+
   const attempts = await db.quizAttempt.findMany({
     where: { userId: user.id },
     include: { answers: true },
@@ -38,6 +43,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     ...attempt,
     answers: attempt.answers.map((answer) => ({ isCorrect: answer.isCorrect, categoryName: answer.categoryName })),
   })));
+  const plan = buildDailyStudyPlan({
+    currentStage: learnerProfile?.currentStage ?? null,
+    targetTestDate: learnerProfile?.targetTestDate ?? null,
+    summary,
+  });
 
   return (
     <main className="mx-auto w-full max-w-6xl space-y-6 px-4 py-8">
@@ -46,7 +56,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         <p className="text-slate-600">Track saved practice scores, weak areas, and next study actions.</p>
       </div>
       {params.saved === "quiz" ? <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900">Quiz progress saved.</p> : null}
-      <DashboardShell attempts={attempts} summary={summary} />
+      <DashboardShell attempts={attempts} plan={plan} summary={summary} />
     </main>
   );
 }

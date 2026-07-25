@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
+  buildDailyStudyPlan,
   buildQuizAttemptRows,
   summarizeQuizProgress,
   type ProgressAttemptInput,
@@ -77,5 +78,44 @@ describe("learner progress helpers", () => {
     assert.equal(summary.latestPercent, 0);
     assert.equal(summary.totalQuestionsAnswered, 0);
     assert.deepEqual(summary.weakAreas, []);
+  });
+
+  it("builds a daily study plan from weak areas and target test date", () => {
+    const summary = summarizeQuizProgress(attempts);
+    const plan = buildDailyStudyPlan({
+      currentStage: "G1",
+      targetTestDate: new Date("2026-07-30T12:00:00Z"),
+      today: new Date("2026-07-24T12:00:00Z"),
+      summary,
+    });
+
+    assert.equal(plan.stageLabel, "G1 knowledge test");
+    assert.equal(plan.daysUntilTest, 6);
+    assert.equal(plan.focusArea, "Rules");
+    assert.deepEqual(plan.actions.map((action) => action.title), [
+      "Review Rules",
+      "Take a 20-question G1 practice quiz",
+      "Read one G1 knowledge lesson",
+    ]);
+    assert.equal(plan.readinessTone, "steady");
+  });
+
+  it("gives a starter plan when no quizzes are saved yet", () => {
+    const plan = buildDailyStudyPlan({
+      currentStage: null,
+      targetTestDate: null,
+      today: new Date("2026-07-24T12:00:00Z"),
+      summary: summarizeQuizProgress([]),
+    });
+
+    assert.equal(plan.stageLabel, "G1 knowledge test");
+    assert.equal(plan.daysUntilTest, null);
+    assert.equal(plan.focusArea, "Road signs and rules");
+    assert.equal(plan.readinessTone, "starter");
+    assert.deepEqual(plan.actions.map((action) => action.title), [
+      "Start with road signs and rules",
+      "Take a 10-question G1 practice quiz",
+      "Save your result to unlock weak-area review",
+    ]);
   });
 });
