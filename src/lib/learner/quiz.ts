@@ -47,6 +47,21 @@ export type QuizScoreResult = {
   }>;
 };
 
+export type PracticeStageGuide = {
+  title: string;
+  description: string;
+  questionTargetLabel: string;
+  readinessTarget: string;
+  emptyState: string;
+  milestones: Array<{ title: string; detail: string }>;
+};
+
+type PracticeStageGuideInput = {
+  stage: LicenseStage;
+  categoryCount: number;
+  questionCount: number;
+};
+
 function sortedUnique(values: string[]) {
   return Array.from(new Set(values.filter(Boolean))).sort();
 }
@@ -96,5 +111,37 @@ export function scoreQuizAnswers(questions: QuizQuestionView[], selectedChoiceId
     totalCount,
     percent: totalCount ? Math.round((correctCount / totalCount) * 100) : 0,
     review,
+  };
+}
+
+const stageGuideCopy: Record<LicenseStage, Pick<PracticeStageGuide, "title" | "description" | "readinessTarget">> = {
+  G1: {
+    title: "G1 knowledge test practice",
+    description: "Build confidence with Ontario road signs, right-of-way rules, penalties, and safe-driving basics before the written test.",
+    readinessTarget: "Aim for 80%+ twice before booking",
+  },
+  G2: {
+    title: "G2 road test prep",
+    description: "Practice the decisions examiners watch for: observation, lane position, turns, parking, speed control, and calm hazard response.",
+    readinessTarget: "Aim for consistent safe choices before your road test",
+  },
+  G: {
+    title: "Full G road test prep",
+    description: "Focus on highway readiness, advanced observation, lane changes, merging, defensive spacing, and confident route decisions.",
+    readinessTarget: "Aim for strong highway and city-driving consistency",
+  },
+};
+
+export function buildPracticeStageGuide({ stage, categoryCount, questionCount }: PracticeStageGuideInput): PracticeStageGuide {
+  const copy = stageGuideCopy[stage];
+  return {
+    ...copy,
+    questionTargetLabel: questionCount > 0 ? `${questionCount}-question set loaded` : `No published ${stage} questions yet`,
+    emptyState: `No published ${stage} practice questions yet. Add and publish questions from Admin → Questions to make this practice set useful.`,
+    milestones: [
+      { title: "Learn the rule", detail: categoryCount > 0 ? `Choose from ${categoryCount} active topic areas or practice everything together.` : "Start with core topics, then publish stage-specific categories." },
+      { title: "Answer with feedback", detail: "Check answers only after you commit, then read the plain-English explanation." },
+      { title: "Save and fix weak areas", detail: "Verified learners can save results so the dashboard recommends the next focus area." },
+    ],
   };
 }

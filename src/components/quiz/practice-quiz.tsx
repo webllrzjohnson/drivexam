@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 type PracticeQuizProps = {
   questions: QuizQuestionView[];
   canSaveProgress: boolean;
+  emptyState?: string;
   stage: "G1" | "G2" | "G";
 };
 
@@ -29,7 +30,7 @@ function toggleMultiChoice(selection: Record<string, string[]>, questionId: stri
   return { ...selection, [questionId]: next };
 }
 
-export function PracticeQuiz({ canSaveProgress, questions, stage }: PracticeQuizProps) {
+export function PracticeQuiz({ canSaveProgress, emptyState, questions, stage }: PracticeQuizProps) {
   const [selection, setSelection] = useState<Record<string, string[]>>({});
   const [submitted, setSubmitted] = useState(false);
   const result = useMemo(() => scoreQuizAnswers(questions, selection), [questions, selection]);
@@ -38,8 +39,9 @@ export function PracticeQuiz({ canSaveProgress, questions, stage }: PracticeQuiz
   if (!questions.length) {
     return (
       <Card>
-        <CardContent className="p-8 text-center text-slate-600">
-          No published practice questions yet. Add and publish questions from Admin → Questions.
+        <CardContent className="space-y-3 p-8 text-center text-slate-600">
+          <p>{emptyState ?? "No published practice questions yet. Add and publish questions from Admin → Questions."}</p>
+          <Button asChild variant="outline"><Link href="/admin/questions">Add questions</Link></Button>
         </CardContent>
       </Card>
     );

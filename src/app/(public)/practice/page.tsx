@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-import { PracticeQuiz } from "@/components/quiz/practice-quiz";
+import { auth } from "@/auth";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { PracticeQuiz } from "@/components/quiz/practice-quiz";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { buildQuizQuestionViews } from "@/lib/learner/quiz";
 import { db } from "@/lib/db";
-import { auth } from "@/auth";
+import { buildPracticeStageGuide, buildQuizQuestionViews } from "@/lib/learner/quiz";
 
 type PracticePageProps = {
   searchParams: Promise<{ stage?: string; categoryId?: string }>;
@@ -47,16 +47,39 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
     }),
   ]);
   const quizQuestions = buildQuizQuestionViews(questions);
+  const guide = buildPracticeStageGuide({ stage, categoryCount: categories.length, questionCount: quizQuestions.length });
 
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10">
-        <div className="space-y-3">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-800">Practice quiz</p>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-950">Ontario driving practice questions</h1>
-          <p className="max-w-3xl text-slate-600">Choose your stage, answer published admin questions, and review explanations immediately.</p>
-        </div>
+      <main className="mx-auto w-full max-w-6xl space-y-8 px-4 py-10">
+        <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
+          <div className="space-y-4">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-800">Practice quiz</p>
+            <h1 className="text-4xl font-bold tracking-tight text-slate-950">{guide.title}</h1>
+            <p className="max-w-3xl text-lg leading-8 text-slate-600">{guide.description}</p>
+            <div className="flex flex-wrap gap-3 text-sm font-medium">
+              <span className="rounded-full bg-green-100 px-3 py-1 text-green-900">{guide.questionTargetLabel}</span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">{guide.readinessTarget}</span>
+            </div>
+          </div>
+          <Card className="border-green-200 bg-green-50">
+            <CardHeader>
+              <CardTitle className="text-xl">How to use this practice set</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {guide.milestones.map((milestone, index) => (
+                <div className="flex gap-3 rounded-xl bg-white p-3 shadow-sm" key={milestone.title}>
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-900 text-sm font-bold text-white">{index + 1}</span>
+                  <div>
+                    <p className="font-semibold text-slate-950">{milestone.title}</p>
+                    <p className="text-sm leading-6 text-slate-600">{milestone.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </section>
 
         <Card>
           <CardHeader>
@@ -85,7 +108,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
           </CardContent>
         </Card>
 
-        <PracticeQuiz canSaveProgress={Boolean(session?.user?.emailVerified)} questions={quizQuestions} stage={stage} />
+        <PracticeQuiz canSaveProgress={Boolean(session?.user?.emailVerified)} emptyState={guide.emptyState} questions={quizQuestions} stage={stage} />
       </main>
       <SiteFooter />
     </>

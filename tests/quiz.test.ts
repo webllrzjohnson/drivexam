@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
+  buildPracticeStageGuide,
   buildQuizQuestionViews,
   scoreQuizAnswers,
   type QuizQuestionInput,
@@ -80,5 +81,26 @@ describe("learner quiz helpers", () => {
     assert.equal(result.totalCount, 0);
     assert.equal(result.percent, 0);
     assert.deepEqual(result.review, []);
+  });
+
+  it("builds stage-specific practice guidance for learner onboarding", () => {
+    const guide = buildPracticeStageGuide({ stage: "G1", categoryCount: 5, questionCount: 20 });
+
+    assert.equal(guide.title, "G1 knowledge test practice");
+    assert.equal(guide.questionTargetLabel, "20-question set loaded");
+    assert.equal(guide.readinessTarget, "Aim for 80%+ twice before booking");
+    assert.deepEqual(guide.milestones.map((milestone) => milestone.title), [
+      "Learn the rule",
+      "Answer with feedback",
+      "Save and fix weak areas",
+    ]);
+  });
+
+  it("explains the empty practice state for the selected stage", () => {
+    const guide = buildPracticeStageGuide({ stage: "G2", categoryCount: 0, questionCount: 0 });
+
+    assert.equal(guide.title, "G2 road test prep");
+    assert.equal(guide.questionTargetLabel, "No published G2 questions yet");
+    assert.match(guide.emptyState, /Admin → Questions/);
   });
 });
