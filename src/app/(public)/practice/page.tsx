@@ -10,7 +10,7 @@ import { db } from "@/lib/db";
 import { buildPracticeStageGuide, buildQuizQuestionViews } from "@/lib/learner/quiz";
 
 type PracticePageProps = {
-  searchParams: Promise<{ stage?: string; categoryId?: string }>;
+  searchParams: Promise<{ stage?: string; categoryId?: string; reported?: string }>;
 };
 
 const stageOptions = [
@@ -27,6 +27,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
   const params = await searchParams;
   const stage = getStage(params.stage);
   const categoryId = params.categoryId || undefined;
+  const returnTo = `/practice?stage=${stage}${categoryId ? `&categoryId=${categoryId}` : ""}`;
   const [session, categories, questions] = await Promise.all([
     auth(),
     db.category.findMany({ where: { isActive: true, OR: [{ stage }, { stage: null }] }, orderBy: [{ sortOrder: "asc" }, { name: "asc" }] }),
@@ -108,7 +109,9 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
           </CardContent>
         </Card>
 
-        <PracticeQuiz canSaveProgress={Boolean(session?.user?.emailVerified)} emptyState={guide.emptyState} questions={quizQuestions} stage={stage} />
+        {params.reported === "question" ? <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900">Thanks — your question report was sent to admins.</p> : null}
+
+        <PracticeQuiz canSaveProgress={Boolean(session?.user?.emailVerified)} emptyState={guide.emptyState} questions={quizQuestions} returnTo={returnTo} stage={stage} />
       </main>
       <SiteFooter />
     </>

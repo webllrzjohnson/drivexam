@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { saveQuizAttempt } from "@/app/(public)/practice/actions";
+import { createQuestionReport } from "@/app/(public)/practice/report-actions";
 import { scoreQuizAnswers, type QuizQuestionView } from "@/lib/learner/quiz";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,8 +14,18 @@ type PracticeQuizProps = {
   questions: QuizQuestionView[];
   canSaveProgress: boolean;
   emptyState?: string;
+  returnTo: string;
   stage: "G1" | "G2" | "G";
 };
+
+const reportReasonOptions = [
+  { value: "INCORRECT_ANSWER", label: "Incorrect answer" },
+  { value: "CONFUSING_EXPLANATION", label: "Confusing explanation" },
+  { value: "TYPO_GRAMMAR", label: "Typo / grammar" },
+  { value: "OUTDATED_RULE", label: "Outdated rule" },
+  { value: "IMAGE_SIGN_ISSUE", label: "Image / sign issue" },
+  { value: "OTHER", label: "Other" },
+];
 
 function hasChoice(selection: Record<string, string[]>, questionId: string, choiceId: string) {
   return selection[questionId]?.includes(choiceId) ?? false;
@@ -30,7 +41,7 @@ function toggleMultiChoice(selection: Record<string, string[]>, questionId: stri
   return { ...selection, [questionId]: next };
 }
 
-export function PracticeQuiz({ canSaveProgress, emptyState, questions, stage }: PracticeQuizProps) {
+export function PracticeQuiz({ canSaveProgress, emptyState, questions, returnTo, stage }: PracticeQuizProps) {
   const [selection, setSelection] = useState<Record<string, string[]>>({});
   const [submitted, setSubmitted] = useState(false);
   const result = useMemo(() => scoreQuizAnswers(questions, selection), [questions, selection]);
@@ -114,9 +125,30 @@ export function PracticeQuiz({ canSaveProgress, emptyState, questions, stage }: 
               </div>
 
               {submitted && review ? (
-                <div className={`rounded-xl border p-4 text-sm ${review.isCorrect ? "border-green-200 bg-green-50 text-green-950" : "border-amber-200 bg-amber-50 text-amber-950"}`}>
-                  <p className="font-semibold">{review.isCorrect ? "Correct" : "Review this one"}</p>
-                  <p>{question.explanation}</p>
+                <div className="space-y-3">
+                  <div className={`rounded-xl border p-4 text-sm ${review.isCorrect ? "border-green-200 bg-green-50 text-green-950" : "border-amber-200 bg-amber-50 text-amber-950"}`}>
+                    <p className="font-semibold">{review.isCorrect ? "Correct" : "Review this one"}</p>
+                    <p>{question.explanation}</p>
+                  </div>
+                  <details className="rounded-xl border bg-slate-50 p-4 text-sm">
+                    <summary className="cursor-pointer font-semibold text-slate-900">Report this question</summary>
+                    <form action={createQuestionReport} className="mt-4 grid gap-3">
+                      <input name="questionId" type="hidden" value={question.id} />
+                      <input name="returnTo" type="hidden" value={returnTo} />
+                      <label className="space-y-1">
+                        <span className="font-medium">Reason</span>
+                        <select className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm" name="reason" required>
+                          {reportReasonOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                        </select>
+                      </label>
+                      <label className="space-y-1">
+                        <span className="font-medium">Comment</span>
+                        <textarea className="min-h-20 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm" name="comment" placeholder="Tell us what looks wrong or confusing." />
+                      </label>
+                      {!canSaveProgress ? <input className="h-10 rounded-lg border border-border bg-white px-3 text-sm" name="reporterEmail" placeholder="Email optional" type="email" /> : null}
+                      <Button type="submit" variant="outline">Send report</Button>
+                    </form>
+                  </details>
                 </div>
               ) : null}
             </CardContent>
