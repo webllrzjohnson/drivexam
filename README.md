@@ -90,4 +90,20 @@ npm run prisma:validate
 
 ## Deployment
 
-No deployment is configured yet. Push to GitHub and deploy only after Louie approves.
+No deployment host is configured in this repo yet. Push to GitHub and deploy only after Louie approves.
+
+Use the production handoff before launching:
+
+- [Production readiness and launch handoff](docs/production-readiness.md)
+
+Production database migrations should use Prisma's deploy command from the deployed app environment:
+
+```bash
+npx prisma migrate deploy
+```
+
+Then seed the bundled Ontario content/admin bootstrap if needed:
+
+```bash
+npm run db:seed
+```
