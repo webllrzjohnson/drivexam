@@ -2,6 +2,9 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
+  ontarioG1SeedQuestions,
+} from "../src/lib/seed/ontario-g1-content";
+import {
   getOntarioRoadTestSeedSummary,
   ontarioRoadTestChecklistItems,
   ontarioRoadTestSeedCategories,
@@ -26,6 +29,13 @@ describe("Ontario G2/G road-test seed content", () => {
     assert.equal(new Set(ontarioRoadTestSeedCategories.map((category) => category.slug)).size, ontarioRoadTestSeedCategories.length);
     assert.equal(new Set(ontarioRoadTestSeedQuestions.map((question) => question.prompt)).size, ontarioRoadTestSeedQuestions.length);
     assert.equal(new Set(ontarioRoadTestChecklistItems.map((item) => `${item.stage}:${item.section}:${item.title}`)).size, ontarioRoadTestChecklistItems.length);
+  });
+
+  it("does not reuse G1 prompts because prompt-based reseeding deletes older rows", () => {
+    const g1Prompts = new Set(ontarioG1SeedQuestions.map((question) => question.prompt));
+    const reusedPrompt = ontarioRoadTestSeedQuestions.find((question) => g1Prompts.has(question.prompt));
+
+    assert.equal(reusedPrompt, undefined);
   });
 
   it("links every item to a seeded category and official Ontario source", () => {

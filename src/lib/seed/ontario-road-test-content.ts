@@ -298,7 +298,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     stage: "G",
     sourceReference: `${ontarioRoadTestSourceUrls.freewayDriving}#driving-along-a-freeway`,
     categorySlug: "g-advanced-lane-and-traffic-flow",
-    prompt: "Which lane should slower traffic generally use on a multi-lane freeway?",
+    prompt: "During full-G freeway driving, which lane should slower traffic generally use?",
     explanation: "Ontario's freeway-driving guidance directs slower traffic to keep right. The left lane is generally for passing or faster traffic where permitted by signs and conditions.",
     choices: [
       { text: "The right lane", isCorrect: true },
