@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import {
   buildPracticeQuestionSet,
   buildPracticeStageGuide,
+  buildRoadSignPracticeGuide,
   buildQuizQuestionViews,
   scoreQuizAnswers,
   type QuizQuestionInput,
@@ -118,5 +119,15 @@ describe("learner quiz helpers", () => {
     assert.deepEqual(firstSet.questions.map((question) => question.id), Array.from({ length: 20 }, (_, index) => `q${index + 1}`));
     assert.deepEqual(secondSet.questions.map((question) => question.id), Array.from({ length: 20 }, (_, index) => `q${index + 21}`));
     assert.equal(clampedSet.activeSet, 2);
+  });
+
+  it("builds dedicated road-sign practice guidance", () => {
+    const guide = buildRoadSignPracticeGuide({ assetCount: 40, questionCount: 35 });
+
+    assert.equal(guide.title, "Ontario road signs only");
+    assert.equal(guide.assetLabel, "40 Ontario sign images");
+    assert.equal(guide.questionLabel, "35 image questions");
+    assert.match(guide.description, /flashcards/i);
+    assert.deepEqual(guide.actions.map((action) => action.label), ["Start signs quiz", "Review G1 practice"]);
   });
 });

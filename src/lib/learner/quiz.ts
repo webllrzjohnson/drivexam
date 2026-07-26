@@ -56,6 +56,14 @@ export type PracticeStageGuide = {
   milestones: Array<{ title: string; detail: string }>;
 };
 
+export type RoadSignPracticeGuide = {
+  title: string;
+  description: string;
+  assetLabel: string;
+  questionLabel: string;
+  actions: Array<{ label: string; href: string }>;
+};
+
 type PracticeStageGuideInput = {
   stage: LicenseStage;
   categoryCount: number;
@@ -171,6 +179,19 @@ export function buildPracticeStageGuide({ stage, categoryCount, questionCount }:
       { title: "Learn the rule", detail: categoryCount > 0 ? `Choose from ${categoryCount} active topic areas or practice everything together.` : "Start with core topics, then publish stage-specific categories." },
       { title: "Answer with feedback", detail: "Check answers only after you commit, then read the plain-English explanation." },
       { title: "Save and fix weak areas", detail: "Verified learners can save results so the dashboard recommends the next focus area." },
+    ],
+  };
+}
+
+export function buildRoadSignPracticeGuide({ assetCount, questionCount }: { assetCount: number; questionCount: number }): RoadSignPracticeGuide {
+  return {
+    title: "Ontario road signs only",
+    description: "Review Ontario road signs as flashcards, then jump straight into image-recognition practice questions.",
+    assetLabel: `${assetCount} Ontario sign image${assetCount === 1 ? "" : "s"}`,
+    questionLabel: `${questionCount} image question${questionCount === 1 ? "" : "s"}`,
+    actions: [
+      { label: "Start signs quiz", href: "/practice?stage=G1" },
+      { label: "Review G1 practice", href: "/practice?stage=G1" },
     ],
   };
 }

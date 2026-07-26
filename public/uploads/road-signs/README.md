@@ -31,3 +31,23 @@ The app stores local copies so learner practice works offline/local-first and do
 | `ontario-no-left-turn-alt.svg` | [CA-ON road sign Rb-012.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-012.svg) | Public domain |
 | `ontario-yield-ahead.svg` | [CA-ON road sign Wb-001A.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wb-001A.svg) | Public domain |
 | `ontario-keep-right.svg` | [CA-ON road sign Ra-005-R.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Ra-005-R.svg) | Public domain |
+| `ontario-stop-ahead.svg` | [CA-ON road sign Wb-001.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wb-001.svg) | Public domain |
+| `ontario-traffic-signal-ahead.svg` | [CA-ON road sign Wc-003.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-003.svg) | Public domain |
+| `ontario-two-way-traffic.svg` | [CA-ON road sign Wc-007.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-007.svg) | Public domain |
+| `ontario-pedestrian-crossing-ahead.svg` | [CA-ON road sign Wc-001.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-001.svg) | Public domain |
+| `ontario-roundabout-ahead.svg` | [CA-ON road sign Wc-018.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-018.svg) | Public domain |
+| `ontario-slippery-road.svg` | [Ontario Wc-5.svg](https://commons.wikimedia.org/wiki/File:Ontario_Wc-5.svg) | Public domain |
+| `ontario-merge-left.svg` | [Ontario Wa-16L.svg](https://commons.wikimedia.org/wiki/File:Ontario_Wa-16L.svg) | Public domain |
+| `ontario-merge-right.svg` | [Ontario Wa-16R.svg](https://commons.wikimedia.org/wiki/File:Ontario_Wa-16R.svg) | Public domain |
+| `ontario-curve-left.svg` | [Ontario road sign Wa-10L.svg](https://commons.wikimedia.org/wiki/File:Ontario_road_sign_Wa-10L.svg) | Public domain |
+| `ontario-curve-right.svg` | [Ontario road sign Wa-10R.svg](https://commons.wikimedia.org/wiki/File:Ontario_road_sign_Wa-10R.svg) | Public domain |
+| `ontario-sharp-turn-left.svg` | [Ontario Wa-6L.svg](https://commons.wikimedia.org/wiki/File:Ontario_Wa-6L.svg) | Public domain |
+| `ontario-sharp-turn-right.svg` | [Ontario Wa-6R.svg](https://commons.wikimedia.org/wiki/File:Ontario_Wa-6R.svg) | Public domain |
+| `ontario-winding-road-right.svg` | [Ontario Wa-5R.svg](https://commons.wikimedia.org/wiki/File:Ontario_Wa-5R.svg) | Public domain |
+| `ontario-bicycle-crossing.svg` | [Ontario road sign Wc-15.svg](https://commons.wikimedia.org/wiki/File:Ontario_road_sign_Wc-15.svg) | Public domain |
+| `ontario-bicycle-lane.svg` | [CA-ON road sign Rb-066.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-066.svg) | Public domain |
+| `ontario-share-road-bicycles.svg` | [CA-ON road sign Rb-070.svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-070.svg) | Public domain |
+| `ontario-no-parking.svg` | [CA-ON road sign Rb-057 (B).svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-057_(B).svg) | Public domain |
+| `ontario-accessible-parking.svg` | [CA-ON road sign Rb-058 (F).svg](https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-058_(F).svg) | Public domain |
+| `ontario-road-work-ahead.svg` | [Ontario TC-1.svg](https://commons.wikimedia.org/wiki/File:Ontario_TC-1.svg) | Public domain |
+| `ontario-construction-detour.svg` | [Ontario TC-1A.svg](https://commons.wikimedia.org/wiki/File:Ontario_TC-1A.svg) | Public domain |

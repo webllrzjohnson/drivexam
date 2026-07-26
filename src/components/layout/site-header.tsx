@@ -14,6 +14,7 @@ export async function SiteHeader() {
         <Link href="/" className="text-xl font-bold tracking-tight text-green-900">drivexam</Link>
         <nav className="hidden items-center gap-6 text-sm text-slate-600 md:flex">
           <Link href="/practice">Practice</Link>
+          <Link href="/road-signs">Road signs</Link>
           <Link href="/road-test">Road test</Link>
           <Link href="/blog">Blog</Link>
           <Link href="/news">News</Link>

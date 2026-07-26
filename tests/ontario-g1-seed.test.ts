@@ -13,7 +13,7 @@ describe("Ontario G1 seed content", () => {
     const summary = getOntarioG1SeedSummary();
 
     assert.equal(summary.categoryCount, 8);
-    assert.equal(summary.questionCount, 52);
+    assert.equal(summary.questionCount, 68);
     assert.equal(summary.sourceCount, 8);
   });
 
@@ -42,7 +42,7 @@ describe("Ontario G1 seed content", () => {
   });
 
   it("bundles local road-sign assets and attaches them to sign questions", () => {
-    assert.ok(ontarioG1RoadSignAssets.length >= 20, "ships a practical Canadian road-sign image bank");
+    assert.ok(ontarioG1RoadSignAssets.length >= 40, "ships a practical Canadian road-sign image bank");
     assert.equal(new Set(ontarioG1RoadSignAssets.map((asset) => asset.slug)).size, ontarioG1RoadSignAssets.length);
 
     const assetSlugs = new Set(ontarioG1RoadSignAssets.map((asset) => asset.slug));
@@ -55,9 +55,9 @@ describe("Ontario G1 seed content", () => {
     }
 
     const signQuestionsWithAssets = ontarioG1SeedQuestions.filter((question) => question.assetSlugs?.length);
-    assert.ok(signQuestionsWithAssets.length >= 18, "attaches road-sign images to a meaningful set of G1 sign questions");
+    assert.ok(signQuestionsWithAssets.length >= 35, "attaches road-sign images to a meaningful set of G1 sign questions");
     assert.ok(
-      signQuestionsWithAssets.filter((question) => /this sign|shown|image/i.test(question.prompt)).length >= 12,
+      signQuestionsWithAssets.filter((question) => /this sign|shown|image/i.test(question.prompt)).length >= 28,
       "includes dedicated image-recognition questions, not only decorative sign attachments",
     );
 
