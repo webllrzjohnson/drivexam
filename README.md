@@ -28,6 +28,23 @@ cp .env.example .env
 
 3. Fill in `DATABASE_URL`, `AUTH_SECRET`/`NEXTAUTH_SECRET`, Google OAuth, and SMTP values as needed.
 
+For SMTP/Gmail delivery, set:
+
+```bash
+EMAIL_FROM="Drivexam <no-reply@example.com>"
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT="587"
+SMTP_USER="your-smtp-user@example.com"
+SMTP_PASS="your-app-password"
+EMAIL_SMOKE_TO="your-test-recipient@example.com"
+```
+
+Then verify delivery without printing secrets:
+
+```bash
+npm run email:smoke
+```
+
 4. Generate Prisma client:
 
 ```bash
