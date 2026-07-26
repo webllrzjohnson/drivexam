@@ -7,10 +7,10 @@ import { PracticeQuiz } from "@/components/quiz/practice-quiz";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/lib/db";
-import { buildPracticeStageGuide, buildQuizQuestionViews } from "@/lib/learner/quiz";
+import { buildPracticeQuestionSet, buildPracticeStageGuide, buildQuizQuestionViews } from "@/lib/learner/quiz";
 
 type PracticePageProps = {
-  searchParams: Promise<{ stage?: string; categoryId?: string; reported?: string }>;
+  searchParams: Promise<{ stage?: string; categoryId?: string; reported?: string; questionSet?: string }>;
 };
 
 const stageOptions = [
@@ -23,11 +23,23 @@ function getStage(value?: string) {
   return value === "G2" || value === "G" ? value : "G1";
 }
 
+function getQuestionSet(value?: string) {
+  const parsed = Number.parseInt(value ?? "1", 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+}
+
+function buildPracticeUrl(stage: string, categoryId: string | undefined, questionSet: number) {
+  const search = new URLSearchParams({ stage, questionSet: String(questionSet) });
+  if (categoryId) search.set("categoryId", categoryId);
+  return `/practice?${search.toString()}`;
+}
+
 export default async function PracticePage({ searchParams }: PracticePageProps) {
   const params = await searchParams;
   const stage = getStage(params.stage);
   const categoryId = params.categoryId || undefined;
-  const returnTo = `/practice?stage=${stage}${categoryId ? `&categoryId=${categoryId}` : ""}`;
+  const requestedSet = getQuestionSet(params.questionSet);
+  const returnTo = buildPracticeUrl(stage, categoryId, requestedSet);
   const [session, categories, questions] = await Promise.all([
     auth(),
     db.category.findMany({ where: { isActive: true, OR: [{ stage }, { stage: null }] }, orderBy: [{ sortOrder: "asc" }, { name: "asc" }] }),
@@ -44,11 +56,12 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
         choices: { include: { asset: true }, orderBy: { sortOrder: "asc" } },
       },
       orderBy: { updatedAt: "desc" },
-      take: 20,
+      take: 100,
     }),
   ]);
   const quizQuestions = buildQuizQuestionViews(questions);
-  const guide = buildPracticeStageGuide({ stage, categoryCount: categories.length, questionCount: quizQuestions.length });
+  const questionSet = buildPracticeQuestionSet(quizQuestions, { requestedSet, pageSize: 20 });
+  const guide = buildPracticeStageGuide({ stage, categoryCount: categories.length, questionCount: questionSet.questions.length });
 
   return (
     <>
@@ -111,7 +124,24 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
 
         {params.reported === "question" ? <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900">Thanks — your question report was sent to admins.</p> : null}
 
-        <PracticeQuiz canSaveProgress={Boolean(session?.user?.emailVerified)} emptyState={guide.emptyState} questions={quizQuestions} returnTo={returnTo} stage={stage} />
+        {questionSet.totalSets > 1 ? (
+          <Card className="border-slate-200 bg-slate-50">
+            <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-slate-700">
+                Showing set {questionSet.activeSet} of {questionSet.totalSets} · {questionSet.totalCount} published questions available
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: questionSet.totalSets }, (_, index) => index + 1).map((set) => (
+                  <Button asChild key={set} size="sm" variant={set === questionSet.activeSet ? "default" : "outline"}>
+                    <Link href={buildPracticeUrl(stage, categoryId, set)}>Set {set}</Link>
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
+
+        <PracticeQuiz canSaveProgress={Boolean(session?.user?.emailVerified)} emptyState={guide.emptyState} questions={questionSet.questions} returnTo={returnTo} stage={stage} />
       </main>
       <SiteFooter />
     </>

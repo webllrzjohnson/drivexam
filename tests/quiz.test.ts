@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
+  buildPracticeQuestionSet,
   buildPracticeStageGuide,
   buildQuizQuestionViews,
   scoreQuizAnswers,
@@ -102,5 +103,20 @@ describe("learner quiz helpers", () => {
     assert.equal(guide.title, "G2 road test prep");
     assert.equal(guide.questionTargetLabel, "No published G2 questions yet");
     assert.match(guide.emptyState, /Admin → Questions/);
+  });
+
+  it("splits larger practice pools into learner-selectable question sets", () => {
+    const pool = Array.from({ length: 40 }, (_, index) => ({ id: `q${index + 1}` }));
+
+    const firstSet = buildPracticeQuestionSet(pool, { requestedSet: 1, pageSize: 20 });
+    const secondSet = buildPracticeQuestionSet(pool, { requestedSet: 2, pageSize: 20 });
+    const clampedSet = buildPracticeQuestionSet(pool, { requestedSet: 99, pageSize: 20 });
+
+    assert.equal(firstSet.totalCount, 40);
+    assert.equal(firstSet.totalSets, 2);
+    assert.equal(firstSet.activeSet, 1);
+    assert.deepEqual(firstSet.questions.map((question) => question.id), Array.from({ length: 20 }, (_, index) => `q${index + 1}`));
+    assert.deepEqual(secondSet.questions.map((question) => question.id), Array.from({ length: 20 }, (_, index) => `q${index + 21}`));
+    assert.equal(clampedSet.activeSet, 2);
   });
 });

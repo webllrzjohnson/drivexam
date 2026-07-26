@@ -62,6 +62,19 @@ type PracticeStageGuideInput = {
   questionCount: number;
 };
 
+export type PracticeQuestionSet<T> = {
+  questions: T[];
+  activeSet: number;
+  totalSets: number;
+  totalCount: number;
+  pageSize: number;
+};
+
+type PracticeQuestionSetInput = {
+  requestedSet?: number;
+  pageSize?: number;
+};
+
 function sortedUnique(values: string[]) {
   return Array.from(new Set(values.filter(Boolean))).sort();
 }
@@ -111,6 +124,22 @@ export function scoreQuizAnswers(questions: QuizQuestionView[], selectedChoiceId
     totalCount,
     percent: totalCount ? Math.round((correctCount / totalCount) * 100) : 0,
     review,
+  };
+}
+
+export function buildPracticeQuestionSet<T>(questions: T[], { pageSize = 20, requestedSet = 1 }: PracticeQuestionSetInput): PracticeQuestionSet<T> {
+  const safePageSize = Math.max(1, Math.floor(pageSize));
+  const totalCount = questions.length;
+  const totalSets = Math.max(1, Math.ceil(totalCount / safePageSize));
+  const activeSet = Math.min(Math.max(1, Math.floor(requestedSet) || 1), totalSets);
+  const start = (activeSet - 1) * safePageSize;
+
+  return {
+    questions: questions.slice(start, start + safePageSize),
+    activeSet,
+    totalSets,
+    totalCount,
+    pageSize: safePageSize,
   };
 }
 
