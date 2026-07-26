@@ -3,13 +3,16 @@ import type { QuizAttempt } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { buildRoadTestChecklistProgressSummary } from "@/lib/learner/road-test-progress";
 import type { buildDailyStudyPlan, summarizeQuizProgress } from "@/lib/learner/progress";
 
 type ProgressSummary = ReturnType<typeof summarizeQuizProgress>;
 type DailyStudyPlan = ReturnType<typeof buildDailyStudyPlan>;
+type RoadTestChecklistProgressSummary = ReturnType<typeof buildRoadTestChecklistProgressSummary>;
 
 type DashboardShellProps = {
   attempts: Array<Pick<QuizAttempt, "id" | "stage" | "correctCount" | "totalCount" | "percent" | "createdAt">>;
+  checklistProgress: RoadTestChecklistProgressSummary[];
   plan: DailyStudyPlan;
   summary: ProgressSummary;
 };
@@ -26,7 +29,7 @@ function MetricCard({ title, value, detail }: { title: string; value: string; de
   );
 }
 
-export function DashboardShell({ attempts, plan, summary }: DashboardShellProps) {
+export function DashboardShell({ attempts, checklistProgress, plan, summary }: DashboardShellProps) {
   const recentAttempts = attempts.slice(0, 5);
 
   return (
@@ -56,6 +59,25 @@ export function DashboardShell({ attempts, plan, summary }: DashboardShellProps)
         <MetricCard detail="Most recent saved quiz" title="Latest score" value={`${summary.latestPercent}%`} />
         <MetricCard detail="Across saved attempts" title="Answered" value={String(summary.totalQuestionsAnswered)} />
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Road-test checklist progress</CardTitle>
+          <p className="text-sm text-slate-600">Track practical road-test readiness separately from quiz scores.</p>
+        </CardHeader>
+        <CardContent className="grid gap-3 md:grid-cols-2">
+          {checklistProgress.map((stageSummary) => (
+            <Link className="rounded-xl border bg-slate-50 p-4 transition hover:border-green-300 hover:bg-green-50" href={`/road-test?stage=${stageSummary.stage}`} key={stageSummary.stage}>
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="font-semibold text-slate-950">{stageSummary.stage === "G" ? "Full G" : "G2"} checklist</h2>
+                <span className="rounded-full bg-white px-2 py-1 text-xs font-semibold text-green-900">{stageSummary.percent}%</span>
+              </div>
+              <p className="mt-2 text-2xl font-bold text-green-900">{stageSummary.completedCount}/{stageSummary.totalCount} complete</p>
+              <p className="mt-1 text-sm leading-6 text-slate-600">Next: {stageSummary.nextAction}</p>
+            </Link>
+          ))}
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_1fr]">
         <Card>
