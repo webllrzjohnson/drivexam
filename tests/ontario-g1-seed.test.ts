@@ -1,14 +1,19 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { getOntarioG1SeedSummary, ontarioG1SeedCategories, ontarioG1SeedQuestions } from "../src/lib/seed/ontario-g1-content";
+import {
+  getOntarioG1SeedSummary,
+  ontarioG1RoadSignAssets,
+  ontarioG1SeedCategories,
+  ontarioG1SeedQuestions,
+} from "../src/lib/seed/ontario-g1-content";
 
 describe("Ontario G1 seed content", () => {
   it("ships an expanded source-backed G1 batch across core handbook topics", () => {
     const summary = getOntarioG1SeedSummary();
 
     assert.equal(summary.categoryCount, 8);
-    assert.equal(summary.questionCount, 40);
+    assert.equal(summary.questionCount, 52);
     assert.equal(summary.sourceCount, 8);
   });
 
@@ -33,6 +38,34 @@ describe("Ontario G1 seed content", () => {
       assert.equal(question.choices.length, 4, `${question.prompt} has four answer choices`);
       assert.equal(question.choices.filter((choice) => choice.isCorrect).length, 1, `${question.prompt} has exactly one correct answer`);
       assert.equal(new Set(question.choices.map((choice) => choice.text)).size, question.choices.length, `${question.prompt} has unique choices`);
+    }
+  });
+
+  it("bundles local road-sign assets and attaches them to sign questions", () => {
+    assert.ok(ontarioG1RoadSignAssets.length >= 20, "ships a practical Canadian road-sign image bank");
+    assert.equal(new Set(ontarioG1RoadSignAssets.map((asset) => asset.slug)).size, ontarioG1RoadSignAssets.length);
+
+    const assetSlugs = new Set(ontarioG1RoadSignAssets.map((asset) => asset.slug));
+    for (const asset of ontarioG1RoadSignAssets) {
+      assert.match(asset.path, /^\/uploads\/road-signs\/[a-z0-9-]+\.svg$/);
+      assert.match(asset.mimeType, /^image\/svg\+xml$/);
+      assert.ok(asset.title.length >= 4);
+      assert.ok(asset.sourceCredit.includes("Public domain"));
+      assert.ok(asset.sourceCredit.includes("Wikimedia Commons"));
+    }
+
+    const signQuestionsWithAssets = ontarioG1SeedQuestions.filter((question) => question.assetSlugs?.length);
+    assert.ok(signQuestionsWithAssets.length >= 18, "attaches road-sign images to a meaningful set of G1 sign questions");
+    assert.ok(
+      signQuestionsWithAssets.filter((question) => /this sign|shown|image/i.test(question.prompt)).length >= 12,
+      "includes dedicated image-recognition questions, not only decorative sign attachments",
+    );
+
+    for (const question of signQuestionsWithAssets) {
+      assert.ok(question.sourceReference.startsWith("https://www.ontario.ca/document/official-mto-drivers-handbook/"));
+      for (const slug of question.assetSlugs ?? []) {
+        assert.ok(assetSlugs.has(slug), `${question.prompt} references seeded asset ${slug}`);
+      }
     }
   });
 });

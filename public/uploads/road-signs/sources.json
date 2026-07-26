@@ -1,0 +1,222 @@
+[
+  {
+    "slug": "ontario-stop",
+    "title": "Stop sign",
+    "filename": "ontario-stop.svg",
+    "path": "/uploads/road-signs/ontario-stop.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 4981,
+    "description": "Ontario stop sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Ra-001.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Ra-001.svg"
+  },
+  {
+    "slug": "ontario-yield",
+    "title": "Yield sign",
+    "filename": "ontario-yield.svg",
+    "path": "/uploads/road-signs/ontario-yield.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 5286,
+    "description": "Ontario yield sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Ra-002.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Ra-002.svg"
+  },
+  {
+    "slug": "ontario-maximum-40",
+    "title": "Maximum 40 km/h sign",
+    "filename": "ontario-maximum-40.svg",
+    "path": "/uploads/road-signs/ontario-maximum-40.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 11324,
+    "description": "Ontario maximum 40 sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-001-040.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-040.svg"
+  },
+  {
+    "slug": "ontario-maximum-50",
+    "title": "Maximum 50 km/h sign",
+    "filename": "ontario-maximum-50.svg",
+    "path": "/uploads/road-signs/ontario-maximum-50.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 10552,
+    "description": "Ontario maximum 50 sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-001-050.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-050.svg"
+  },
+  {
+    "slug": "ontario-maximum-60",
+    "title": "Maximum 60 km/h sign",
+    "filename": "ontario-maximum-60.svg",
+    "path": "/uploads/road-signs/ontario-maximum-60.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 12997,
+    "description": "Ontario maximum 60 sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-001-060.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-060.svg"
+  },
+  {
+    "slug": "ontario-maximum-80",
+    "title": "Maximum 80 km/h sign",
+    "filename": "ontario-maximum-80.svg",
+    "path": "/uploads/road-signs/ontario-maximum-80.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 14225,
+    "description": "Ontario maximum 80 sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-001-080.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-080.svg"
+  },
+  {
+    "slug": "ontario-maximum-100",
+    "title": "Maximum 100 km/h sign",
+    "filename": "ontario-maximum-100.svg",
+    "path": "/uploads/road-signs/ontario-maximum-100.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 15659,
+    "description": "Ontario maximum 100 sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-001-100.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-100.svg"
+  },
+  {
+    "slug": "ontario-speed-fines-50",
+    "title": "Speed fines sign",
+    "filename": "ontario-speed-fines-50.svg",
+    "path": "/uploads/road-signs/ontario-speed-fines-50.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 8367,
+    "description": "Ontario speed fines sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-005-50.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-005-50.svg"
+  },
+  {
+    "slug": "ontario-school-crossing",
+    "title": "School crossing sign",
+    "filename": "ontario-school-crossing.svg",
+    "path": "/uploads/road-signs/ontario-school-crossing.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 6085,
+    "description": "Ontario school crossing sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Wc-002.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-002.svg"
+  },
+  {
+    "slug": "ontario-pedestrian-crossover",
+    "title": "Pedestrian crossover sign",
+    "filename": "ontario-pedestrian-crossover.svg",
+    "path": "/uploads/road-signs/ontario-pedestrian-crossover.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 37493,
+    "description": "Ontario pedestrian crossover sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Ra-008 (B).svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Ra-008_(B).svg"
+  },
+  {
+    "slug": "ontario-railway-crossing",
+    "title": "Railway crossing ahead sign",
+    "filename": "ontario-railway-crossing.svg",
+    "path": "/uploads/road-signs/ontario-railway-crossing.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 4028,
+    "description": "Ontario railway crossing sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "Ontario Wc-4.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_Wc-4.svg"
+  },
+  {
+    "slug": "ontario-one-way",
+    "title": "One way sign",
+    "filename": "ontario-one-way.svg",
+    "path": "/uploads/road-signs/ontario-one-way.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 7872,
+    "description": "Ontario one way sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-048.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-048.svg"
+  },
+  {
+    "slug": "ontario-no-left-turn",
+    "title": "No left turn sign",
+    "filename": "ontario-no-left-turn.svg",
+    "path": "/uploads/road-signs/ontario-no-left-turn.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 9954,
+    "description": "Ontario no left turn sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-079-L.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-079-L.svg"
+  },
+  {
+    "slug": "ontario-no-right-turn",
+    "title": "No right turn sign",
+    "filename": "ontario-no-right-turn.svg",
+    "path": "/uploads/road-signs/ontario-no-right-turn.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 9934,
+    "description": "Ontario no right turn sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-079-R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-079-R.svg"
+  },
+  {
+    "slug": "ontario-do-not-enter",
+    "title": "Do not enter sign",
+    "filename": "ontario-do-not-enter.svg",
+    "path": "/uploads/road-signs/ontario-do-not-enter.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 3814,
+    "description": "Ontario do not enter sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-019.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-019.svg"
+  },
+  {
+    "slug": "ontario-no-stopping",
+    "title": "No stopping sign",
+    "filename": "ontario-no-stopping.svg",
+    "path": "/uploads/road-signs/ontario-no-stopping.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 22314,
+    "description": "Ontario no stopping sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-010A (B).svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-010A_(B).svg"
+  },
+  {
+    "slug": "ontario-no-u-turn",
+    "title": "No U-turn sign",
+    "filename": "ontario-no-u-turn.svg",
+    "path": "/uploads/road-signs/ontario-no-u-turn.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 7292,
+    "description": "Ontario no U-turn sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-011.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-011.svg"
+  },
+  {
+    "slug": "ontario-no-left-turn-alt",
+    "title": "Turn restriction sign",
+    "filename": "ontario-no-left-turn-alt.svg",
+    "path": "/uploads/road-signs/ontario-no-left-turn-alt.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 7372,
+    "description": "Ontario turn restriction sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Rb-012.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-012.svg"
+  },
+  {
+    "slug": "ontario-yield-ahead",
+    "title": "Yield ahead sign",
+    "filename": "ontario-yield-ahead.svg",
+    "path": "/uploads/road-signs/ontario-yield-ahead.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 5751,
+    "description": "Ontario yield ahead sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Wb-001A.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wb-001A.svg"
+  },
+  {
+    "slug": "ontario-keep-right",
+    "title": "Keep right sign",
+    "filename": "ontario-keep-right.svg",
+    "path": "/uploads/road-signs/ontario-keep-right.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 3716,
+    "description": "Ontario keep right sign from Wikimedia Commons for G1 road-sign practice.",
+    "sourceCredit": "CA-ON road sign Ra-005-R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Ra-005-R.svg"
+  }
+]

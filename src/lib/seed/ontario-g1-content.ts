@@ -10,11 +10,23 @@ export type SeedQuestionChoice = {
   isCorrect: boolean;
 };
 
+export type SeedRoadSignAsset = {
+  slug: string;
+  title: string;
+  filename: string;
+  path: string;
+  mimeType: "image/svg+xml";
+  sizeBytes: number;
+  description: string;
+  sourceCredit: string;
+};
+
 export type SeedQuestion = {
   sourceReference: string;
   categorySlug: string;
   prompt: string;
   explanation: string;
+  assetSlugs?: string[];
   choices: SeedQuestionChoice[];
 };
 
@@ -80,12 +92,216 @@ export const ontarioG1SeedCategories: SeedCategory[] = [
   },
 ];
 
+export const ontarioG1RoadSignAssets: SeedRoadSignAsset[] = [
+  {
+    slug: "ontario-stop",
+    title: "Stop sign",
+    filename: "ontario-stop.svg",
+    path: "/uploads/road-signs/ontario-stop.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 4981,
+    description: "Ontario stop sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Ra-001.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-yield",
+    title: "Yield sign",
+    filename: "ontario-yield.svg",
+    path: "/uploads/road-signs/ontario-yield.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 5286,
+    description: "Ontario yield sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Ra-002.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-maximum-40",
+    title: "Maximum 40 km/h sign",
+    filename: "ontario-maximum-40.svg",
+    path: "/uploads/road-signs/ontario-maximum-40.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 11324,
+    description: "Ontario maximum 40 sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-001-040.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-maximum-50",
+    title: "Maximum 50 km/h sign",
+    filename: "ontario-maximum-50.svg",
+    path: "/uploads/road-signs/ontario-maximum-50.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 10552,
+    description: "Ontario maximum 50 sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-001-050.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-maximum-60",
+    title: "Maximum 60 km/h sign",
+    filename: "ontario-maximum-60.svg",
+    path: "/uploads/road-signs/ontario-maximum-60.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 12997,
+    description: "Ontario maximum 60 sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-001-060.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-maximum-80",
+    title: "Maximum 80 km/h sign",
+    filename: "ontario-maximum-80.svg",
+    path: "/uploads/road-signs/ontario-maximum-80.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 14225,
+    description: "Ontario maximum 80 sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-001-080.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-maximum-100",
+    title: "Maximum 100 km/h sign",
+    filename: "ontario-maximum-100.svg",
+    path: "/uploads/road-signs/ontario-maximum-100.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 15659,
+    description: "Ontario maximum 100 sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-001-100.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-speed-fines-50",
+    title: "Speed fines sign",
+    filename: "ontario-speed-fines-50.svg",
+    path: "/uploads/road-signs/ontario-speed-fines-50.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 8367,
+    description: "Ontario speed fines sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-005-50.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-school-crossing",
+    title: "School crossing sign",
+    filename: "ontario-school-crossing.svg",
+    path: "/uploads/road-signs/ontario-school-crossing.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 6085,
+    description: "Ontario school crossing sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Wc-002.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-pedestrian-crossover",
+    title: "Pedestrian crossover sign",
+    filename: "ontario-pedestrian-crossover.svg",
+    path: "/uploads/road-signs/ontario-pedestrian-crossover.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 37493,
+    description: "Ontario pedestrian crossover sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Ra-008 (B).svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-railway-crossing",
+    title: "Railway crossing ahead sign",
+    filename: "ontario-railway-crossing.svg",
+    path: "/uploads/road-signs/ontario-railway-crossing.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 4028,
+    description: "Ontario railway crossing sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "Ontario Wc-4.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-one-way",
+    title: "One way sign",
+    filename: "ontario-one-way.svg",
+    path: "/uploads/road-signs/ontario-one-way.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 7872,
+    description: "Ontario one way sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-048.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-no-left-turn",
+    title: "No left turn sign",
+    filename: "ontario-no-left-turn.svg",
+    path: "/uploads/road-signs/ontario-no-left-turn.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 9954,
+    description: "Ontario no left turn sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-079-L.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-no-right-turn",
+    title: "No right turn sign",
+    filename: "ontario-no-right-turn.svg",
+    path: "/uploads/road-signs/ontario-no-right-turn.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 9934,
+    description: "Ontario no right turn sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-079-R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-do-not-enter",
+    title: "Do not enter sign",
+    filename: "ontario-do-not-enter.svg",
+    path: "/uploads/road-signs/ontario-do-not-enter.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 3814,
+    description: "Ontario do not enter sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-019.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-no-stopping",
+    title: "No stopping sign",
+    filename: "ontario-no-stopping.svg",
+    path: "/uploads/road-signs/ontario-no-stopping.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 22314,
+    description: "Ontario no stopping sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-010A (B).svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-no-u-turn",
+    title: "No U-turn sign",
+    filename: "ontario-no-u-turn.svg",
+    path: "/uploads/road-signs/ontario-no-u-turn.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 7292,
+    description: "Ontario no U-turn sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-011.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-no-left-turn-alt",
+    title: "Turn restriction sign",
+    filename: "ontario-no-left-turn-alt.svg",
+    path: "/uploads/road-signs/ontario-no-left-turn-alt.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 7372,
+    description: "Ontario turn restriction sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Rb-012.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-yield-ahead",
+    title: "Yield ahead sign",
+    filename: "ontario-yield-ahead.svg",
+    path: "/uploads/road-signs/ontario-yield-ahead.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 5751,
+    description: "Ontario yield ahead sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Wb-001A.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+  {
+    slug: "ontario-keep-right",
+    title: "Keep right sign",
+    filename: "ontario-keep-right.svg",
+    path: "/uploads/road-signs/ontario-keep-right.svg",
+    mimeType: "image/svg+xml",
+    sizeBytes: 3716,
+    description: "Ontario keep right sign from Wikimedia Commons for G1 road-sign practice.",
+    sourceCredit: "CA-ON road sign Ra-005-R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
+  },
+];
+
 export const ontarioG1SeedQuestions: SeedQuestion[] = [
   {
     sourceReference: `${ontarioG1SourceUrls.intersections}#controlled-intersections`,
     categorySlug: "g1-right-of-way",
     prompt: "At a stop sign, what must you do before entering the intersection?",
     explanation: "Ontario's handbook treats stop signs as controlled intersections. You must come to a complete stop, check for pedestrians and traffic, yield the right-of-way where required, and proceed only when it is safe.",
+    assetSlugs: ["ontario-stop"],
     choices: [
       { text: "Come to a complete stop, yield where required, and proceed only when safe", isCorrect: true },
       { text: "Slow down only if another vehicle is already in the intersection", isCorrect: false },
@@ -110,6 +326,7 @@ export const ontarioG1SeedQuestions: SeedQuestion[] = [
     categorySlug: "g1-right-of-way",
     prompt: "What does a yield sign require you to do?",
     explanation: "A yield sign means you must slow down or stop if necessary and give the right-of-way to traffic and pedestrians before proceeding.",
+    assetSlugs: ["ontario-yield"],
     choices: [
       { text: "Slow or stop if needed and give the right-of-way before proceeding", isCorrect: true },
       { text: "Speed up to merge ahead of other traffic", isCorrect: false },
@@ -134,6 +351,7 @@ export const ontarioG1SeedQuestions: SeedQuestion[] = [
     categorySlug: "g1-right-of-way",
     prompt: "At a pedestrian crossover, when may you proceed?",
     explanation: "Ontario's handbook says drivers must yield and wait for pedestrians to completely cross the road at pedestrian crossovers and school crossings with crossing guards before proceeding.",
+    assetSlugs: ["ontario-pedestrian-crossover"],
     choices: [
       { text: "After pedestrians have completely crossed the road", isCorrect: true },
       { text: "As soon as pedestrians pass your lane", isCorrect: false },
@@ -182,6 +400,7 @@ export const ontarioG1SeedQuestions: SeedQuestion[] = [
     categorySlug: "g1-signs-and-lights",
     prompt: "What is the purpose of regulatory signs such as stop, yield, and speed-limit signs?",
     explanation: "Regulatory signs tell drivers about traffic laws and must be obeyed. They are not just suggestions or warnings.",
+    assetSlugs: ["ontario-stop", "ontario-yield", "ontario-maximum-50"],
     choices: [
       { text: "They tell drivers about rules that must be obeyed", isCorrect: true },
       { text: "They only give optional route advice", isCorrect: false },
@@ -206,6 +425,7 @@ export const ontarioG1SeedQuestions: SeedQuestion[] = [
     categorySlug: "g1-sharing-the-road",
     prompt: "When a school bus has overhead amber lights flashing, what should nearby drivers do?",
     explanation: "The Ontario handbook says flashing amber lights mean the bus is preparing to stop to pick up or drop off passengers. Drivers should slow down and prepare to stop.",
+    assetSlugs: ["ontario-school-crossing"],
     choices: [
       { text: "Slow down and prepare to stop", isCorrect: true },
       { text: "Pass quickly before the bus stops", isCorrect: false },
@@ -218,6 +438,7 @@ export const ontarioG1SeedQuestions: SeedQuestion[] = [
     categorySlug: "g1-sharing-the-road",
     prompt: "When a school bus is stopped with red lights flashing, what must drivers approaching from either direction generally do?",
     explanation: "Drivers must stop for a school bus with red lights flashing when approaching from the front or rear, unless they are on the opposite side of a road divided by a median strip.",
+    assetSlugs: ["ontario-school-crossing"],
     choices: [
       { text: "Stop and remain stopped until the bus lights stop flashing or the bus moves", isCorrect: true },
       { text: "Pass slowly if no children are visible", isCorrect: false },
@@ -302,6 +523,7 @@ export const ontarioG1SeedQuestions: SeedQuestion[] = [
     categorySlug: "g1-special-conditions",
     prompt: "At a railway crossing with flashing lights or a lowered gate, what must you do?",
     explanation: "Stop before the railway crossing when warning lights are flashing, gates are lowered, or a train is approaching. Proceed only when the signals stop and it is safe.",
+    assetSlugs: ["ontario-railway-crossing"],
     choices: [
       { text: "Stop and wait until it is safe to cross", isCorrect: true },
       { text: "Drive around the gate if the train looks far away", isCorrect: false },
@@ -560,6 +782,162 @@ export const ontarioG1SeedQuestions: SeedQuestion[] = [
       { text: "Brake hard whenever the vehicle starts to slide", isCorrect: false },
       { text: "Accelerate quickly to regain traction", isCorrect: false },
       { text: "Steer aggressively to force the vehicle back into line", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What does this sign tell a driver to do?",
+    explanation: "A stop sign requires a complete stop before the stop line, crosswalk, or intersection. Proceed only after yielding and checking that it is safe.",
+    assetSlugs: ["ontario-stop"],
+    choices: [
+      { text: "Come to a complete stop and proceed only when safe", isCorrect: true },
+      { text: "Slow down only if cross traffic is present", isCorrect: false },
+      { text: "Yield without stopping every time", isCorrect: false },
+      { text: "Continue if the road appears clear", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What does this sign require you to do?",
+    explanation: "A yield sign means slow down or stop if necessary and give the right-of-way to traffic and pedestrians before entering or crossing.",
+    assetSlugs: ["ontario-yield"],
+    choices: [
+      { text: "Slow or stop if needed and yield the right-of-way", isCorrect: true },
+      { text: "Stop for exactly three seconds no matter what", isCorrect: false },
+      { text: "Speed up to merge first", isCorrect: false },
+      { text: "Only yield to large trucks", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What does the number shown on this sign mean?",
+    explanation: "A maximum speed sign shows the highest legal speed in kilometres per hour under ideal conditions. Drivers must go slower when conditions require it.",
+    assetSlugs: ["ontario-maximum-50"],
+    choices: [
+      { text: "The maximum legal speed is 50 km/h when conditions allow", isCorrect: true },
+      { text: "The minimum speed is 50 km/h", isCorrect: false },
+      { text: "The recommended ramp speed is 50 km/h", isCorrect: false },
+      { text: "Only trucks must obey 50 km/h", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#warning-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What should this sign make you prepare for?",
+    explanation: "A school crossing sign warns that children may be crossing nearby. Slow down, scan carefully, and be ready to stop.",
+    assetSlugs: ["ontario-school-crossing"],
+    choices: [
+      { text: "Children or pedestrians may be crossing; slow down and be ready to stop", isCorrect: true },
+      { text: "A school bus lane begins and cars must enter it", isCorrect: false },
+      { text: "The road is closed to all traffic", isCorrect: false },
+      { text: "Only school buses may use the road", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "At the crossing shown by this sign, when may you proceed?",
+    explanation: "At pedestrian crossovers, drivers must yield and wait until pedestrians have completely crossed before proceeding.",
+    assetSlugs: ["ontario-pedestrian-crossover"],
+    choices: [
+      { text: "After pedestrians have completely crossed the road", isCorrect: true },
+      { text: "As soon as pedestrians pass the front of your vehicle", isCorrect: false },
+      { text: "When the driver behind you honks", isCorrect: false },
+      { text: "If you wave pedestrians to wait", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#warning-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What hazard is this sign warning about?",
+    explanation: "A railway crossing warning sign means train tracks are ahead. Slow down, look and listen, and obey any lights, gates, or signals.",
+    assetSlugs: ["ontario-railway-crossing"],
+    choices: [
+      { text: "A railway crossing is ahead", isCorrect: true },
+      { text: "A one-way street begins", isCorrect: false },
+      { text: "A school zone ends", isCorrect: false },
+      { text: "A divided highway starts", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What does this sign tell you about the road?",
+    explanation: "A one-way sign means traffic on that road travels only in the direction shown by the arrow.",
+    assetSlugs: ["ontario-one-way"],
+    choices: [
+      { text: "Traffic travels only in the direction of the arrow", isCorrect: true },
+      { text: "You may drive either direction if the lane is clear", isCorrect: false },
+      { text: "Only bicycles may use the road", isCorrect: false },
+      { text: "The lane is for emergency vehicles only", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What left-turn movement is prohibited by this sign?",
+    explanation: "A no-left-turn sign means drivers must not turn left at that location. Choose a legal alternate route.",
+    assetSlugs: ["ontario-no-left-turn"],
+    choices: [
+      { text: "Turning left", isCorrect: true },
+      { text: "Turning right", isCorrect: false },
+      { text: "Driving straight through", isCorrect: false },
+      { text: "Stopping at the intersection", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What right-turn movement is prohibited by this sign?",
+    explanation: "A no-right-turn sign means drivers must not turn right at that location, including when a red-light right turn might otherwise be allowed.",
+    assetSlugs: ["ontario-no-right-turn"],
+    choices: [
+      { text: "Turning right", isCorrect: true },
+      { text: "Turning left", isCorrect: false },
+      { text: "Driving straight through", isCorrect: false },
+      { text: "Yielding to pedestrians", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What does this sign mean?",
+    explanation: "A do-not-enter sign marks a road or ramp that traffic must not enter from your direction.",
+    assetSlugs: ["ontario-do-not-enter"],
+    choices: [
+      { text: "Do not enter this road or ramp", isCorrect: true },
+      { text: "Stop only if another vehicle is coming", isCorrect: false },
+      { text: "The road is one way in your direction", isCorrect: false },
+      { text: "Parking is allowed ahead", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What movement does this sign prohibit?",
+    explanation: "A no-U-turn sign means you must not reverse direction with a U-turn at that location.",
+    assetSlugs: ["ontario-no-u-turn"],
+    choices: [
+      { text: "Making a U-turn", isCorrect: true },
+      { text: "Turning right", isCorrect: false },
+      { text: "Parking beside the curb", isCorrect: false },
+      { text: "Proceeding through the intersection", isCorrect: false },
+    ],
+  },
+  {
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
+    categorySlug: "g1-signs-and-lights",
+    prompt: "What should you do when this sign is posted at an obstruction or traffic island?",
+    explanation: "A keep-right sign directs drivers to pass to the right side of the sign or obstruction.",
+    assetSlugs: ["ontario-keep-right"],
+    choices: [
+      { text: "Keep to the right of the sign or obstruction", isCorrect: true },
+      { text: "Turn left before the sign", isCorrect: false },
+      { text: "Stop and wait for a flag person", isCorrect: false },
+      { text: "Drive on either side", isCorrect: false },
     ],
   },
 ];

@@ -1,6 +1,6 @@
 import { db } from "../src/lib/db";
 import { hashPassword } from "../src/lib/auth/password";
-import { ontarioG1SeedCategories, ontarioG1SeedQuestions } from "../src/lib/seed/ontario-g1-content";
+import { ontarioG1RoadSignAssets, ontarioG1SeedCategories, ontarioG1SeedQuestions } from "../src/lib/seed/ontario-g1-content";
 import {
   ontarioRoadTestChecklistItems,
   ontarioRoadTestSeedCategories,
@@ -30,6 +30,7 @@ async function seedAdmin() {
 
 async function seedOntarioG1Content() {
   const categories = new Map<string, string>();
+  const assets = new Map<string, string>();
 
   for (const category of ontarioG1SeedCategories) {
     const saved = await db.category.upsert({
@@ -53,12 +54,37 @@ async function seedOntarioG1Content() {
     categories.set(category.slug, saved.id);
   }
 
+  await db.uploadAsset.deleteMany({ where: { category: "Ontario G1 road signs" } });
+
+  for (const asset of ontarioG1RoadSignAssets) {
+    const saved = await db.uploadAsset.create({
+      data: {
+        type: "ROAD_SIGN",
+        filename: asset.filename,
+        path: asset.path,
+        mimeType: asset.mimeType,
+        sizeBytes: asset.sizeBytes,
+        title: asset.title,
+        category: "Ontario G1 road signs",
+        description: asset.description,
+        sourceCredit: asset.sourceCredit,
+      },
+    });
+    assets.set(asset.slug, saved.id);
+  }
+
   const seedPrompts = ontarioG1SeedQuestions.map((question) => question.prompt);
   await db.question.deleteMany({ where: { prompt: { in: seedPrompts }, sourceReference: { not: null } } });
 
   for (const [questionIndex, question] of ontarioG1SeedQuestions.entries()) {
     const categoryId = categories.get(question.categorySlug);
     if (!categoryId) throw new Error(`Missing seeded category for ${question.categorySlug}`);
+
+    const questionAssets = (question.assetSlugs ?? []).map((slug, assetIndex) => {
+      const assetId = assets.get(slug);
+      if (!assetId) throw new Error(`Missing seeded road-sign asset for ${slug}`);
+      return { assetId, sortOrder: assetIndex + 1 };
+    });
 
     await db.question.create({
       data: {
@@ -71,6 +97,7 @@ async function seedOntarioG1Content() {
         selectCount: 1,
         sourceReference: question.sourceReference,
         publishedAt: new Date(),
+        assets: questionAssets.length ? { create: questionAssets } : undefined,
         choices: {
           create: question.choices.map((choice, choiceIndex) => ({
             text: choice.text,
