@@ -28,6 +28,23 @@ cp .env.example .env
 
 3. Fill in `DATABASE_URL`, `AUTH_SECRET`/`NEXTAUTH_SECRET`, Google OAuth, and SMTP values as needed.
 
+For Google OAuth, create a Google Cloud OAuth client with this authorized redirect URI:
+
+```bash
+http://localhost:3000/api/auth/callback/google
+```
+
+For production, replace the host with the deployed app URL and set:
+
+```bash
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+NEXTAUTH_URL="https://your-domain.example"
+AUTH_URL="https://your-domain.example"
+```
+
+If `GOOGLE_CLIENT_ID` or `GOOGLE_CLIENT_SECRET` is missing, the app keeps email/password sign-in available and disables the Google button.
+
 For SMTP/Gmail delivery, set:
 
 ```bash

@@ -3,13 +3,15 @@ import Link from "next/link";
 import { GoogleSignInForm } from "@/components/auth/google-sign-in-form";
 import { SignInForm } from "@/components/auth/sign-in-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { hasGoogleOAuthConfig } from "@/lib/auth/google-oauth";
 
 type SignInPageProps = {
-  searchParams: Promise<{ callbackUrl?: string }>;
+  searchParams: Promise<{ callbackUrl?: string; oauth?: string }>;
 };
 
 export default async function Page({ searchParams }: SignInPageProps) {
-  const { callbackUrl = "" } = await searchParams;
+  const { callbackUrl = "", oauth = "" } = await searchParams;
+  const googleOAuthEnabled = hasGoogleOAuthConfig();
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-4 py-12">
@@ -19,11 +21,12 @@ export default async function Page({ searchParams }: SignInPageProps) {
           <p className="text-sm text-slate-600">Access your Ontario driving exam dashboard and admin tools.</p>
         </CardHeader>
         <CardContent className="space-y-4">
+          {oauth === "not-configured" ? <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">Google sign-in is not configured yet. Use email and password for now.</p> : null}
           <SignInForm callbackUrl={callbackUrl} />
           <div className="relative py-2 text-center text-xs uppercase text-slate-400">
             <span className="bg-white px-2">or</span>
           </div>
-          <GoogleSignInForm callbackUrl={callbackUrl} />
+          <GoogleSignInForm callbackUrl={callbackUrl} enabled={googleOAuthEnabled} />
           <div className="flex items-center justify-between text-sm">
             <Link className="font-medium text-green-800 hover:underline" href="/forgot-password">Forgot password?</Link>
             <Link className="font-medium text-green-800 hover:underline" href="/sign-up">Create account</Link>

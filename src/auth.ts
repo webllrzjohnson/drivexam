@@ -5,15 +5,17 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/auth/password";
+import { getGoogleOAuthConfig } from "@/lib/auth/google-oauth";
 
 const credentialsSchema = z.object({ email: z.string().email(), password: z.string().min(8) });
+const googleOAuthConfig = getGoogleOAuthConfig();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
   pages: { signIn: "/sign-in", verifyRequest: "/verify-email" },
   providers: [
-    Google({ clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET, allowDangerousEmailAccountLinking: false }),
+    ...(googleOAuthConfig ? [Google({ ...googleOAuthConfig, allowDangerousEmailAccountLinking: false })] : []),
     Credentials({
       name: "Email and password",
       credentials: { email: { label: "Email", type: "email" }, password: { label: "Password", type: "password" } },

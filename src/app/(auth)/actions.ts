@@ -8,6 +8,7 @@ import { hashPassword } from "@/lib/auth/password";
 import { normalizeEmail, validatePassword, isValidPasswordReset } from "@/lib/auth/inputs";
 import { getAppUrl, createSecureToken, getExpiryDate, hashToken } from "@/lib/auth/tokens";
 import { getPostSignInRedirect, isSafeRelativePath } from "@/lib/auth/redirects";
+import { hasGoogleOAuthConfig } from "@/lib/auth/google-oauth";
 import { db } from "@/lib/db";
 import { sendEmail } from "@/lib/email/send-email";
 import { passwordResetEmailTemplate } from "@/lib/email/templates/password-reset-email";
@@ -117,6 +118,8 @@ export async function resetPassword(_previousState: FormState, formData: FormDat
 }
 
 export async function signInWithGoogle(formData: FormData) {
+  if (!hasGoogleOAuthConfig()) redirect("/sign-in?oauth=not-configured");
+
   const callbackUrl = String(formData.get("callbackUrl") ?? "");
   await signIn("google", { redirectTo: isSafeRelativePath(callbackUrl) ? callbackUrl : "/dashboard" });
 }
