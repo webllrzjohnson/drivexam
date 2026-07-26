@@ -4,12 +4,12 @@ import { describe, it } from "node:test";
 import { getOntarioG1SeedSummary, ontarioG1SeedCategories, ontarioG1SeedQuestions } from "../src/lib/seed/ontario-g1-content";
 
 describe("Ontario G1 seed content", () => {
-  it("ships a practical first batch of active categories and questions", () => {
+  it("ships an expanded source-backed G1 batch across core handbook topics", () => {
     const summary = getOntarioG1SeedSummary();
 
-    assert.equal(summary.categoryCount, 5);
-    assert.equal(summary.questionCount, 20);
-    assert.equal(summary.sourceCount, 4);
+    assert.equal(summary.categoryCount, 8);
+    assert.equal(summary.questionCount, 40);
+    assert.equal(summary.sourceCount, 8);
   });
 
   it("uses stable unique category slugs and prompts", () => {
