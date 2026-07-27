@@ -1,12 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { RoadSignFlashcards } from "@/components/road-signs/road-sign-flashcards";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/lib/db";
-import { buildRoadSignPracticeGuide } from "@/lib/learner/quiz";
+import { buildRoadSignFlashcardGroups, buildRoadSignPracticeGuide } from "@/lib/learner/quiz";
 
 export default async function RoadSignsPage() {
   const [assets, signsCategory, linkedQuestionCount] = await Promise.all([
@@ -24,6 +24,11 @@ export default async function RoadSignsPage() {
     }),
   ]);
   const guide = buildRoadSignPracticeGuide({ assetCount: assets.length, questionCount: linkedQuestionCount });
+  const flashcardGroups = buildRoadSignFlashcardGroups(assets.map((asset) => ({
+    title: asset.title ?? asset.filename,
+    path: asset.path,
+    description: asset.description,
+  })));
   const signsQuizHref = signsCategory?.id ? `/practice?stage=G1&categoryId=${signsCategory.id}` : "/practice?stage=G1";
 
   return (
@@ -62,21 +67,7 @@ export default async function RoadSignsPage() {
             <p className="text-sm text-slate-600">Source-backed local images. Select “Start signs quiz” when you are ready to test recognition.</p>
           </div>
           {assets.length ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {assets.map((asset) => (
-                <Card key={asset.id} className="overflow-hidden">
-                  <CardContent className="space-y-3 p-4">
-                    <div className="flex h-40 items-center justify-center rounded-xl bg-slate-50 p-4">
-                      <Image alt={asset.title ?? asset.filename} className="max-h-32 w-auto object-contain" height={140} src={asset.path} width={140} />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-slate-950">{asset.title ?? asset.filename}</h3>
-                      <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">{asset.description}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <RoadSignFlashcards groups={flashcardGroups} />
           ) : (
             <Card>
               <CardContent className="p-6 text-sm text-slate-600">No road sign assets are seeded yet. Run the seed command to load the Ontario sign bank.</CardContent>

@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import {
   buildPracticeQuestionSet,
   buildPracticeStageGuide,
+  buildRoadSignFlashcardGroups,
   buildRoadSignPracticeGuide,
   buildQuizQuestionViews,
   scoreQuizAnswers,
@@ -129,5 +130,23 @@ describe("learner quiz helpers", () => {
     assert.equal(guide.questionLabel, "35 image questions");
     assert.match(guide.description, /flashcards/i);
     assert.deepEqual(guide.actions.map((action) => action.label), ["Start signs quiz", "Review G1 practice"]);
+  });
+
+  it("groups road-sign flashcards into learner-friendly filters", () => {
+    const groups = buildRoadSignFlashcardGroups([
+      { title: "Stop sign", path: "/uploads/road-signs/ontario-stop.svg", description: "Ontario stop sign" },
+      { title: "Slippery road sign", path: "/uploads/road-signs/ontario-slippery-road.svg", description: "Ontario slippery road sign" },
+      { title: "Road work ahead sign", path: "/uploads/road-signs/ontario-road-work-ahead.svg", description: "Ontario road work sign" },
+      { title: "No parking sign", path: "/uploads/road-signs/ontario-no-parking.svg", description: "Ontario no parking sign" },
+      { title: "Bicycle lane sign", path: "/uploads/road-signs/ontario-bicycle-lane.svg", description: "Ontario bicycle lane sign" },
+    ]);
+
+    assert.deepEqual(groups.map((group) => group.label), ["All signs", "Regulatory", "Warning", "Construction", "Parking", "Bicycle / pedestrian"]);
+    assert.equal(groups[0].cards.length, 5);
+    assert.equal(groups.find((group) => group.key === "regulatory")?.cards[0].title, "Stop sign");
+    assert.equal(groups.find((group) => group.key === "warning")?.cards[0].title, "Slippery road sign");
+    assert.equal(groups.find((group) => group.key === "construction")?.cards[0].title, "Road work ahead sign");
+    assert.equal(groups.find((group) => group.key === "parking")?.cards[0].title, "No parking sign");
+    assert.equal(groups.find((group) => group.key === "bicycle-pedestrian")?.cards[0].title, "Bicycle lane sign");
   });
 });

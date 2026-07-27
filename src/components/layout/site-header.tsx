@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import { auth } from "@/auth";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { Button } from "@/components/ui/button";
+import { getOptionalSession } from "@/lib/auth/session";
 
 export async function SiteHeader() {
-  const session = await auth();
+  const session = await getOptionalSession();
   const isAdmin = session?.user.role === "ADMIN";
 
   return (

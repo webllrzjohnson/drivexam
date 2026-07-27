@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { auth } from "@/auth";
 import { submitContactForm } from "@/app/(public)/contact/actions";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -9,13 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getOptionalSession } from "@/lib/auth/session";
 
 type ContactPageProps = {
   searchParams: Promise<{ submitted?: string }>;
 };
 
 export default async function Page({ searchParams }: ContactPageProps) {
-  const [session, params] = await Promise.all([auth(), searchParams]);
+  const [session, params] = await Promise.all([getOptionalSession(), searchParams]);
   const isVerified = Boolean(session?.user?.emailVerified);
 
   return (

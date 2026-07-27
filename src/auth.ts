@@ -14,6 +14,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
   pages: { signIn: "/sign-in", verifyRequest: "/verify-email" },
+  logger: {
+    error(error) {
+      const type = "type" in error ? error.type : error.name;
+      if (type === "JWTSessionError") return;
+      console.error("[auth][error]", error);
+    },
+  },
   providers: [
     ...(googleOAuthConfig ? [Google({ ...googleOAuthConfig, allowDangerousEmailAccountLinking: false })] : []),
     Credentials({

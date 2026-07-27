@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import { auth } from "@/auth";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { PracticeQuiz } from "@/components/quiz/practice-quiz";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getOptionalSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { buildPracticeQuestionSet, buildPracticeStageGuide, buildQuizQuestionViews } from "@/lib/learner/quiz";
 
@@ -41,7 +41,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
   const requestedSet = getQuestionSet(params.questionSet);
   const returnTo = buildPracticeUrl(stage, categoryId, requestedSet);
   const [session, categories, questions] = await Promise.all([
-    auth(),
+    getOptionalSession(),
     db.category.findMany({ where: { isActive: true, OR: [{ stage }, { stage: null }] }, orderBy: [{ sortOrder: "asc" }, { name: "asc" }] }),
     db.question.findMany({
       where: {

@@ -64,6 +64,18 @@ export type RoadSignPracticeGuide = {
   actions: Array<{ label: string; href: string }>;
 };
 
+export type RoadSignFlashcard = {
+  title: string;
+  path: string;
+  description: string | null;
+};
+
+export type RoadSignFlashcardGroup = {
+  key: "all" | "regulatory" | "warning" | "construction" | "parking" | "bicycle-pedestrian";
+  label: string;
+  cards: RoadSignFlashcard[];
+};
+
 type PracticeStageGuideInput = {
   stage: LicenseStage;
   categoryCount: number;
@@ -194,4 +206,27 @@ export function buildRoadSignPracticeGuide({ assetCount, questionCount }: { asse
       { label: "Review G1 practice", href: "/practice?stage=G1" },
     ],
   };
+}
+
+const roadSignGroupDefinitions: Array<Omit<RoadSignFlashcardGroup, "cards"> & { matches: string[] }> = [
+  { key: "regulatory", label: "Regulatory", matches: ["stop", "yield", "maximum", "one way", "do not enter", "keep right", "turn"] },
+  { key: "warning", label: "Warning", matches: ["ahead", "slippery", "curve", "merge", "winding", "two-way", "railway", "roundabout"] },
+  { key: "construction", label: "Construction", matches: ["construction", "road work", "detour"] },
+  { key: "parking", label: "Parking", matches: ["parking", "stopping", "accessible"] },
+  { key: "bicycle-pedestrian", label: "Bicycle / pedestrian", matches: ["bicycle", "pedestrian", "school crossing", "crossover"] },
+];
+
+function cardSearchText(card: RoadSignFlashcard) {
+  return `${card.title} ${card.path} ${card.description ?? ""}`.toLowerCase();
+}
+
+export function buildRoadSignFlashcardGroups(cards: RoadSignFlashcard[]): RoadSignFlashcardGroup[] {
+  return [
+    { key: "all", label: "All signs", cards },
+    ...roadSignGroupDefinitions.map(({ key, label, matches }) => ({
+      key,
+      label,
+      cards: cards.filter((card) => matches.some((match) => cardSearchText(card).includes(match))),
+    })),
+  ];
 }
