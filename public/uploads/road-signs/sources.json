@@ -5,10 +5,10 @@
     "filename": "ontario-stop.svg",
     "path": "/uploads/road-signs/ontario-stop.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 4981,
-    "description": "Ontario stop sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Ra-001.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Ra-001.svg"
+    "sizeBytes": 951,
+    "description": "Original drivexam SVG recreation for stop sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Stop completely and proceed only when safe.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-yield",
@@ -16,10 +16,10 @@
     "filename": "ontario-yield.svg",
     "path": "/uploads/road-signs/ontario-yield.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 5286,
-    "description": "Ontario yield sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Ra-002.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Ra-002.svg"
+    "sizeBytes": 841,
+    "description": "Original drivexam SVG recreation for yield sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Yield to traffic in or close to the intersection; stop if necessary.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-maximum-40",
@@ -27,10 +27,10 @@
     "filename": "ontario-maximum-40.svg",
     "path": "/uploads/road-signs/ontario-maximum-40.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 11324,
-    "description": "Ontario maximum 40 sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-001-040.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-040.svg"
+    "sizeBytes": 964,
+    "description": "Original drivexam SVG recreation for maximum 40 km/h sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Maximum legal speed is 40 km/h when conditions allow.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-maximum-50",
@@ -38,10 +38,10 @@
     "filename": "ontario-maximum-50.svg",
     "path": "/uploads/road-signs/ontario-maximum-50.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 10552,
-    "description": "Ontario maximum 50 sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-001-050.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-050.svg"
+    "sizeBytes": 964,
+    "description": "Original drivexam SVG recreation for maximum 50 km/h sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Maximum legal speed is 50 km/h when conditions allow.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-maximum-60",
@@ -49,10 +49,10 @@
     "filename": "ontario-maximum-60.svg",
     "path": "/uploads/road-signs/ontario-maximum-60.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 12997,
-    "description": "Ontario maximum 60 sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-001-060.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-060.svg"
+    "sizeBytes": 964,
+    "description": "Original drivexam SVG recreation for maximum 60 km/h sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Maximum legal speed is 60 km/h when conditions allow.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-maximum-80",
@@ -60,10 +60,10 @@
     "filename": "ontario-maximum-80.svg",
     "path": "/uploads/road-signs/ontario-maximum-80.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 14225,
-    "description": "Ontario maximum 80 sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-001-080.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-080.svg"
+    "sizeBytes": 964,
+    "description": "Original drivexam SVG recreation for maximum 80 km/h sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Maximum legal speed is 80 km/h when conditions allow.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-maximum-100",
@@ -71,21 +71,21 @@
     "filename": "ontario-maximum-100.svg",
     "path": "/uploads/road-signs/ontario-maximum-100.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 15659,
-    "description": "Ontario maximum 100 sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-001-100.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-001-100.svg"
+    "sizeBytes": 967,
+    "description": "Original drivexam SVG recreation for maximum 100 km/h sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Maximum legal speed is 100 km/h when conditions allow.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-speed-fines-50",
-    "title": "Speed fines sign",
+    "title": "Community safety zone sign",
     "filename": "ontario-speed-fines-50.svg",
     "path": "/uploads/road-signs/ontario-speed-fines-50.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 8367,
-    "description": "Ontario speed fines sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-005-50.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-005-50.svg"
+    "sizeBytes": 1279,
+    "description": "Original drivexam SVG recreation for community safety zone sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Traffic offences in special risk zones may carry increased fines.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-school-crossing",
@@ -93,10 +93,10 @@
     "filename": "ontario-school-crossing.svg",
     "path": "/uploads/road-signs/ontario-school-crossing.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 6085,
-    "description": "Ontario school crossing sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Wc-002.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-002.svg"
+    "sizeBytes": 919,
+    "description": "Original drivexam SVG recreation for school crossing sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Watch for children and follow crossing guard or school safety patroller directions.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-pedestrian-crossover",
@@ -104,10 +104,10 @@
     "filename": "ontario-pedestrian-crossover.svg",
     "path": "/uploads/road-signs/ontario-pedestrian-crossover.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 37493,
-    "description": "Ontario pedestrian crossover sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Ra-008 (B).svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Ra-008_(B).svg"
+    "sizeBytes": 930,
+    "description": "Original drivexam SVG recreation for pedestrian crossover sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Be prepared to stop and yield right-of-way to pedestrians.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-railway-crossing",
@@ -115,10 +115,10 @@
     "filename": "ontario-railway-crossing.svg",
     "path": "/uploads/road-signs/ontario-railway-crossing.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 4028,
-    "description": "Ontario railway crossing sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario Wc-4.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_Wc-4.svg"
+    "sizeBytes": 1026,
+    "description": "Original drivexam SVG recreation for railway crossing ahead sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Railway tracks cross the road ahead; slow down and be prepared to stop.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-one-way",
@@ -126,10 +126,10 @@
     "filename": "ontario-one-way.svg",
     "path": "/uploads/road-signs/ontario-one-way.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 7872,
-    "description": "Ontario one way sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-048.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-048.svg"
+    "sizeBytes": 923,
+    "description": "Original drivexam SVG recreation for one way sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Traffic may travel in one direction only.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-no-left-turn",
@@ -137,10 +137,10 @@
     "filename": "ontario-no-left-turn.svg",
     "path": "/uploads/road-signs/ontario-no-left-turn.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 9954,
-    "description": "Ontario no left turn sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-079-L.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-079-L.svg"
+    "sizeBytes": 882,
+    "description": "Original drivexam SVG recreation for no left turn sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Do not turn left at the intersection.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-no-right-turn",
@@ -148,10 +148,10 @@
     "filename": "ontario-no-right-turn.svg",
     "path": "/uploads/road-signs/ontario-no-right-turn.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 9934,
-    "description": "Ontario no right turn sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-079-R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-079-R.svg"
+    "sizeBytes": 884,
+    "description": "Original drivexam SVG recreation for no right turn sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Do not turn right at the posted location.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-do-not-enter",
@@ -159,10 +159,10 @@
     "filename": "ontario-do-not-enter.svg",
     "path": "/uploads/road-signs/ontario-do-not-enter.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 3814,
-    "description": "Ontario do not enter sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-019.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-019.svg"
+    "sizeBytes": 664,
+    "description": "Original drivexam SVG recreation for do not enter sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Do not enter this road.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-no-stopping",
@@ -170,10 +170,10 @@
     "filename": "ontario-no-stopping.svg",
     "path": "/uploads/road-signs/ontario-no-stopping.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 22314,
-    "description": "Ontario no stopping sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-010A (B).svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-010A_(B).svg"
+    "sizeBytes": 895,
+    "description": "Original drivexam SVG recreation for no stopping sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Do not stop in the signed area, even for a moment.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-no-u-turn",
@@ -181,21 +181,21 @@
     "filename": "ontario-no-u-turn.svg",
     "path": "/uploads/road-signs/ontario-no-u-turn.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 7292,
-    "description": "Ontario no U-turn sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-011.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-011.svg"
+    "sizeBytes": 888,
+    "description": "Original drivexam SVG recreation for no u-turn sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Do not turn to go in the opposite direction.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-no-left-turn-alt",
-    "title": "Turn restriction sign",
+    "title": "Time-restricted left turn sign",
     "filename": "ontario-no-left-turn-alt.svg",
     "path": "/uploads/road-signs/ontario-no-left-turn-alt.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 7372,
-    "description": "Ontario turn restriction sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-012.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-012.svg"
+    "sizeBytes": 1039,
+    "description": "Original drivexam SVG recreation for time-restricted left turn sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Do not turn left during the times shown.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-yield-ahead",
@@ -203,10 +203,10 @@
     "filename": "ontario-yield-ahead.svg",
     "path": "/uploads/road-signs/ontario-yield-ahead.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 5751,
-    "description": "Ontario yield ahead sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Wb-001A.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wb-001A.svg"
+    "sizeBytes": 838,
+    "description": "Original drivexam SVG recreation for yield ahead sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: A yield sign is ahead; slow early and prepare to yield.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-keep-right",
@@ -214,10 +214,10 @@
     "filename": "ontario-keep-right.svg",
     "path": "/uploads/road-signs/ontario-keep-right.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 3716,
-    "description": "Ontario keep right sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Ra-005-R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Ra-005-R.svg"
+    "sizeBytes": 1012,
+    "description": "Original drivexam SVG recreation for keep right sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Keep to the right of the traffic island or obstruction.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-stop-ahead",
@@ -225,21 +225,21 @@
     "filename": "ontario-stop-ahead.svg",
     "path": "/uploads/road-signs/ontario-stop-ahead.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 5271,
-    "description": "Ontario stop ahead sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Wb-001.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wb-001.svg"
+    "sizeBytes": 936,
+    "description": "Original drivexam SVG recreation for stop ahead sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Stop sign ahead; slow down.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-traffic-signal-ahead",
-    "title": "Traffic signal ahead sign",
+    "title": "Traffic lights ahead sign",
     "filename": "ontario-traffic-signal-ahead.svg",
     "path": "/uploads/road-signs/ontario-traffic-signal-ahead.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 4386,
-    "description": "Ontario traffic signal ahead sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Wc-003.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-003.svg"
+    "sizeBytes": 963,
+    "description": "Original drivexam SVG recreation for traffic lights ahead sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Traffic lights ahead; slow down and be ready for a changing signal.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-two-way-traffic",
@@ -247,10 +247,10 @@
     "filename": "ontario-two-way-traffic.svg",
     "path": "/uploads/road-signs/ontario-two-way-traffic.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 4104,
-    "description": "Ontario two-way traffic sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Wc-007.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-007.svg"
+    "sizeBytes": 932,
+    "description": "Original drivexam SVG recreation for two-way traffic sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Share the road with oncoming traffic.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-pedestrian-crossing-ahead",
@@ -258,10 +258,10 @@
     "filename": "ontario-pedestrian-crossing-ahead.svg",
     "path": "/uploads/road-signs/ontario-pedestrian-crossing-ahead.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 4809,
-    "description": "Ontario pedestrian crossing ahead sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Wc-001.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-001.svg"
+    "sizeBytes": 933,
+    "description": "Original drivexam SVG recreation for pedestrian crossing ahead sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Watch for pedestrians and be prepared to share the road.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-roundabout-ahead",
@@ -269,10 +269,10 @@
     "filename": "ontario-roundabout-ahead.svg",
     "path": "/uploads/road-signs/ontario-roundabout-ahead.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 5029,
-    "description": "Ontario roundabout ahead sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Wc-018.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Wc-018.svg"
+    "sizeBytes": 993,
+    "description": "Original drivexam SVG recreation for roundabout ahead sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Roundabout ahead; reduce speed and follow the traffic direction.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-slippery-road",
@@ -280,32 +280,32 @@
     "filename": "ontario-slippery-road.svg",
     "path": "/uploads/road-signs/ontario-slippery-road.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 10000,
-    "description": "Ontario slippery road sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario Wc-5.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_Wc-5.svg"
+    "sizeBytes": 937,
+    "description": "Original drivexam SVG recreation for slippery road sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Pavement is slippery when wet; slow down and drive with caution.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-merge-left",
-    "title": "Merge left sign",
+    "title": "Right lane ends / merge left sign",
     "filename": "ontario-merge-left.svg",
     "path": "/uploads/road-signs/ontario-merge-left.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 4247,
-    "description": "Ontario merge left sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario Wa-16L.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_Wa-16L.svg"
+    "sizeBytes": 964,
+    "description": "Original drivexam SVG recreation for right lane ends / merge left sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Right lane ends ahead; merge safely with traffic to the left.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-merge-right",
-    "title": "Merge right sign",
+    "title": "Left lane ends / merge right sign",
     "filename": "ontario-merge-right.svg",
     "path": "/uploads/road-signs/ontario-merge-right.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 4238,
-    "description": "Ontario merge right sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario Wa-16R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_Wa-16R.svg"
+    "sizeBytes": 964,
+    "description": "Original drivexam SVG recreation for left lane ends / merge right sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Left lane ends ahead; merge safely with traffic to the right.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-curve-left",
@@ -313,10 +313,10 @@
     "filename": "ontario-curve-left.svg",
     "path": "/uploads/road-signs/ontario-curve-left.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 5146,
-    "description": "Ontario curve left sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario road sign Wa-10L.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_road_sign_Wa-10L.svg"
+    "sizeBytes": 884,
+    "description": "Original drivexam SVG recreation for curve left sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Slight bend or curve in the road ahead to the left.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-curve-right",
@@ -324,10 +324,10 @@
     "filename": "ontario-curve-right.svg",
     "path": "/uploads/road-signs/ontario-curve-right.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 5146,
-    "description": "Ontario curve right sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario road sign Wa-10R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_road_sign_Wa-10R.svg"
+    "sizeBytes": 883,
+    "description": "Original drivexam SVG recreation for curve right sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Slight bend or curve in the road ahead to the right.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-sharp-turn-left",
@@ -335,10 +335,10 @@
     "filename": "ontario-sharp-turn-left.svg",
     "path": "/uploads/road-signs/ontario-sharp-turn-left.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 5536,
-    "description": "Ontario sharp turn left sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario Wa-6L.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_Wa-6L.svg"
+    "sizeBytes": 875,
+    "description": "Original drivexam SVG recreation for sharp turn left sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Sharp bend or turn in the road ahead to the left.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-sharp-turn-right",
@@ -346,10 +346,10 @@
     "filename": "ontario-sharp-turn-right.svg",
     "path": "/uploads/road-signs/ontario-sharp-turn-right.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 5542,
-    "description": "Ontario sharp turn right sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario Wa-6R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_Wa-6R.svg"
+    "sizeBytes": 877,
+    "description": "Original drivexam SVG recreation for sharp turn right sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Sharp bend or turn in the road ahead to the right.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-winding-road-right",
@@ -357,32 +357,32 @@
     "filename": "ontario-winding-road-right.svg",
     "path": "/uploads/road-signs/ontario-winding-road-right.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 5215,
-    "description": "Ontario winding road sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario Wa-5R.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_Wa-5R.svg"
+    "sizeBytes": 897,
+    "description": "Original drivexam SVG recreation for winding road sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Winding road ahead; slow down and keep control.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-bicycle-crossing",
-    "title": "Bicycle crossing sign",
+    "title": "Bicycle crossing ahead sign",
     "filename": "ontario-bicycle-crossing.svg",
     "path": "/uploads/road-signs/ontario-bicycle-crossing.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 6591,
-    "description": "Ontario bicycle crossing sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario road sign Wc-15.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_road_sign_Wc-15.svg"
+    "sizeBytes": 1063,
+    "description": "Original drivexam SVG recreation for bicycle crossing ahead sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Bicycle crossing ahead; watch for cyclists.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-bicycle-lane",
-    "title": "Bicycle lane sign",
+    "title": "Bicycle route sign",
     "filename": "ontario-bicycle-lane.svg",
     "path": "/uploads/road-signs/ontario-bicycle-lane.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 8612,
-    "description": "Ontario bicycle lane sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-066.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-066.svg"
+    "sizeBytes": 1216,
+    "description": "Original drivexam SVG recreation for bicycle route sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: This road is an official bicycle route; watch for cyclists and share the road.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-share-road-bicycles",
@@ -390,10 +390,10 @@
     "filename": "ontario-share-road-bicycles.svg",
     "path": "/uploads/road-signs/ontario-share-road-bicycles.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 6751,
-    "description": "Ontario share the road with bicycles sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-070.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-070.svg"
+    "sizeBytes": 1219,
+    "description": "Original drivexam SVG recreation for share the road with bicycles sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Provide safe space on the road for cyclists and other vehicles.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-no-parking",
@@ -401,21 +401,21 @@
     "filename": "ontario-no-parking.svg",
     "path": "/uploads/road-signs/ontario-no-parking.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 23960,
-    "description": "Ontario no parking sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-057 (B).svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-057_(B).svg"
+    "sizeBytes": 920,
+    "description": "Original drivexam SVG recreation for no parking sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Do not park in the signed area except as permitted for loading or unloading.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-accessible-parking",
-    "title": "Accessible parking sign",
+    "title": "Accessible parking permit sign",
     "filename": "ontario-accessible-parking.svg",
     "path": "/uploads/road-signs/ontario-accessible-parking.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 24815,
-    "description": "Ontario accessible parking sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "CA-ON road sign Rb-058 (F).svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CA-ON_road_sign_Rb-058_(F).svg"
+    "sizeBytes": 928,
+    "description": "Original drivexam SVG recreation for accessible parking permit sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Parking space is only for vehicles displaying a valid Accessible Parking Permit.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-road-work-ahead",
@@ -423,20 +423,20 @@
     "filename": "ontario-road-work-ahead.svg",
     "path": "/uploads/road-signs/ontario-road-work-ahead.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 12212,
-    "description": "Ontario road work ahead sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario TC-1.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_TC-1.svg"
+    "sizeBytes": 930,
+    "description": "Original drivexam SVG recreation for road work ahead sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Road work ahead; drive with extra caution.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   },
   {
     "slug": "ontario-construction-detour",
-    "title": "Construction detour sign",
+    "title": "Temporary detour sign",
     "filename": "ontario-construction-detour.svg",
     "path": "/uploads/road-signs/ontario-construction-detour.svg",
     "mimeType": "image/svg+xml",
-    "sizeBytes": 13995,
-    "description": "Ontario construction detour sign from Wikimedia Commons for G1 road-sign practice.",
-    "sourceCredit": "Ontario TC-1A.svg; Government of Ontario / Ministry of Transportation; Public domain via Wikimedia Commons.",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ontario_TC-1A.svg"
+    "sizeBytes": 961,
+    "description": "Original drivexam SVG recreation for temporary detour sign, inspired by the official Ontario handbook signs page.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Temporary detour from the normal traffic route.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
   }
 ]

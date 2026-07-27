@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, it } from "node:test";
 
 import {
@@ -50,8 +52,13 @@ describe("Ontario G1 seed content", () => {
       assert.match(asset.path, /^\/uploads\/road-signs\/[a-z0-9-]+\.svg$/);
       assert.match(asset.mimeType, /^image\/svg\+xml$/);
       assert.ok(asset.title.length >= 4);
-      assert.ok(asset.sourceCredit.includes("Public domain"));
-      assert.ok(asset.sourceCredit.includes("Wikimedia Commons"));
+      assert.ok(asset.sourceCredit.includes("Original drivexam SVG recreation"), `${asset.slug} is not copied from a third-party image file`);
+      assert.ok(asset.sourceCredit.includes("official Ontario handbook"), `${asset.slug} cites the official Ontario handbook reference`);
+      assert.ok(!asset.sourceCredit.includes("Wikimedia Commons"), `${asset.slug} no longer relies on mislabelled Commons art`);
+
+      const svg = readFileSync(join(process.cwd(), "public", asset.path), "utf8");
+      assert.match(svg, /Original drivexam SVG recreation/i, `${asset.slug} declares original local SVG provenance`);
+      assert.match(svg, /official Ontario handbook/i, `${asset.slug} declares the official handbook inspiration`);
     }
 
     const signQuestionsWithAssets = ontarioG1SeedQuestions.filter((question) => question.assetSlugs?.length);
