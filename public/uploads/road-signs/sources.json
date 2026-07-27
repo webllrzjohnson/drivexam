@@ -438,5 +438,159 @@
     "description": "Original drivexam SVG recreation for temporary detour sign, inspired by the official Ontario handbook signs page.",
     "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook signs page. Reference meaning: Temporary detour from the normal traffic route.",
     "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/signs"
+  },
+  {
+    "slug": "ontario-green-light",
+    "title": "Green traffic light",
+    "filename": "ontario-green-light.svg",
+    "path": "/uploads/road-signs/ontario-green-light.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1042,
+    "description": "Original drivexam SVG recreation for green traffic light, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A green light means you may go straight or turn after yielding to traffic and pedestrians already in the intersection.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-lights"
+  },
+  {
+    "slug": "ontario-yellow-light",
+    "title": "Yellow traffic light",
+    "filename": "ontario-yellow-light.svg",
+    "path": "/uploads/road-signs/ontario-yellow-light.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1040,
+    "description": "Original drivexam SVG recreation for yellow traffic light, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A yellow or amber light means red is about to appear; stop if you can do so safely, otherwise proceed with caution.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-lights"
+  },
+  {
+    "slug": "ontario-red-light",
+    "title": "Red traffic light",
+    "filename": "ontario-red-light.svg",
+    "path": "/uploads/road-signs/ontario-red-light.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1024,
+    "description": "Original drivexam SVG recreation for red traffic light, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A red light means stop at the stop line, crosswalk, sidewalk edge, or intersection edge as applicable.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-lights"
+  },
+  {
+    "slug": "ontario-green-arrow-left",
+    "title": "Green left-turn arrow",
+    "filename": "ontario-green-arrow-left.svg",
+    "path": "/uploads/road-signs/ontario-green-arrow-left.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1187,
+    "description": "Original drivexam SVG recreation for green left-turn arrow, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A green arrow gives a protected turn in the arrow direction, while drivers must still watch for pedestrians and conflicts.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-lights"
+  },
+  {
+    "slug": "ontario-flashing-red-light",
+    "title": "Flashing red light",
+    "filename": "ontario-flashing-red-light.svg",
+    "path": "/uploads/road-signs/ontario-flashing-red-light.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1143,
+    "description": "Original drivexam SVG recreation for flashing red light, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A flashing red light means stop completely, yield, and proceed only when safe, like a stop sign.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-lights"
+  },
+  {
+    "slug": "ontario-flashing-yellow-light",
+    "title": "Flashing yellow light",
+    "filename": "ontario-flashing-yellow-light.svg",
+    "path": "/uploads/road-signs/ontario-flashing-yellow-light.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1148,
+    "description": "Original drivexam SVG recreation for flashing yellow light, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A flashing yellow light means slow down, drive with caution, and be prepared to stop if necessary.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-lights"
+  },
+  {
+    "slug": "ontario-pedestrian-walk",
+    "title": "Pedestrian walk signal",
+    "filename": "ontario-pedestrian-walk.svg",
+    "path": "/uploads/road-signs/ontario-pedestrian-walk.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 978,
+    "description": "Original drivexam SVG recreation for pedestrian walk signal, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A white walking symbol tells pedestrians they may begin crossing in the direction of the signal.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/pedestrian-signals"
+  },
+  {
+    "slug": "ontario-pedestrian-dont-walk",
+    "title": "Pedestrian do not walk signal",
+    "filename": "ontario-pedestrian-dont-walk.svg",
+    "path": "/uploads/road-signs/ontario-pedestrian-dont-walk.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 948,
+    "description": "Original drivexam SVG recreation for pedestrian do not walk signal, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A flashing or steady orange hand means pedestrians must not begin crossing; those already crossing should continue to a safe area.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/pedestrian-signals"
+  },
+  {
+    "slug": "ontario-solid-yellow-line",
+    "title": "Solid yellow line",
+    "filename": "ontario-solid-yellow-line.svg",
+    "path": "/uploads/road-signs/ontario-solid-yellow-line.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 953,
+    "description": "Original drivexam SVG recreation for solid yellow line, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A solid yellow line at the left of your lane means it is unsafe to pass.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/pavement-markings"
+  },
+  {
+    "slug": "ontario-broken-yellow-line",
+    "title": "Broken yellow line",
+    "filename": "ontario-broken-yellow-line.svg",
+    "path": "/uploads/road-signs/ontario-broken-yellow-line.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1405,
+    "description": "Original drivexam SVG recreation for broken yellow line, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A broken yellow line at the left of your lane means you may pass only if the way is clear and there is enough distance.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/pavement-markings"
+  },
+  {
+    "slug": "ontario-continuity-lines",
+    "title": "Continuity lines",
+    "filename": "ontario-continuity-lines.svg",
+    "path": "/uploads/road-signs/ontario-continuity-lines.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1612,
+    "description": "Original drivexam SVG recreation for continuity lines, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: Wider, closer broken continuity lines show a lane is ending or exiting and help drivers identify where lane changes may be needed.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/pavement-markings"
+  },
+  {
+    "slug": "ontario-stop-line",
+    "title": "Stop line marking",
+    "filename": "ontario-stop-line.svg",
+    "path": "/uploads/road-signs/ontario-stop-line.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 953,
+    "description": "Original drivexam SVG recreation for stop line marking, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A stop line is a single white line across the road showing where drivers must stop at an intersection.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/pavement-markings"
+  },
+  {
+    "slug": "ontario-crosswalk-marking",
+    "title": "Crosswalk marking",
+    "filename": "ontario-crosswalk-marking.svg",
+    "path": "/uploads/road-signs/ontario-crosswalk-marking.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1205,
+    "description": "Original drivexam SVG recreation for crosswalk marking, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: A crosswalk is marked by parallel white lines where pedestrians cross and drivers must watch and yield as required.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/pavement-markings"
+  },
+  {
+    "slug": "ontario-lane-direction-arrows",
+    "title": "Lane direction arrows",
+    "filename": "ontario-lane-direction-arrows.svg",
+    "path": "/uploads/road-signs/ontario-lane-direction-arrows.svg",
+    "mimeType": "image/svg+xml",
+    "sizeBytes": 1042,
+    "description": "Original drivexam SVG recreation for lane direction arrows, inspired by official Ontario handbook traffic lights, pedestrian signals, and pavement markings guidance.",
+    "sourceCredit": "Original drivexam SVG recreation inspired by the official Ontario handbook. Reference meaning: White arrows on pavement show which direction vehicles in that lane must travel or turn.",
+    "sourceUrl": "https://www.ontario.ca/document/official-mto-drivers-handbook/pavement-markings"
   }
 ]

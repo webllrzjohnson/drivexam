@@ -15,8 +15,8 @@ describe("Ontario G1 seed content", () => {
     const summary = getOntarioG1SeedSummary();
 
     assert.equal(summary.categoryCount, 8);
-    assert.equal(summary.questionCount, 68);
-    assert.equal(summary.sourceCount, 8);
+    assert.equal(summary.questionCount, 82);
+    assert.equal(summary.sourceCount, 11);
   });
 
   it("uses stable unique category slugs and prompts", () => {
@@ -44,7 +44,7 @@ describe("Ontario G1 seed content", () => {
   });
 
   it("bundles local road-sign assets and attaches them to sign questions", () => {
-    assert.ok(ontarioG1RoadSignAssets.length >= 40, "ships a practical Canadian road-sign image bank");
+    assert.ok(ontarioG1RoadSignAssets.length >= 54, "ships a practical Ontario road-sign, signal, and pavement-marking image bank");
     assert.equal(new Set(ontarioG1RoadSignAssets.map((asset) => asset.slug)).size, ontarioG1RoadSignAssets.length);
 
     const assetSlugs = new Set(ontarioG1RoadSignAssets.map((asset) => asset.slug));
@@ -62,7 +62,7 @@ describe("Ontario G1 seed content", () => {
     }
 
     const signQuestionsWithAssets = ontarioG1SeedQuestions.filter((question) => question.assetSlugs?.length);
-    assert.ok(signQuestionsWithAssets.length >= 35, "attaches road-sign images to a meaningful set of G1 sign questions");
+    assert.ok(signQuestionsWithAssets.length >= 49, "attaches road-sign, signal, and marking images to a meaningful set of G1 questions");
     assert.ok(
       signQuestionsWithAssets.filter((question) => /this sign|shown|image/i.test(question.prompt)).length >= 28,
       "includes dedicated image-recognition questions, not only decorative sign attachments",
@@ -73,6 +73,42 @@ describe("Ontario G1 seed content", () => {
       for (const slug of question.assetSlugs ?? []) {
         assert.ok(assetSlugs.has(slug), `${question.prompt} references seeded asset ${slug}`);
       }
+    }
+  });
+
+  it("adds local visuals and questions for traffic lights, pedestrian signals, and pavement markings", () => {
+    const expectedVisualSlugs = new Set([
+      "ontario-green-light",
+      "ontario-yellow-light",
+      "ontario-red-light",
+      "ontario-green-arrow-left",
+      "ontario-flashing-red-light",
+      "ontario-flashing-yellow-light",
+      "ontario-pedestrian-walk",
+      "ontario-pedestrian-dont-walk",
+      "ontario-solid-yellow-line",
+      "ontario-broken-yellow-line",
+      "ontario-continuity-lines",
+      "ontario-stop-line",
+      "ontario-crosswalk-marking",
+      "ontario-lane-direction-arrows",
+    ]);
+
+    const assetSlugs = new Set(ontarioG1RoadSignAssets.map((asset) => asset.slug));
+    for (const slug of expectedVisualSlugs) {
+      assert.ok(assetSlugs.has(slug), `ships a recreated visual for ${slug}`);
+    }
+
+    const sourceCoverage = new Map([
+      ["traffic-lights", "https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-lights"],
+      ["pedestrian-signals", "https://www.ontario.ca/document/official-mto-drivers-handbook/pedestrian-signals"],
+      ["pavement-markings", "https://www.ontario.ca/document/official-mto-drivers-handbook/pavement-markings"],
+    ]);
+
+    for (const [label, sourceUrl] of sourceCoverage) {
+      const matchingQuestions = ontarioG1SeedQuestions.filter((question) => question.sourceReference.startsWith(sourceUrl));
+      assert.ok(matchingQuestions.length >= 4, `adds at least four ${label} questions`);
+      assert.ok(matchingQuestions.some((question) => question.assetSlugs?.some((slug) => expectedVisualSlugs.has(slug))), `${label} questions use local recreated visuals`);
     }
   });
 });

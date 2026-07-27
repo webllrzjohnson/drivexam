@@ -48,3 +48,28 @@ The artwork uses simple geometric road-sign conventions so the app can teach Ont
 | `ontario-accessible-parking.svg` | Accessible parking permit sign | Parking space is only for vehicles displaying a valid Accessible Parking Permit. |
 | `ontario-road-work-ahead.svg` | Road work ahead sign | Road work ahead; drive with extra caution. |
 | `ontario-construction-detour.svg` | Temporary detour sign | Temporary detour from the normal traffic route. |
+
+## Traffic lights, pedestrian signals, and pavement markings
+
+These additional visuals are original drivexam SVG recreations guided by:
+
+- https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-lights
+- https://www.ontario.ca/document/official-mto-drivers-handbook/pedestrian-signals
+- https://www.ontario.ca/document/official-mto-drivers-handbook/pavement-markings
+
+| Local file | Label | Official-handbook-inspired meaning |
+| --- | --- | --- |
+| `ontario-green-light.svg` | Green traffic light | A green light means you may go straight or turn after yielding to traffic and pedestrians already in the intersection. |
+| `ontario-yellow-light.svg` | Yellow traffic light | A yellow or amber light means red is about to appear; stop if you can do so safely, otherwise proceed with caution. |
+| `ontario-red-light.svg` | Red traffic light | A red light means stop at the stop line, crosswalk, sidewalk edge, or intersection edge as applicable. |
+| `ontario-green-arrow-left.svg` | Green left-turn arrow | A green arrow gives a protected turn in the arrow direction, while drivers must still watch for pedestrians and conflicts. |
+| `ontario-flashing-red-light.svg` | Flashing red light | A flashing red light means stop completely, yield, and proceed only when safe, like a stop sign. |
+| `ontario-flashing-yellow-light.svg` | Flashing yellow light | A flashing yellow light means slow down, drive with caution, and be prepared to stop if necessary. |
+| `ontario-pedestrian-walk.svg` | Pedestrian walk signal | A white walking symbol tells pedestrians they may begin crossing in the direction of the signal. |
+| `ontario-pedestrian-dont-walk.svg` | Pedestrian do not walk signal | A flashing or steady orange hand means pedestrians must not begin crossing; those already crossing should continue to a safe area. |
+| `ontario-solid-yellow-line.svg` | Solid yellow line | A solid yellow line at the left of your lane means it is unsafe to pass. |
+| `ontario-broken-yellow-line.svg` | Broken yellow line | A broken yellow line at the left of your lane means you may pass only if the way is clear and there is enough distance. |
+| `ontario-continuity-lines.svg` | Continuity lines | Wider, closer broken continuity lines show a lane is ending or exiting and help drivers identify where lane changes may be needed. |
+| `ontario-stop-line.svg` | Stop line marking | A stop line is a single white line across the road showing where drivers must stop at an intersection. |
+| `ontario-crosswalk-marking.svg` | Crosswalk marking | A crosswalk is marked by parallel white lines where pedestrians cross and drivers must watch and yield as required. |
+| `ontario-lane-direction-arrows.svg` | Lane direction arrows | White arrows on pavement show which direction vehicles in that lane must travel or turn. |
