@@ -16,13 +16,26 @@ describe("Ontario G2/G road-test seed content", () => {
     const summary = getOntarioRoadTestSeedSummary();
 
     assert.equal(summary.categoryCount, 6);
-    assert.equal(summary.questionCount, 24);
+    assert.equal(summary.questionCount, 52);
     assert.equal(summary.checklistCount, 16);
     assert.equal(summary.sourceCount, 5);
-    assert.equal(summary.questionCountsByStage.G2, 12);
+    assert.equal(summary.questionCountsByStage.G2, 40);
     assert.equal(summary.questionCountsByStage.G, 12);
     assert.equal(summary.checklistCountsByStage.G2, 8);
     assert.equal(summary.checklistCountsByStage.G, 8);
+  });
+
+  it("ships a broad G2 road-test practice bank across readiness, observation, and control", () => {
+    const g2Questions = ontarioRoadTestSeedQuestions.filter((question) => question.stage === "G2");
+    const g2QuestionsByCategory = g2Questions.reduce<Record<string, number>>((acc, question) => {
+      acc[question.categorySlug] = (acc[question.categorySlug] ?? 0) + 1;
+      return acc;
+    }, {});
+
+    assert.equal(g2Questions.length, 40);
+    assert.ok(g2QuestionsByCategory["g2-observation-and-right-of-way"] >= 14);
+    assert.ok(g2QuestionsByCategory["g2-turns-parking-and-control"] >= 14);
+    assert.ok(g2QuestionsByCategory["g2-road-test-readiness"] >= 8);
   });
 
   it("uses stable unique category slugs, question prompts, and checklist titles", () => {
