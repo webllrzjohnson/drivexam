@@ -122,33 +122,29 @@ describe("learner quiz helpers", () => {
     assert.equal(clampedSet.activeSet, 2);
   });
 
-  it("builds dedicated signs, signals, and markings practice guidance", () => {
-    const guide = buildRoadSignPracticeGuide({ assetCount: 54, questionCount: 49 });
+  it("builds dedicated road-sign practice guidance", () => {
+    const guide = buildRoadSignPracticeGuide({ assetCount: 40, questionCount: 35 });
 
-    assert.equal(guide.title, "Ontario signs, signals, and markings");
-    assert.equal(guide.assetLabel, "54 Ontario visuals");
-    assert.equal(guide.questionLabel, "49 image questions");
+    assert.equal(guide.title, "Ontario road signs only");
+    assert.equal(guide.assetLabel, "40 Ontario sign images");
+    assert.equal(guide.questionLabel, "35 image questions");
     assert.match(guide.description, /flashcards/i);
     assert.deepEqual(guide.actions.map((action) => action.label), ["Start signs quiz", "Review G1 practice"]);
   });
 
-  it("groups signs, signals, and markings flashcards into learner-friendly filters", () => {
+  it("groups road-sign flashcards into learner-friendly filters", () => {
     const groups = buildRoadSignFlashcardGroups([
       { title: "Stop sign", path: "/uploads/road-signs/ontario-stop.svg", description: "Ontario stop sign" },
       { title: "Slippery road sign", path: "/uploads/road-signs/ontario-slippery-road.svg", description: "Ontario slippery road sign" },
       { title: "Road work ahead sign", path: "/uploads/road-signs/ontario-road-work-ahead.svg", description: "Ontario road work sign" },
       { title: "No parking sign", path: "/uploads/road-signs/ontario-no-parking.svg", description: "Ontario no parking sign" },
       { title: "Bicycle lane sign", path: "/uploads/road-signs/ontario-bicycle-lane.svg", description: "Ontario bicycle lane sign" },
-      { title: "Green traffic light", path: "/uploads/road-signs/ontario-green-light.svg", description: "Ontario traffic light" },
-      { title: "Crosswalk marking", path: "/uploads/road-signs/ontario-crosswalk-marking.svg", description: "Ontario pavement marking" },
     ]);
 
-    assert.deepEqual(groups.map((group) => group.label), ["All visuals", "Regulatory", "Warning", "Traffic signals", "Pavement markings", "Construction", "Parking", "Bicycle / pedestrian"]);
-    assert.equal(groups[0].cards.length, 7);
+    assert.deepEqual(groups.map((group) => group.label), ["All signs", "Regulatory", "Warning", "Construction", "Parking", "Bicycle / pedestrian"]);
+    assert.equal(groups[0].cards.length, 5);
     assert.equal(groups.find((group) => group.key === "regulatory")?.cards[0].title, "Stop sign");
     assert.equal(groups.find((group) => group.key === "warning")?.cards[0].title, "Slippery road sign");
-    assert.equal(groups.find((group) => group.key === "traffic-signals")?.cards[0].title, "Green traffic light");
-    assert.equal(groups.find((group) => group.key === "pavement-markings")?.cards[0].title, "Crosswalk marking");
     assert.equal(groups.find((group) => group.key === "construction")?.cards[0].title, "Road work ahead sign");
     assert.equal(groups.find((group) => group.key === "parking")?.cards[0].title, "No parking sign");
     assert.equal(groups.find((group) => group.key === "bicycle-pedestrian")?.cards[0].title, "Bicycle lane sign");

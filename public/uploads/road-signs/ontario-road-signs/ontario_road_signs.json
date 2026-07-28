@@ -1,0 +1,548 @@
+[
+  {
+    "id": 1,
+    "filename": "01-share-the-road-with-oncoming-traffic.png",
+    "name": "Share the Road with Oncoming Traffic",
+    "category": "Warning Signs",
+    "description": "This sign means you have to share the road with oncoming traffic."
+  },
+  {
+    "id": 2,
+    "filename": "02-divided-road-ends-keep-to-the-right.png",
+    "name": "Divided Road Ends, Keep to the Right",
+    "category": "Warning Signs",
+    "description": "Divided road ends, keep to the right."
+  },
+  {
+    "id": 3,
+    "filename": "03-road-ahead-turns-right-then-left.png",
+    "name": "Road Ahead Turns Right, Then Left",
+    "category": "Warning Signs",
+    "description": "The road ahead first turns right, then left."
+  },
+  {
+    "id": 4,
+    "filename": "04-deer-regularly-cross-be-alert-for-animals.png",
+    "name": "Deer Regularly Cross, Be Alert for Animals",
+    "category": "Warning Signs",
+    "description": "This is a 'Deer Crossing' road sign."
+  },
+  {
+    "id": 5,
+    "filename": "05-bumpy-or-uneven-pavement-ahead.png",
+    "name": "Bumpy or Uneven Pavement Ahead",
+    "category": "Warning Signs",
+    "description": "This is a 'Bumpy or Uneven Pavement Ahead' road sign."
+  },
+  {
+    "id": 6,
+    "filename": "06-merge-with-traffic.png",
+    "name": "Merge with Traffic",
+    "category": "Warning Signs",
+    "description": "This sign warns about merging with traffic, where traffic on two roads are equally responsible to merge correctly."
+  },
+  {
+    "id": 7,
+    "filename": "07-median-ahead-keep-to-the-right.png",
+    "name": "Median Ahead; Keep to the Right",
+    "category": "Warning Signs",
+    "description": "This is a warning sign saying that the road ahead is separated by a median. Keep to the right of the median or barrier."
+  },
+  {
+    "id": 8,
+    "filename": "08-a-school-crossing-ahead.png",
+    "name": "A School Crossing Ahead",
+    "category": "Warning Signs",
+    "description": "This is a 'School Crossing Ahead' road sign. Follow the directions of the crossing guard or school safety patroller."
+  },
+  {
+    "id": 9,
+    "filename": "09-a-hidden-school-bus-stop-ahead.png",
+    "name": "A Hidden School Bus Stop Ahead",
+    "category": "Warning Signs",
+    "description": "This is a 'Hidden School Bus Stop Ahead' road sign. Slow down, drive with extra caution, watch for children and school buses with flashing red lights."
+  },
+  {
+    "id": 10,
+    "filename": "10-right-lane-ends-ahead.png",
+    "name": "Right Lane Ends Ahead",
+    "category": "Warning Signs",
+    "description": "This is a 'Right Lane Ends' sign. If you are in this lane, make sure you safely merge with traffic in the lane to the left."
+  },
+  {
+    "id": 11,
+    "filename": "11-school-zone-sign.png",
+    "name": "School Zone Sign",
+    "category": "Warning Signs",
+    "description": "This is a 'School Zone' sign."
+  },
+  {
+    "id": 12,
+    "filename": "12-winding-road.png",
+    "name": "Winding Road",
+    "category": "Warning Signs",
+    "description": "This is a 'Winding Road Ahead' sign."
+  },
+  {
+    "id": 13,
+    "filename": "13-stop-sign-ahead.png",
+    "name": "Stop Sign Ahead",
+    "category": "Warning Signs",
+    "description": "This is a 'Stop Sign Ahead' road sign. Be prepared to stop."
+  },
+  {
+    "id": 14,
+    "filename": "14-steep-hill-ahead.png",
+    "name": "Steep Hill Ahead",
+    "category": "Warning Signs",
+    "description": "This is a 'Steep Hill Ahead' road sign."
+  },
+  {
+    "id": 15,
+    "filename": "15-narrow-bridge-ahead.png",
+    "name": "Narrow Bridge Ahead",
+    "category": "Warning Signs",
+    "description": "This is a 'Narrow Bridge Ahead' road sign."
+  },
+  {
+    "id": 16,
+    "filename": "16-truck-entrance-ahead-on-the-right.png",
+    "name": "Truck Entrance Ahead on the Right",
+    "category": "Warning Signs",
+    "description": "This sign means there is a truck entrance ahead on the right."
+  },
+  {
+    "id": 17,
+    "filename": "17-road-branching-off-ahead.png",
+    "name": "Road Branching Off Ahead",
+    "category": "Warning Signs",
+    "description": "This is a 'Road Branching Off Ahead' road sign."
+  },
+  {
+    "id": 18,
+    "filename": "18-railway-crossing-ahead.png",
+    "name": "Railway Crossing Ahead",
+    "category": "Warning Signs",
+    "description": "This is a sign indicating that a railway crossing is ahead."
+  },
+  {
+    "id": 19,
+    "filename": "19-bicycle-crossing-ahead.png",
+    "name": "Bicycle Crossing Ahead",
+    "category": "Warning Signs",
+    "description": "This is a 'Bicycle Crossing Ahead' road sign."
+  },
+  {
+    "id": 20,
+    "filename": "20-danger-sharp-turn.png",
+    "name": "Danger, Sharp Turn",
+    "category": "Warning Signs",
+    "description": "This is a 'Sharp Turn Ahead' road sign."
+  },
+  {
+    "id": 21,
+    "filename": "21-drivers-on-the-sideroad-of-the-intersection-ahead-don-t-have-a-clear-view-of-traffic.png",
+    "name": "Drivers on the Sideroad of the Intersection Ahead Don't Have a Clear View of Traffic",
+    "category": "Warning Signs",
+    "description": "This is a warning sign showing that drivers on the sideroad at the intersection ahead don't have a clear view of traffic."
+  },
+  {
+    "id": 22,
+    "filename": "22-bus-entrance-ahead-on-the-right.png",
+    "name": "Bus Entrance Ahead on the Right",
+    "category": "Warning Signs",
+    "description": "This sign indicates an upcoming bus entrance on the right and vehicles should be prepared to yield to buses entering the roadway."
+  },
+  {
+    "id": 23,
+    "filename": "23-pavement-is-slippery-when-wet.png",
+    "name": "Pavement Is Slippery When Wet",
+    "category": "Warning Signs",
+    "description": "This is a 'Slippery When Wet' road sign. Drive with caution."
+  },
+  {
+    "id": 24,
+    "filename": "24-fire-truck-entrance-ahead-on-the-right.png",
+    "name": "Fire Truck Entrance Ahead on the Right",
+    "category": "Warning Signs",
+    "description": "This sign indicates an upcoming fire truck entrance on the right and vehicles should be prepared to yield to fire trucks entering the roadway."
+  },
+  {
+    "id": 25,
+    "filename": "25-maximum-safe-speed-for-the-curve.png",
+    "name": "Maximum Safe Speed for the Curve",
+    "category": "Warning Signs",
+    "description": "Posted under a curve warning, this sign shows the maximum safe speed for the curve."
+  },
+  {
+    "id": 26,
+    "filename": "26-you-are-approaching-a-railroad-crossing.png",
+    "name": "You Are Approaching a Railroad Crossing",
+    "category": "Regulatory Signs",
+    "description": "This sign warns you that there is a rail road crossing ahead."
+  },
+  {
+    "id": 27,
+    "filename": "27-slow-traffic-must-keep-right.png",
+    "name": "Slow Traffic Must Keep Right",
+    "category": "Regulatory Signs",
+    "description": "Slow traffic on multi-lane roads must keep right."
+  },
+  {
+    "id": 28,
+    "filename": "28-this-lane-is-for-bicycles-only.png",
+    "name": "This Lane Is for Bicycles Only",
+    "category": "Regulatory Signs",
+    "description": "This is a 'Bicycles Only' lane sign."
+  },
+  {
+    "id": 29,
+    "filename": "29-two-way-left-turn-lane.png",
+    "name": "Two-Way Left Turn Lane",
+    "category": "Regulatory Signs",
+    "description": "This is a 'Two-way Left Turn Lane' road markup."
+  },
+  {
+    "id": 30,
+    "filename": "30-do-not-block-intersection.png",
+    "name": "Do Not Block Intersection",
+    "category": "Regulatory Signs",
+    "description": "This is a 'Do Not Block The Intersection' road sign."
+  },
+  {
+    "id": 31,
+    "filename": "31-keep-to-the-right-lane-except-when-passing-on-two-lane-sections-where-climbing-or-passing-lanes-are-provided.png",
+    "name": "Keep to the Right Lane, Except When Passing on Two-Lane Sections Where Climbing or Passing Lanes Are Provided",
+    "category": "Regulatory Signs",
+    "description": "This is a regulatory sign instructing drivers to keep to the right lane except when passing on two-lane sections where climbing or passing lanes are provided."
+  },
+  {
+    "id": 32,
+    "filename": "32-these-signs-tell-drivers-the-direction-they-must-travel.png",
+    "name": "These Signs Tell Drivers the Direction They Must Travel",
+    "category": "Regulatory Signs",
+    "description": "These signs, above the road or as markings on the pavement before an intersection, tell drivers the direction they must travel."
+  },
+  {
+    "id": 33,
+    "filename": "33-be-more-aware-of-pedestrians-and-your-speed-in-this-area.png",
+    "name": "Be More Aware of Pedestrians and Your Speed in This Area",
+    "category": "Regulatory Signs",
+    "description": "This sign indicates areas where the community has identified that there is a special risk to pedestrians. Traffic related offences committed within the zone are subject to increased fines."
+  },
+  {
+    "id": 34,
+    "filename": "34-speed-limit-changes-ahead-with-maximum-speed-of-50-km-h.png",
+    "name": "Speed Limit Changes Ahead, with Maximum Speed of 50 km/h",
+    "category": "Regulatory Signs",
+    "description": "This is a regulatory sign indicating that there is a speed limit change ahead. You must be prepared to slow down to the posted speed when you see another speed limit sign without an arrow."
+  },
+  {
+    "id": 35,
+    "filename": "35-school-buses-load-and-unload-in-this-area.png",
+    "name": "School Buses Load and Unload in This Area",
+    "category": "Regulatory Signs",
+    "description": "This sign marks a zone within which school buses load or unload passengers without using the red alternating lights and stop arm."
+  },
+  {
+    "id": 36,
+    "filename": "36-keep-to-the-right-of-the-traffic-island.png",
+    "name": "Keep to the Right of the Traffic Island",
+    "category": "Regulatory Signs",
+    "description": "You must keep to the right of the traffic island when you see this sign."
+  },
+  {
+    "id": 37,
+    "filename": "37-lane-usage-sign-meaning-right-turn-only.png",
+    "name": "Lane Usage Sign Meaning Right Turn Only",
+    "category": "Regulatory Signs",
+    "description": "This is a 'Right Turn Only' road sign."
+  },
+  {
+    "id": 38,
+    "filename": "38-traffic-must-travel-in-one-direction-only.png",
+    "name": "Traffic Must Travel in One Direction Only",
+    "category": "Regulatory Signs",
+    "description": "This is a 'One Direction Only' road sign."
+  },
+  {
+    "id": 39,
+    "filename": "39-shows-maximum-speed-limit-on-the-highway.png",
+    "name": "Shows Maximum Speed Limit on the Highway",
+    "category": "Regulatory Signs",
+    "description": "This is a 'Maximum Speed Limit On The Highway' road sign."
+  },
+  {
+    "id": 40,
+    "filename": "40-you-must-exit-if-you-remain-in-right-hand-lane.png",
+    "name": "You Must Exit If You Remain in Right-Hand Lane",
+    "category": "Regulatory Signs",
+    "description": "This sign means 'Right Lane Must Exit'."
+  },
+  {
+    "id": 41,
+    "filename": "41-you-must-stop-if-a-school-bus-has-flashing-signals.png",
+    "name": "You Must Stop If a School Bus Has Flashing Signals",
+    "category": "Regulatory Signs",
+    "description": "This sign means that you must stop for school bus when signals are flashing."
+  },
+  {
+    "id": 42,
+    "filename": "42-do-not-drive-straight-through-the-intersection.png",
+    "name": "Do Not Drive Straight Through the Intersection",
+    "category": "Regulatory Signs",
+    "description": "This is a sign also known as 'Do Not Drive Straight Through the Intersection'."
+  },
+  {
+    "id": 43,
+    "filename": "43-red-light-camera-at-intersection.png",
+    "name": "Red Light Camera at Intersection",
+    "category": "Regulatory Signs",
+    "description": "This intersection is monitored with a red light camera."
+  },
+  {
+    "id": 44,
+    "filename": "44-do-not-turn-left-during-the-times-shown.png",
+    "name": "Do Not Turn Left During the Times Shown",
+    "category": "Regulatory Signs",
+    "description": "This sign means 'No Left Turn During The Posted Times'."
+  },
+  {
+    "id": 45,
+    "filename": "45-do-not-stop-in-the-area-between-the-signs.png",
+    "name": "Do Not Stop in the Area Between the Signs",
+    "category": "Regulatory Signs",
+    "description": "This sign means that stopping is not allowed in the area between the signs, even for a moment."
+  },
+  {
+    "id": 46,
+    "filename": "46-you-must-not-make-a-left-turn.png",
+    "name": "You Must Not Make a Left Turn",
+    "category": "Regulatory Signs",
+    "description": "This is a 'No Left Turn' road sign."
+  },
+  {
+    "id": 47,
+    "filename": "47-no-right-turn-on-red.png",
+    "name": "No Right Turn on Red",
+    "category": "Regulatory Signs",
+    "description": "This is a 'No Right Turn On Red' sign."
+  },
+  {
+    "id": 48,
+    "filename": "48-no-pedestrians-allowed.png",
+    "name": "No Pedestrians Allowed",
+    "category": "Regulatory Signs",
+    "description": "This is a 'No Pedestrians' road sign."
+  },
+  {
+    "id": 49,
+    "filename": "49-you-must-give-the-right-of-way.png",
+    "name": "You Must Give the Right-of-Way",
+    "category": "Regulatory Signs",
+    "description": "This is a 'Yield' sign."
+  },
+  {
+    "id": 50,
+    "filename": "50-no-bicycles-allowed-on-this-road.png",
+    "name": "No Bicycles Allowed on This Road",
+    "category": "Regulatory Signs",
+    "description": "This is a 'No Bicycles Allowed' road sign."
+  },
+  {
+    "id": 51,
+    "filename": "51-passing-is-not-allowed.png",
+    "name": "Passing Is Not Allowed",
+    "category": "Regulatory Signs",
+    "description": "This is a 'Passing is not allowed' sign."
+  },
+  {
+    "id": 52,
+    "filename": "52-do-not-stand-or-stop-in-this-area.png",
+    "name": "Do Not Stand or Stop in This Area",
+    "category": "Regulatory Signs",
+    "description": "This sign means 'No Standing or Stopping in This Area'."
+  },
+  {
+    "id": 53,
+    "filename": "53-you-must-not-make-a-u-turn.png",
+    "name": "You Must Not Make a U-Turn",
+    "category": "Regulatory Signs",
+    "description": "This is a 'No U-Turn Allowed' sign."
+  },
+  {
+    "id": 54,
+    "filename": "54-no-idling-for-more-than-3-min.png",
+    "name": "No Idling for More Than 3 Min",
+    "category": "Regulatory Signs",
+    "description": "This is a 'No Idling' sign."
+  },
+  {
+    "id": 55,
+    "filename": "55-keep-out-do-not-enter.png",
+    "name": "Keep Out (Do Not Enter)",
+    "category": "Regulatory Signs",
+    "description": "This is a 'Do Not Enter' road sign."
+  },
+  {
+    "id": 56,
+    "filename": "56-stop-and-yield-the-right-of-way-to-passing-vehicles-from-both-directions.png",
+    "name": "Stop and Yield the Right-of-Way to Passing Vehicles from Both Directions",
+    "category": "Regulatory Signs",
+    "description": "This is a Stop sign, you must come to a complete stop and yield the right-of-way to passing vehicles from both directions."
+  },
+  {
+    "id": 57,
+    "filename": "57-do-not-pass-any-vehicles-within-30-metres-of-a-pedestrian-crossing.png",
+    "name": "Do Not Pass Any Vehicles Within 30 Metres of a Pedestrian Crossing",
+    "category": "Regulatory Signs",
+    "description": "This is a pedestrian crossover. Be prepared to stop and yield right-of-way to pedestrians."
+  },
+  {
+    "id": 58,
+    "filename": "58-only-for-vehicles-displaying-a-valid-disabled-person-parking-permit.png",
+    "name": "Only for Vehicles Displaying a Valid Disabled Person Parking Permit",
+    "category": "Regulatory Signs",
+    "description": "This sign is placed in the areas where parking is permitted only for vehicles displaying a valid Disabled Person Parking Permit."
+  },
+  {
+    "id": 59,
+    "filename": "59-you-must-stop-and-are-prohibited-from-passing.png",
+    "name": "You Must Stop and Are Prohibited from Passing",
+    "category": "Regulatory Signs",
+    "description": "When a school bus arm swings out with red lights flashing, you must stop and are prohibited from passing."
+  },
+  {
+    "id": 60,
+    "filename": "60-you-may-park-in-the-designated-area-during-the-posted-times.png",
+    "name": "You May Park in the Designated Area During the Posted Times",
+    "category": "Regulatory Signs",
+    "description": "You may park in the designated area during the posted times only."
+  },
+  {
+    "id": 61,
+    "filename": "61-this-road-is-an-official-bicycle-route.png",
+    "name": "This Road Is an Official Bicycle Route",
+    "category": "Regulatory Signs",
+    "description": "This road is an official bicycle route. Watch for cyclists and be prepared to share the road with them."
+  },
+  {
+    "id": 62,
+    "filename": "62-snowmobiles-may-use-this-road.png",
+    "name": "Snowmobiles May Use This Road",
+    "category": "Regulatory Signs",
+    "description": "This is a 'Snowmobiles May Use This Road' sign."
+  },
+  {
+    "id": 63,
+    "filename": "63-permissive-sign.png",
+    "name": "Permissive Sign",
+    "category": "Regulatory Signs",
+    "description": "You may or must do the activity shown inside the ring, hence, it is a permissive sign."
+  },
+  {
+    "id": 64,
+    "filename": "64-survey-crew-working-on-the-road-ahead.png",
+    "name": "Survey Crew Working on the Road Ahead",
+    "category": "Temporary Condition Signs",
+    "description": "This is a 'Survey Crew Ahead' road sign."
+  },
+  {
+    "id": 65,
+    "filename": "65-closed-lane.png",
+    "name": "Closed Lane",
+    "category": "Temporary Condition Signs",
+    "description": "There is a closed lane ahead. Adjust speed to merge with traffic in lane indicated by arrow."
+  },
+  {
+    "id": 66,
+    "filename": "66-traffic-control-person-ahead.png",
+    "name": "Traffic Control Person Ahead",
+    "category": "Temporary Condition Signs",
+    "description": "This sign indicates a traffic control person ahead. Drive slowly and watch for instructions."
+  },
+  {
+    "id": 67,
+    "filename": "67-pavement-has-been-milled-or-grooved.png",
+    "name": "Pavement Has Been Milled or Grooved",
+    "category": "Temporary Condition Signs",
+    "description": "This sign means that the pavement has been milled or grooved. Your vehicle's stopping ability may be affected so obey the speed limit and drive with extra caution. Motorcyclists may experience reduced traction on these surfaces."
+  },
+  {
+    "id": 68,
+    "filename": "68-follow-detour-marker-until-you-return-to-regular-route.png",
+    "name": "Follow Detour Marker Until You Return to Regular Route",
+    "category": "Temporary Condition Signs",
+    "description": "These signs warn of unusual temporary conditions such as road work zones, diversions, detours, lane closures or traffic control people on the road. This particular sign means 'Follow detour marker until you return to regular route'."
+  },
+  {
+    "id": 69,
+    "filename": "69-road-work-operation-ahead.png",
+    "name": "Road Work Operation Ahead",
+    "category": "Temporary Condition Signs",
+    "description": "This is a 'Road Work Ahead' sign."
+  },
+  {
+    "id": 70,
+    "filename": "70-wheelchair-only-or-disabled-handicapped-person-parking.png",
+    "name": "Wheelchair Only or Disabled (Handicapped) Person Parking",
+    "category": "Information and Direction Signs",
+    "description": "This is a 'Wheelchair Only or Disabled (Handicapped) Person Parking' sign."
+  },
+  {
+    "id": 71,
+    "filename": "71-the-upcoming-roundabout-exits-and-where-they-will-take-you.png",
+    "name": "The Upcoming Roundabout Exits and Where They Will Take You",
+    "category": "Information and Direction Signs",
+    "description": "This sign shows the upcoming roundabout exits and where they will take you."
+  },
+  {
+    "id": 72,
+    "filename": "72-destination-board.png",
+    "name": "Destination Board",
+    "category": "Information and Direction Signs",
+    "description": "This is a destination board with several destinations."
+  },
+  {
+    "id": 73,
+    "filename": "73-route-to-airport.png",
+    "name": "Route to Airport",
+    "category": "Information and Direction Signs",
+    "description": "This is a 'Route To Airport' sign."
+  },
+  {
+    "id": 74,
+    "filename": "74-hospital.png",
+    "name": "Hospital",
+    "category": "Information and Direction Signs",
+    "description": "This is a 'Hospital' sign."
+  },
+  {
+    "id": 75,
+    "filename": "75-railway-crossing.png",
+    "name": "Railway Crossing",
+    "category": "Other Common Signs",
+    "description": "All railway crossings on public roads in Ontario are marked with large red and white 'X' signs."
+  },
+  {
+    "id": 76,
+    "filename": "76-slow-moving-vehicle.png",
+    "name": "Slow Moving Vehicle",
+    "category": "Other Common Signs",
+    "description": "This is a 'Slow Moving Vehicle' sign."
+  },
+  {
+    "id": 77,
+    "filename": "77-two-or-more-passengers-must-be-in-the-vehicle-to-use-this-lane-on-the-highway.png",
+    "name": "Two or More Passengers Must Be in the Vehicle to Use This Lane on the Highway",
+    "category": "Other Common Signs",
+    "description": "This is an HOV (High Occupancy Vehicle) highway sign, two or more passengers must be in the vehicle to use this lane on the highway."
+  },
+  {
+    "id": 78,
+    "filename": "78-vehicles-cannot-change-lanes-into-or-out-of-a-hov-lane-in-this-area.png",
+    "name": "Vehicles Cannot Change Lanes into or out of a HOV Lane in This Area",
+    "category": "Other Common Signs",
+    "description": "Vehicles cannot change lanes into or out of a high occupancy vehicle lane in this area."
+  }
+]

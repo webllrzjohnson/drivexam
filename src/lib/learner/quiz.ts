@@ -71,7 +71,7 @@ export type RoadSignFlashcard = {
 };
 
 export type RoadSignFlashcardGroup = {
-  key: "all" | "regulatory" | "warning" | "traffic-signals" | "pavement-markings" | "construction" | "parking" | "bicycle-pedestrian";
+  key: "all" | "regulatory" | "warning" | "construction" | "parking" | "bicycle-pedestrian";
   label: string;
   cards: RoadSignFlashcard[];
 };
@@ -197,9 +197,9 @@ export function buildPracticeStageGuide({ stage, categoryCount, questionCount }:
 
 export function buildRoadSignPracticeGuide({ assetCount, questionCount }: { assetCount: number; questionCount: number }): RoadSignPracticeGuide {
   return {
-    title: "Ontario signs, signals, and markings",
-    description: "Review Ontario road signs, traffic lights, pedestrian signals, and pavement markings as flashcards, then jump into image-recognition practice questions.",
-    assetLabel: `${assetCount} Ontario visual${assetCount === 1 ? "" : "s"}`,
+    title: "Ontario road signs only",
+    description: "Review Ontario road signs as flashcards, then jump straight into image-recognition practice questions.",
+    assetLabel: `${assetCount} Ontario sign image${assetCount === 1 ? "" : "s"}`,
     questionLabel: `${questionCount} image question${questionCount === 1 ? "" : "s"}`,
     actions: [
       { label: "Start signs quiz", href: "/practice?stage=G1" },
@@ -211,8 +211,6 @@ export function buildRoadSignPracticeGuide({ assetCount, questionCount }: { asse
 const roadSignGroupDefinitions: Array<Omit<RoadSignFlashcardGroup, "cards"> & { matches: string[] }> = [
   { key: "regulatory", label: "Regulatory", matches: ["stop", "yield", "maximum", "one way", "do not enter", "keep right", "turn"] },
   { key: "warning", label: "Warning", matches: ["ahead", "slippery", "curve", "merge", "winding", "two-way", "railway", "roundabout"] },
-  { key: "traffic-signals", label: "Traffic signals", matches: ["traffic light", "green light", "yellow light", "red light", "flashing", "arrow", "pedestrian walk", "do not walk"] },
-  { key: "pavement-markings", label: "Pavement markings", matches: ["line", "marking", "crosswalk", "continuity", "pavement", "arrow"] },
   { key: "construction", label: "Construction", matches: ["construction", "road work", "detour"] },
   { key: "parking", label: "Parking", matches: ["parking", "stopping", "accessible"] },
   { key: "bicycle-pedestrian", label: "Bicycle / pedestrian", matches: ["bicycle", "pedestrian", "school crossing", "crossover"] },
@@ -224,7 +222,7 @@ function cardSearchText(card: RoadSignFlashcard) {
 
 export function buildRoadSignFlashcardGroups(cards: RoadSignFlashcard[]): RoadSignFlashcardGroup[] {
   return [
-    { key: "all", label: "All visuals", cards },
+    { key: "all", label: "All signs", cards },
     ...roadSignGroupDefinitions.map(({ key, label, matches }) => ({
       key,
       label,

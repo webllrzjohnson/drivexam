@@ -58,7 +58,7 @@ export function RoadSignFlashcards({ groups }: RoadSignFlashcardsProps) {
       </div>
 
       {cards.length ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((card) => {
             const isFlipped = flippedPaths.includes(card.path);
             const status = knownPaths.includes(card.path) ? "Known" : reviewPaths.includes(card.path) ? "Need review" : null;
@@ -67,7 +67,7 @@ export function RoadSignFlashcards({ groups }: RoadSignFlashcardsProps) {
                 <CardContent className="space-y-3 p-4">
                   <button
                     aria-label={isFlipped ? `Hide meaning for ${card.title}` : `Reveal meaning for ${card.title}`}
-                    className="flex h-44 w-full items-center justify-center rounded-xl border bg-white p-4 text-left transition hover:border-green-300"
+                    className="flex h-72 w-full items-center justify-center rounded-xl border bg-white p-3 text-left transition hover:border-green-300"
                     data-flipped={isFlipped ? "true" : "false"}
                     data-road-sign-card={card.path}
                     onClick={() => toggleFlip(card.path)}
@@ -79,7 +79,7 @@ export function RoadSignFlashcards({ groups }: RoadSignFlashcardsProps) {
                         <span className="block text-sm leading-6 text-slate-600">{card.description ?? "Review this Ontario road sign and practise its meaning in the signs quiz."}</span>
                       </span>
                     ) : (
-                      <Image alt={card.title} className="max-h-36 w-auto object-contain" height={150} src={card.path} width={150} />
+                      <Image alt={card.title} className="max-h-64 w-auto max-w-full object-contain" height={280} src={card.path} width={320} />
                     )}
                   </button>
                   <div className="flex items-center justify-between gap-2 text-xs text-slate-500">
