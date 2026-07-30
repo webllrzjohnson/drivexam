@@ -19,7 +19,19 @@ export type RoadTestSeedQuestion = {
   categorySlug: string;
   prompt: string;
   explanation: string;
+  assetSlugs?: string[];
   choices: RoadTestSeedChoice[];
+};
+
+export type RoadTestIllustrationAsset = {
+  slug: string;
+  title: string;
+  filename: string;
+  path: string;
+  mimeType: "image/png";
+  sizeBytes: number;
+  description: string;
+  sourceCredit: string;
 };
 
 export type RoadTestSeedChecklistItem = {
@@ -39,6 +51,49 @@ export const ontarioRoadTestSourceUrls = {
   changingDirections: "https://www.ontario.ca/document/official-mto-drivers-handbook/changing-directions",
   parking: "https://www.ontario.ca/document/official-mto-drivers-handbook/parking-along-roadways",
 } as const;
+
+export const retiredOntarioRoadTestSeedPrompts = [
+  "Why should full-G candidates keep a large space cushion on freeways?",
+  "Why does the full-G test include business and residential sections?",
+  "What does a roadside stop show on the Level Two road test?",
+  "What should a full-G driver watch for in residential sections?",
+  "Why should full-G practice include residential driving after highway practice?",
+] as const;
+
+export const retiredOntarioRoadTestChecklistTitles = ["Rehearse merge and exit sequences"] as const;
+
+export const ontarioRoadTestIllustrationAssets: RoadTestIllustrationAsset[] = [
+  {
+    slug: "g2-left-turn-pedestrian-yield",
+    title: "Left turn yielding to a pedestrian",
+    filename: "g2-left-turn-pedestrian-yield.png",
+    path: "/uploads/content-images/road-test/g2-left-turn-pedestrian-yield.png",
+    mimeType: "image/png",
+    sizeBytes: 132353,
+    description: "Top-down sequence showing a learner turning left into the proper lane and stopping before an occupied pedestrian crossing.",
+    sourceCredit: "Ontario MTO handbook used for manoeuvre logic; original Drivexam composition using documented OpenClipart CC0 vehicle components.",
+  },
+  {
+    slug: "g2-g-lane-change-blind-spot",
+    title: "Lane change into a safe gap",
+    filename: "g2-g-lane-change-blind-spot.png",
+    path: "/uploads/content-images/road-test/g2-g-lane-change-blind-spot.png",
+    mimeType: "image/png",
+    sizeBytes: 117485,
+    description: "Top-down sequence showing mirror and blind-spot planning followed by a smooth lane change into a measured safe gap.",
+    sourceCredit: "Ontario MTO handbook used for manoeuvre logic; original Drivexam composition using documented OpenClipart CC0 vehicle components.",
+  },
+  {
+    slug: "full-g-highway-merge-safe-gap",
+    title: "Highway merge into a safe gap",
+    filename: "full-g-highway-merge-safe-gap.png",
+    path: "/uploads/content-images/road-test/full-g-highway-merge-safe-gap.png",
+    mimeType: "image/png",
+    sizeBytes: 156776,
+    description: "Top-down sequence showing acceleration-lane positioning and a gradual merge into a safe freeway gap.",
+    sourceCredit: "Ontario MTO handbook used for manoeuvre logic; original Drivexam composition using documented OpenClipart CC0 vehicle components.",
+  },
+];
 
 export const ontarioRoadTestSeedCategories: RoadTestSeedCategory[] = [
   {
@@ -94,9 +149,9 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "Ontario describes the G2 road test as the G1 exit test. It checks whether a new driver can safely handle basic road-test tasks and make responsible decisions in traffic.",
     choices: [
       { text: "Whether you can safely handle basic driving tasks in traffic", isCorrect: true },
-      { text: "Whether you can drive on freeways without supervision", isCorrect: false },
-      { text: "Whether you know every mechanical part of the vehicle", isCorrect: false },
-      { text: "Whether you can park without ever using mirrors", isCorrect: false },
+      { text: "Whether you can independently handle advanced freeway merging and exiting", isCorrect: false },
+      { text: "Whether you can perform low-speed control exercises without entering traffic", isCorrect: false },
+      { text: "Whether you can follow a route when observation and yielding are inconsistent", isCorrect: false },
     ],
   },
   {
@@ -121,7 +176,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     choices: [
       { text: "Stop completely, yield, and turn only when clear and allowed", isCorrect: true },
       { text: "Roll through slowly if cross traffic is light", isCorrect: false },
-      { text: "Turn only after the driver behind you honks", isCorrect: false },
+      { text: "Proceed after stopping if cross traffic appears likely to slow for you", isCorrect: false },
       { text: "Ignore pedestrians once they pass your lane", isCorrect: false },
     ],
   },
@@ -131,10 +186,11 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     categorySlug: "g2-observation-and-right-of-way",
     prompt: "What observation habit should be clear during a G2 lane change?",
     explanation: "A safe lane change requires checking traffic, signalling, using mirrors, checking blind spots, and moving only when there is a safe gap.",
+    assetSlugs: ["g2-g-lane-change-blind-spot"],
     choices: [
       { text: "Mirror check, signal, blind-spot check, then move into a safe gap", isCorrect: true },
       { text: "Signal after entering the next lane", isCorrect: false },
-      { text: "Use mirrors only because blind spots are optional", isCorrect: false },
+      { text: "Signal and use the mirrors, then move if no vehicle is visible there", isCorrect: false },
       { text: "Move first so other drivers can react", isCorrect: false },
     ],
   },
@@ -146,8 +202,8 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "Roadside stops require choosing a safe place, signalling, checking traffic, stopping close and parallel to the curb or road edge, and checking before opening a door or pulling out.",
     choices: [
       { text: "Signal, choose a safe place, stop close to the edge, and check before moving", isCorrect: true },
-      { text: "Stop wherever the examiner asks, even if it blocks traffic", isCorrect: false },
-      { text: "Open the door immediately to show you are parked", isCorrect: false },
+      { text: "Use the first open curb space without checking signs or driveways", isCorrect: false },
+      { text: "End the manoeuvre as soon as the vehicle is near the curb", isCorrect: false },
       { text: "Pull out without signalling if traffic looks far away", isCorrect: false },
     ],
   },
@@ -170,6 +226,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     categorySlug: "g2-observation-and-right-of-way",
     prompt: "When turning left, what should you do before crossing oncoming traffic?",
     explanation: "A left turn must be made from the proper lane after signalling and checking. Yield to oncoming traffic and pedestrians, and turn only when there is a safe gap.",
+    assetSlugs: ["g2-left-turn-pedestrian-yield"],
     choices: [
       { text: "Yield to oncoming traffic and pedestrians until there is a safe gap", isCorrect: true },
       { text: "Assume oncoming traffic will slow for you", isCorrect: false },
@@ -186,7 +243,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     choices: [
       { text: "Consistent safe decisions without needing reminders or intervention", isCorrect: true },
       { text: "One lucky perfect route with no traffic", isCorrect: false },
-      { text: "Only parking practice, because moving traffic is not tested", isCorrect: false },
+      { text: "Repeated manoeuvre practice without combining the skills on full routes", isCorrect: false },
       { text: "Confidence even if rules are still uncertain", isCorrect: false },
     ],
   },
@@ -224,8 +281,8 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "A minor error should be corrected calmly and safely. Do not rush, panic, or make a second unsafe move; continue applying observation, speed control, and right-of-way rules.",
     choices: [
       { text: "Correct calmly and continue making safe legal decisions", isCorrect: true },
-      { text: "Speed up to make up lost time", isCorrect: false },
-      { text: "Argue with the examiner while driving", isCorrect: false },
+      { text: "Try to recover the lost time before returning to normal speed", isCorrect: false },
+      { text: "Keep replaying the mistake while you continue driving", isCorrect: false },
       { text: "Ignore mirrors until you feel settled again", isCorrect: false },
     ],
   },
@@ -264,9 +321,9 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "Scanning the whole intersection helps you notice pedestrians, cyclists, turning vehicles, red-light runners, and other hazards before you commit to moving through.",
     choices: [
       { text: "To confirm the full intersection path is clear before you enter", isCorrect: true },
-      { text: "To avoid using your mirrors at intersections", isCorrect: false },
-      { text: "To show the examiner you can turn your head quickly", isCorrect: false },
-      { text: "To decide whether the speed limit still applies", isCorrect: false },
+      { text: "To check the nearest traffic stream first and the remaining directions after entering", isCorrect: false },
+      { text: "To confirm the signal remains in your favour instead of reassessing crossing traffic", isCorrect: false },
+      { text: "To make one complete scan while approaching so you can proceed immediately after stopping", isCorrect: false },
     ],
   },
   {
@@ -277,9 +334,9 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "If you cannot see enough to judge a safe gap, wait. A blocked view is not a reason to guess or force a turn across oncoming traffic or pedestrians.",
     choices: [
       { text: "Wait until you can see clearly and the gap is safe", isCorrect: true },
-      { text: "Follow the vehicle ahead without checking", isCorrect: false },
-      { text: "Move into oncoming traffic to make others stop", isCorrect: false },
-      { text: "Turn because hesitation always fails the test", isCorrect: false },
+      { text: "Follow closely behind the vehicle ahead because it has already created a gap", isCorrect: false },
+      { text: "Move far enough into the oncoming lane to improve your view before judging the gap", isCorrect: false },
+      { text: "Use the traffic-light timing to estimate when oncoming vehicles will stop", isCorrect: false },
     ],
   },
   {
@@ -316,9 +373,9 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "After the complete stop, check signs, pedestrians, cyclists, and traffic from the left and from the direction you are entering before turning only when safe.",
     choices: [
       { text: "Signs, pedestrians, cyclists, and traffic before turning when clear", isCorrect: true },
-      { text: "Only the traffic light colour", isCorrect: false },
-      { text: "Only the driver waiting behind you", isCorrect: false },
-      { text: "Only vehicles in your current lane", isCorrect: false },
+      { text: "Traffic approaching from the left, but not cyclists from the right", isCorrect: false },
+      { text: "Whether the vehicle ahead turned successfully through the same gap", isCorrect: false },
+      { text: "The near crosswalk only, then check the far side after starting the turn", isCorrect: false },
     ],
   },
   {
@@ -331,7 +388,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
       { text: "When the gap or conditions are no longer safe", isCorrect: true },
       { text: "Never, because cancelling looks uncertain", isCorrect: false },
       { text: "Only after you have crossed the lane line", isCorrect: false },
-      { text: "Only if the examiner tells you to cancel", isCorrect: false },
+      { text: "Continue because signalling commits you to complete the lane change", isCorrect: false },
     ],
   },
   {
@@ -409,7 +466,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
       { text: "Anywhere unsafe, illegal, or blocking traffic", isCorrect: true },
       { text: "Only in places with no curb", isCorrect: false },
       { text: "Only on roads with parked cars", isCorrect: false },
-      { text: "Anywhere the examiner can see the curb", isCorrect: false },
+      { text: "Any open curb space, even beside a driveway or fire hydrant", isCorrect: false },
     ],
   },
   {
@@ -420,8 +477,8 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "Keep checking around the vehicle, pause if needed, communicate with signals or brake lights, and continue only when it is safe and controlled.",
     choices: [
       { text: "Keep checking, pause if needed, and continue only when safe", isCorrect: true },
-      { text: "Reverse faster before they arrive", isCorrect: false },
-      { text: "Ignore them because you are already parking", isCorrect: false },
+      { text: "Continue at the same speed so you do not delay the approaching road user", isCorrect: false },
+      { text: "Focus on the parking space and check surrounding traffic after stopping", isCorrect: false },
       { text: "Wave them around without checking your blind spot", isCorrect: false },
     ],
   },
@@ -446,7 +503,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "A ready G2 candidate should practise in real traffic conditions similar to the test: intersections, turns, lane changes, parking tasks, pedestrians, and varying speeds.",
     choices: [
       { text: "Realistic routes with traffic, turns, lane changes, and parking tasks", isCorrect: true },
-      { text: "Only empty parking lots", isCorrect: false },
+      { text: "One familiar quiet route with the same turns each time", isCorrect: false },
       { text: "Only one memorized route at one time of day", isCorrect: false },
       { text: "Only highway driving at full speed", isCorrect: false },
     ],
@@ -460,8 +517,8 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     choices: [
       { text: "Because safe observation must be consistent without reminders", isCorrect: true },
       { text: "Because observation is checked only during parking", isCorrect: false },
-      { text: "Because the examiner will teach observation during the test", isCorrect: false },
-      { text: "Because blind-spot checks are optional after the G1", isCorrect: false },
+      { text: "Because strong steering control can compensate for late observation", isCorrect: false },
+      { text: "Because mirrors are enough whenever surrounding traffic looks light", isCorrect: false },
     ],
   },
   {
@@ -486,7 +543,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     choices: [
       { text: "To avoid turning into pedestrians or cyclists crossing your path", isCorrect: true },
       { text: "To decide whether signalling is necessary", isCorrect: false },
-      { text: "To see if the examiner is watching", isCorrect: false },
+      { text: "To confirm only the nearest half of the crosswalk is clear", isCorrect: false },
       { text: "To avoid checking oncoming traffic", isCorrect: false },
     ],
   },
@@ -500,7 +557,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
       { text: "It confirms no road user is hidden beside the vehicle", isCorrect: true },
       { text: "It replaces signalling", isCorrect: false },
       { text: "It lets you ignore traffic ahead", isCorrect: false },
-      { text: "It is only needed at night", isCorrect: false },
+      { text: "It is needed only when rain or glare reduces the mirror view", isCorrect: false },
     ],
   },
   {
@@ -511,7 +568,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "Confident driving is calm and predictable: plan early, keep safe speed, observe fully, signal in time, and wait for legal safe gaps instead of hesitating late or rushing.",
     choices: [
       { text: "Plan early, observe fully, and move only into safe legal gaps", isCorrect: true },
-      { text: "Move quickly so the examiner sees confidence", isCorrect: false },
+      { text: "Commit immediately once a possible gap appears, without checking again", isCorrect: false },
       { text: "Avoid signalling so choices are flexible", isCorrect: false },
       { text: "Wait at every intersection even when you have right-of-way", isCorrect: false },
     ],
@@ -524,7 +581,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "Check for traffic, cyclists, and pedestrians before opening a door. Opening a door into another road user's path creates a hazard.",
     choices: [
       { text: "That no vehicle, cyclist, or pedestrian is approaching beside you", isCorrect: true },
-      { text: "That the examiner has already removed the seat belt", isCorrect: false },
+      { text: "That the parking brake is applied, so observation is no longer needed", isCorrect: false },
       { text: "That your front wheels are straight in every parking situation", isCorrect: false },
       { text: "That traffic behind you is moving quickly", isCorrect: false },
     ],
@@ -613,6 +670,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     categorySlug: "g-highway-merging-and-exiting",
     prompt: "What is the G road test looking for when you enter a freeway?",
     explanation: "The Level Two road test includes freeway driving. Entering safely means using the acceleration lane, matching traffic speed where safe, signalling, checking mirrors and blind spots, and merging into a safe gap.",
+    assetSlugs: ["full-g-highway-merge-safe-gap"],
     choices: [
       { text: "Build speed, signal, check mirrors and blind spots, and merge into a safe gap", isCorrect: true },
       { text: "Stop at the end of the acceleration lane every time", isCorrect: false },
@@ -622,15 +680,15 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
   },
   {
     stage: "G",
-    sourceReference: `${ontarioRoadTestSourceUrls.freewayDriving}#driving-along-a-freeway`,
+    sourceReference: `${ontarioRoadTestSourceUrls.levelTwoRoadTest}#freeway`,
     categorySlug: "g-advanced-lane-and-traffic-flow",
-    prompt: "Why should full-G candidates keep a large space cushion on freeways?",
-    explanation: "Freeway speeds reduce reaction time. Keeping space ahead, behind, and beside your vehicle gives you time to respond and avoids cutting off other vehicles during lane changes or merges.",
+    prompt: "What observation rhythm should a full-G candidate maintain in normal traffic?",
+    explanation: "Ontario's Level Two guide says to check mirrors every five to 10 seconds and look about 12 to 15 seconds ahead. Keep scanning around the vehicle rather than staring only forward.",
     choices: [
-      { text: "Higher speeds need more reaction time and room for safe decisions", isCorrect: true },
-      { text: "It lets you ignore the speed limit", isCorrect: false },
-      { text: "It means mirror checks are no longer needed", isCorrect: false },
-      { text: "It is needed only when roads are empty", isCorrect: false },
+      { text: "Check mirrors every 5–10 seconds and look about 12–15 seconds ahead", isCorrect: true },
+      { text: "Check mirrors every 15–20 seconds and look about 5–8 seconds ahead", isCorrect: false },
+      { text: "Check mirrors every 2–3 seconds and look about 20–30 seconds ahead", isCorrect: false },
+      { text: "Look 12–15 seconds ahead, but check mirrors mainly before changing speed or lanes", isCorrect: false },
     ],
   },
   {
@@ -639,6 +697,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     categorySlug: "g-advanced-lane-and-traffic-flow",
     prompt: "During a full-G lane change, what should the examiner clearly see?",
     explanation: "The Level Two road test includes lane changes. The examiner should see planning, mirror checks, signalling, blind-spot checks, speed control, and a smooth move into a safe gap.",
+    assetSlugs: ["g2-g-lane-change-blind-spot"],
     choices: [
       { text: "Plan, mirror check, signal, blind-spot check, and move smoothly", isCorrect: true },
       { text: "A fast move before signalling so traffic cannot block you", isCorrect: false },
@@ -676,13 +735,13 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     stage: "G",
     sourceReference: `${ontarioRoadTestSourceUrls.levelTwoRoadTest}#business-section`,
     categorySlug: "g-road-test-readiness",
-    prompt: "Why does the full-G test include business and residential sections?",
-    explanation: "The Level Two road test includes different traffic environments so the examiner can see speed choice, scanning, lane position, yielding, and hazard response in real-world conditions.",
+    prompt: "Which road environments remain part of Ontario's current shortened G test?",
+    explanation: "The current G test still includes major roads and expressways, turns, curves, lane changes, intersections, and business-area driving, including freeway merging and exiting where available.",
     choices: [
-      { text: "To check safe decisions across different traffic environments", isCorrect: true },
-      { text: "To avoid testing freeway skills", isCorrect: false },
-      { text: "To test only parking-lot steering", isCorrect: false },
-      { text: "To let drivers choose any speed that feels comfortable", isCorrect: false },
+      { text: "Major roads and expressways, intersections, lane changes, turns, curves, and business areas", isCorrect: true },
+      { text: "Only residential streets and parking areas", isCorrect: false },
+      { text: "Only freeway merging and exiting", isCorrect: false },
+      { text: "Only the manoeuvres that were tested on the G2 road test", isCorrect: false },
     ],
   },
   {
@@ -708,7 +767,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
       { text: "Consistent city and highway decisions without unsafe prompts", isCorrect: true },
       { text: "Only quiet residential routes", isCorrect: false },
       { text: "Freeway merging for the first time during the test", isCorrect: false },
-      { text: "Relying on the examiner to announce every hazard", isCorrect: false },
+      { text: "Handling highway traffic only on one familiar route", isCorrect: false },
     ],
   },
   {
@@ -726,15 +785,15 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
   },
   {
     stage: "G",
-    sourceReference: `${ontarioRoadTestSourceUrls.levelTwoRoadTest}#roadside-stop`,
+    sourceReference: ontarioRoadTestSourceUrls.levelTwoRoadTest,
     categorySlug: "g-road-test-readiness",
-    prompt: "What does a roadside stop show on the Level Two road test?",
-    explanation: "A roadside stop checks observation, signalling, safe positioning, smooth stopping, and safe re-entry into traffic. It is not just a parking task.",
+    prompt: "Which manoeuvres does Ontario currently exclude from the G road test until further notice?",
+    explanation: "Until further notice, Ontario's shortened G test currently excludes parallel parking, roadside stops, three-point turns, and driving in residential neighbourhoods because those elements are already covered on the G2 road test.",
     choices: [
-      { text: "Observation, signalling, safe position, control, and re-entry", isCorrect: true },
-      { text: "Only whether the wheels touch the curb", isCorrect: false },
-      { text: "How quickly you can stop without checking", isCorrect: false },
-      { text: "Whether you can block a lane briefly", isCorrect: false },
+      { text: "Parallel parking, roadside stops, three-point turns, and residential-neighbourhood driving", isCorrect: true },
+      { text: "Parallel parking, roadside stops, three-point turns, and business-area driving", isCorrect: false },
+      { text: "Parallel parking, residential-neighbourhood driving, freeway exiting, and three-point turns", isCorrect: false },
+      { text: "Roadside stops, three-point turns, residential-neighbourhood driving, and lane changes", isCorrect: false },
     ],
   },
   {
@@ -745,9 +804,9 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "Use the acceleration lane to look for a safe gap, signal, adjust speed smoothly, and merge without forcing another driver to brake sharply or swerve.",
     choices: [
       { text: "Signal, adjust speed smoothly, and merge into a safe gap", isCorrect: true },
-      { text: "Force your way in because ramp traffic has priority", isCorrect: false },
-      { text: "Stop suddenly in the live lane", isCorrect: false },
-      { text: "Drive on the shoulder until traffic clears", isCorrect: false },
+      { text: "Match the nearest vehicle's speed and enter ahead of it before the lane ends", isCorrect: false },
+      { text: "Slow early in the acceleration lane so an opening develops behind the nearest vehicle", isCorrect: false },
+      { text: "Maintain one steady ramp speed and let freeway drivers adjust around your path", isCorrect: false },
     ],
   },
   {
@@ -772,9 +831,9 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "Use the acceleration lane to build an appropriate speed, keep scanning traffic, signal, check mirrors and blind spots, and choose a safe gap before the lane ends.",
     choices: [
       { text: "Build speed, observe fully, signal, and choose a safe gap early", isCorrect: true },
-      { text: "Wait until the lane ends before checking traffic", isCorrect: false },
-      { text: "Stop at the merge point unless traffic waves you in", isCorrect: false },
-      { text: "Enter the freeway first and then signal", isCorrect: false },
+      { text: "Choose a gap first, then adjust speed and check the blind spot immediately before entering", isCorrect: false },
+      { text: "Reach freeway speed before deciding which available gap is safest", isCorrect: false },
+      { text: "Signal near the end of the lane so drivers know exactly where you intend to enter", isCorrect: false },
     ],
   },
   {
@@ -850,9 +909,9 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "After merging, traffic around you can still change quickly. Recheck mirrors, stabilize speed, and rebuild following distance so the vehicle settles safely into the traffic flow.",
     choices: [
       { text: "To stabilize speed and spacing after joining fast traffic", isCorrect: true },
-      { text: "To decide whether the signal was necessary", isCorrect: false },
-      { text: "To let you drift into another lane immediately", isCorrect: false },
-      { text: "To avoid looking ahead", isCorrect: false },
+      { text: "To verify traffic behind accepted the merge while keeping speed and spacing unchanged", isCorrect: false },
+      { text: "To decide whether to move immediately into a faster lane before cancelling the signal", isCorrect: false },
+      { text: "To confirm the vehicle behind is visible without reassessing traffic ahead", isCorrect: false },
     ],
   },
   {
@@ -902,9 +961,9 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "The left lane is generally for passing or following lane-control signs. A full-G driver should return to an appropriate lane after passing and avoid cruising unnecessarily in the passing lane.",
     choices: [
       { text: "When passing or when signs and traffic conditions make it appropriate", isCorrect: true },
-      { text: "Whenever you want the smoothest pavement", isCorrect: false },
-      { text: "At all times because it is the safest lane", isCorrect: false },
-      { text: "Only when you are driving below traffic speed", isCorrect: false },
+      { text: "Whenever you travel at the posted speed and vehicles to the right are slower", isCorrect: false },
+      { text: "When it provides the largest following gap, even when you are not passing", isCorrect: false },
+      { text: "When several exits approach and you want to avoid entering traffic", isCorrect: false },
     ],
   },
   {
@@ -915,9 +974,9 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     explanation: "Following distance should increase with speed, poor weather, heavy traffic, and limited visibility. At freeway speeds, tailgating leaves too little time to respond.",
     choices: [
       { text: "Speed, traffic, weather, visibility, and your reaction time", isCorrect: true },
-      { text: "How close the driver behind you is following", isCorrect: false },
+      { text: "The gap used by surrounding drivers, even when weather or visibility is worse", isCorrect: false },
       { text: "The minimum gap needed to prevent another car entering", isCorrect: false },
-      { text: "Only the posted speed limit sign", isCorrect: false },
+      { text: "Traffic density, with a shorter gap in congestion to keep traffic moving", isCorrect: false },
     ],
   },
   {
@@ -982,7 +1041,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
       { text: "To leave enough space and avoid cutting off the passed vehicle", isCorrect: true },
       { text: "To avoid using your turn signal", isCorrect: false },
       { text: "To stay in the oncoming lane longer than needed", isCorrect: false },
-      { text: "To make the examiner look behind you", isCorrect: false },
+      { text: "To judge the return by whether your front bumper has cleared the vehicle", isCorrect: false },
     ],
   },
   {
@@ -1007,7 +1066,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     choices: [
       { text: "Reduce speed and increase scanning for local hazards", isCorrect: true },
       { text: "Keep freeway following distance but ignore pedestrians", isCorrect: false },
-      { text: "Stay at ramp speed until the examiner warns you", isCorrect: false },
+      { text: "Keep freeway-style speed and spacing until reaching the first intersection", isCorrect: false },
       { text: "Focus only on lane markings", isCorrect: false },
     ],
   },
@@ -1015,13 +1074,13 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     stage: "G",
     sourceReference: `${ontarioRoadTestSourceUrls.levelTwoRoadTest}#residential-section`,
     categorySlug: "g-advanced-lane-and-traffic-flow",
-    prompt: "What should a full-G driver watch for in residential sections?",
-    explanation: "Residential driving calls for speed control and scanning for pedestrians, cyclists, children, parked vehicles, driveways, stop signs, and limited sight lines.",
+    prompt: "Although residential driving is currently excluded from the G test, why is it still useful practice?",
+    explanation: "Residential-neighbourhood driving is currently excluded from the shortened G test, but practising it still develops speed control and scanning for pedestrians, cyclists, children, parked vehicles, driveways, signs, and limited sight lines.",
     choices: [
-      { text: "Pedestrians, cyclists, parked vehicles, driveways, signs, and sight lines", isCorrect: true },
-      { text: "Only freeway-style lane changes", isCorrect: false },
-      { text: "Only vehicles directly behind you", isCorrect: false },
-      { text: "Nothing different from an empty highway", isCorrect: false },
+      { text: "It develops lower-speed hazard scanning and speed control", isCorrect: true },
+      { text: "It replaces the required freeway practice", isCorrect: false },
+      { text: "It is still a primary section of the current shortened G test", isCorrect: false },
+      { text: "It matters only for practising parking manoeuvres", isCorrect: false },
     ],
   },
   {
@@ -1085,7 +1144,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     choices: [
       { text: "It shows you can adapt legally without sudden unsafe moves", isCorrect: true },
       { text: "It proves you know every possible road-test route", isCorrect: false },
-      { text: "It lets you ignore the examiner's next instruction", isCorrect: false },
+      { text: "It helps you recover a missed instruction with a late lane change", isCorrect: false },
       { text: "It means stopping anywhere is acceptable", isCorrect: false },
     ],
   },
@@ -1104,15 +1163,15 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
   },
   {
     stage: "G",
-    sourceReference: `${ontarioRoadTestSourceUrls.levelTwoRoadTest}#residential-section`,
+    sourceReference: ontarioRoadTestSourceUrls.levelTwoRoadTest,
     categorySlug: "g-road-test-readiness",
-    prompt: "Why should full-G practice include residential driving after highway practice?",
-    explanation: "The Level Two test can include residential sections. A driver must show they can transition from highway speeds to careful neighbourhood scanning and speed control.",
+    prompt: "What highway experience must you declare before taking the full G road test?",
+    explanation: "You must report how many times in the previous three months you drove on a freeway or highway with a speed limit of at least 80 km/h and the average length of those trips. Insufficient experience can make the test out-of-order.",
     choices: [
-      { text: "It proves you can transition to lower-speed hazard scanning", isCorrect: true },
-      { text: "It replaces freeway practice", isCorrect: false },
-      { text: "It removes the need for stop-sign routines", isCorrect: false },
-      { text: "It is useful only for parking tests", isCorrect: false },
+      { text: "How often and how far you drove on 80 km/h-or-higher roads during the previous three months", isCorrect: true },
+      { text: "How often you drove on 100 km/h freeways during the previous six months", isCorrect: false },
+      { text: "How many highway kilometres you drove in three months, without trip-frequency details", isCorrect: false },
+      { text: "How often and how far you drove on 80 km/h-or-higher roads during the previous twelve months", isCorrect: false },
     ],
   },
   {
@@ -1125,7 +1184,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
       { text: "You maintain space consistently as traffic speed changes", isCorrect: true },
       { text: "You can stay close enough to prevent lane changes", isCorrect: false },
       { text: "You brake late but always stop in time", isCorrect: false },
-      { text: "You follow closer whenever the examiner is quiet", isCorrect: false },
+      { text: "You use a fixed number of car lengths at every freeway speed", isCorrect: false },
     ],
   },
 ];
@@ -1215,10 +1274,10 @@ export const ontarioRoadTestChecklistItems: RoadTestSeedChecklistItem[] = [
   {
     stage: "G",
     section: "BEFORE_TEST",
-    sourceReference: `${ontarioRoadTestSourceUrls.levelTwoRoadTest}#freeway`,
-    categorySlug: "g-highway-merging-and-exiting",
-    title: "Rehearse merge and exit sequences",
-    description: "Practise acceleration-lane speed matching, signalling, blind-spot checks, safe gap selection, exit planning, and ramp-speed control as one repeatable sequence.",
+    sourceReference: ontarioRoadTestSourceUrls.levelTwoRoadTest,
+    categorySlug: "g-road-test-readiness",
+    title: "Confirm the current G test format",
+    description: "Review Ontario's current shortened format and be ready to declare your highway driving experience from the previous three months, including trips on roads posted at 80 km/h or higher.",
     sortOrder: 120,
   },
   {

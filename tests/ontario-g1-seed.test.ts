@@ -8,6 +8,7 @@ import {
   ontarioG1RoadSignAssets,
   ontarioG1SeedCategories,
   ontarioG1SeedQuestions,
+  retiredOntarioG1SeedPrompts,
 } from "../src/lib/seed/ontario-g1-content";
 
 describe("Ontario G1 seed content", () => {
@@ -22,6 +23,16 @@ describe("Ontario G1 seed content", () => {
   it("uses stable unique category slugs and prompts", () => {
     assert.equal(new Set(ontarioG1SeedCategories.map((category) => category.slug)).size, ontarioG1SeedCategories.length);
     assert.equal(new Set(ontarioG1SeedQuestions.map((question) => question.prompt)).size, ontarioG1SeedQuestions.length);
+  });
+
+  it("tracks retired image-dependent prompts so reseeding removes stale database questions", () => {
+    const currentPrompts = new Set(ontarioG1SeedQuestions.map((question) => question.prompt));
+
+    assert.equal(retiredOntarioG1SeedPrompts.length, 20);
+    assert.equal(new Set(retiredOntarioG1SeedPrompts).size, retiredOntarioG1SeedPrompts.length);
+    assert.equal(retiredOntarioG1SeedPrompts.some((prompt) => currentPrompts.has(prompt)), false);
+    assert.ok(retiredOntarioG1SeedPrompts.includes("What does the green traffic light shown allow you to do?"));
+    assert.ok(retiredOntarioG1SeedPrompts.includes("What do the crosswalk markings shown identify?"));
   });
 
   it("links every question to a seeded category and official Ontario source", () => {

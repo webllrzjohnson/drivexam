@@ -33,6 +33,8 @@ export type RoadTestStageGuide = {
   description: string;
   summaryLabel: string;
   readinessTarget: string;
+  formatNotice: string | null;
+  formatSourceUrl: string | null;
 };
 
 export const roadTestStageOptions = [
@@ -61,11 +63,15 @@ const roadTestStageCopy: Record<Exclude<LicenseStage, "G1">, Omit<RoadTestStageG
     title: "G2 road-test checklist",
     description: "Prep for turns, parking, observation, right-of-way, speed control, and calm basic road-test decisions.",
     readinessTarget: "Aim for three clean mock routes before booking",
+    formatNotice: null,
+    formatSourceUrl: null,
   },
   G: {
     title: "Full G road-test checklist",
     description: "Prep for highway merging, exiting, lane changes, city traffic, spacing, and confident route decisions.",
     readinessTarget: "Aim for confident city and highway consistency",
+    formatNotice: "Ontario's current shortened G test currently excludes parallel parking, roadside stops, three-point turns, and residential-neighbourhood driving until further notice. Those skills remain useful practice, but the current test emphasizes major roads, expressways, intersections, lane changes, turns, curves, and business areas.",
+    formatSourceUrl: "https://www.ontario.ca/document/official-mto-drivers-handbook/level-two-road-test",
   },
 };
 
@@ -78,6 +84,16 @@ export function buildRoadTestStageGuide({ stage, checklistCount }: { stage: Excl
   return {
     ...copy,
     summaryLabel: checklistCount > 0 ? `${checklistCount} checklist items ready` : `No ${stage === "G" ? "Full G" : "G2"} checklist items yet`,
+  };
+}
+
+export function splitRoadTestChecklistDescription(description: string): { guidance: string; sourceUrl: string | null } {
+  const sourceMatch = description.match(/\s*Source:\s*(https?:\/\/\S+)\s*$/i);
+  if (!sourceMatch) return { guidance: description.trim(), sourceUrl: null };
+
+  return {
+    guidance: description.slice(0, sourceMatch.index).trim(),
+    sourceUrl: sourceMatch[1].split("#")[0],
   };
 }
 

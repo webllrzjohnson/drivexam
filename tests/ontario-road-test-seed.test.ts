@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { statSync } from "node:fs";
+import path from "node:path";
 import { describe, it } from "node:test";
 
 import {
@@ -7,8 +9,11 @@ import {
 import {
   getOntarioRoadTestSeedSummary,
   ontarioRoadTestChecklistItems,
+  ontarioRoadTestIllustrationAssets,
   ontarioRoadTestSeedCategories,
   ontarioRoadTestSeedQuestions,
+  retiredOntarioRoadTestChecklistTitles,
+  retiredOntarioRoadTestSeedPrompts,
 } from "../src/lib/seed/ontario-road-test-content";
 
 describe("Ontario G2/G road-test seed content", () => {
@@ -51,6 +56,35 @@ describe("Ontario G2/G road-test seed content", () => {
     assert.ok(gQuestionsByCategory["g-road-test-readiness"] >= 8);
   });
 
+  it("matches Ontario's current shortened G-test format and highway declaration", () => {
+    const gQuestions = ontarioRoadTestSeedQuestions.filter((question) => question.stage === "G");
+    const content = gQuestions.map((question) => `${question.prompt} ${question.explanation} ${question.choices.map((choice) => choice.text).join(" ")}`).join("\n");
+    const gChecklist = ontarioRoadTestChecklistItems.filter((item) => item.stage === "G");
+
+    assert.match(content, /Until further notice|currently excludes/i);
+    assert.match(content, /parallel parking/i);
+    assert.match(content, /roadside stops/i);
+    assert.match(content, /three-point turns|3-point turns/i);
+    assert.match(content, /residential neighbourhoods|residential-neighbourhood driving/i);
+    assert.match(content, /three months/i);
+    assert.match(content, /80 km\/h/i);
+    assert.equal(gQuestions.some((question) => question.prompt === "Why does the full-G test include business and residential sections?"), false);
+    assert.equal(gQuestions.some((question) => question.prompt === "What does a roadside stop show on the Level Two road test?"), false);
+    assert.equal(gQuestions.some((question) => question.prompt === "Why should full-G practice include residential driving after highway practice?"), false);
+    assert.ok(gChecklist.some((item) => /current G test format/i.test(`${item.title} ${item.description}`)));
+    assert.ok(gChecklist.some((item) => /highway driving experience|three months/i.test(item.description)));
+  });
+
+  it("tracks superseded Full G prompts so reseeding removes stale database rows", () => {
+    const currentPrompts = new Set(ontarioRoadTestSeedQuestions.map((question) => question.prompt));
+
+    assert.equal(retiredOntarioRoadTestSeedPrompts.length, 5);
+    assert.equal(new Set(retiredOntarioRoadTestSeedPrompts).size, retiredOntarioRoadTestSeedPrompts.length);
+    assert.equal(retiredOntarioRoadTestSeedPrompts.some((prompt) => currentPrompts.has(prompt)), false);
+    assert.deepEqual(retiredOntarioRoadTestChecklistTitles, ["Rehearse merge and exit sequences"]);
+    assert.equal(ontarioRoadTestChecklistItems.some((item) => retiredOntarioRoadTestChecklistTitles.includes(item.title)), false);
+  });
+
   it("uses stable unique category slugs, question prompts, and checklist titles", () => {
     assert.equal(new Set(ontarioRoadTestSeedCategories.map((category) => category.slug)).size, ontarioRoadTestSeedCategories.length);
     assert.equal(new Set(ontarioRoadTestSeedQuestions.map((question) => question.prompt)).size, ontarioRoadTestSeedQuestions.length);
@@ -91,6 +125,45 @@ describe("Ontario G2/G road-test seed content", () => {
       assert.ok(item.title.length >= 12, `${item.title} has a meaningful title`);
       assert.ok(item.description.length >= 40, `${item.title} has a useful description`);
       assert.ok(["BEFORE_TEST", "DURING_TEST", "COMMON_FAIL_REASONS", "SELF_ASSESSMENT"].includes(item.section));
+    }
+  });
+
+  it("avoids obviously gameable examiner-joke distractors", () => {
+    const weakDistractorPattern = /examiner|honks|blind spots are optional|open the door immediately|only empty parking lots|ignore them because you are already parking/i;
+
+    for (const question of ontarioRoadTestSeedQuestions) {
+      for (const choice of question.choices.filter((candidate) => !candidate.isCorrect)) {
+        assert.doesNotMatch(choice.text, weakDistractorPattern, `${question.stage}: ${question.prompt}`);
+      }
+    }
+  });
+
+  it("ships three production road-test illustrations and attaches them to the matching questions", () => {
+    const expectedAttachments = new Map([
+      ["When turning left, what should you do before crossing oncoming traffic?", "g2-left-turn-pedestrian-yield"],
+      ["What observation habit should be clear during a G2 lane change?", "g2-g-lane-change-blind-spot"],
+      ["During a full-G lane change, what should the examiner clearly see?", "g2-g-lane-change-blind-spot"],
+      ["What is the G road test looking for when you enter a freeway?", "full-g-highway-merge-safe-gap"],
+    ]);
+
+    assert.equal(ontarioRoadTestIllustrationAssets.length, 3);
+    assert.deepEqual(new Set(ontarioRoadTestIllustrationAssets.map((asset) => asset.slug)), new Set(expectedAttachments.values()));
+
+    for (const asset of ontarioRoadTestIllustrationAssets) {
+      assert.equal(asset.mimeType, "image/png");
+      assert.match(asset.path, /^\/uploads\/content-images\/road-test\/[a-z0-9-]+\.png$/);
+      assert.match(asset.sourceCredit, /Ontario.*OpenClipart/i);
+
+      const publicFile = path.join(process.cwd(), "public", asset.path.replace(/^\//, ""));
+      const fileStat = statSync(publicFile);
+      assert.equal(fileStat.size, asset.sizeBytes, `${asset.slug} byte size matches the public PNG`);
+      assert.ok(fileStat.size > 100_000, `${asset.slug} is a production-sized illustration`);
+    }
+
+    for (const [prompt, assetSlug] of expectedAttachments) {
+      const question = ontarioRoadTestSeedQuestions.find((candidate) => candidate.prompt === prompt);
+      assert.ok(question, `${prompt} exists`);
+      assert.deepEqual(question.assetSlugs, [assetSlug]);
     }
   });
 });

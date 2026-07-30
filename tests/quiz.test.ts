@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
+  buildBalancedPracticeQuestionSet,
+  buildQuizNavigationState,
   buildPracticeQuestionSet,
   buildPracticeStageGuide,
   buildRoadSignFlashcardGroups,
@@ -61,6 +63,32 @@ describe("learner quiz helpers", () => {
     });
   });
 
+  it("deterministically mixes answer positions instead of exposing the stored correct-first order", () => {
+    const correctFirstQuestions: QuizQuestionInput[] = Array.from({ length: 12 }, (_, index) => ({
+      id: `position-q${index + 1}`,
+      prompt: `Position test question ${index + 1}?`,
+      explanation: "The stored order should not reveal which answer is correct.",
+      stage: "G2",
+      type: "MULTIPLE_CHOICE",
+      category: { name: "Observation" },
+      assets: [],
+      choices: [
+        { id: `position-q${index + 1}-correct`, text: "Correct", isCorrect: true, sortOrder: 0, asset: null },
+        { id: `position-q${index + 1}-wrong-1`, text: "Wrong 1", isCorrect: false, sortOrder: 1, asset: null },
+        { id: `position-q${index + 1}-wrong-2`, text: "Wrong 2", isCorrect: false, sortOrder: 2, asset: null },
+        { id: `position-q${index + 1}-wrong-3`, text: "Wrong 3", isCorrect: false, sortOrder: 3, asset: null },
+      ],
+    }));
+
+    const firstBuild = buildQuizQuestionViews(correctFirstQuestions);
+    const secondBuild = buildQuizQuestionViews(correctFirstQuestions);
+    const correctPositions = firstBuild.map((question) => question.choices.findIndex((choice) => choice.isCorrect));
+
+    assert.deepEqual(secondBuild, firstBuild);
+    assert.ok(new Set(correctPositions).size > 1, "correct choices appear in more than one answer position");
+    assert.ok(correctPositions.some((position) => position > 0), "correct choices are not always first");
+  });
+
   it("scores exact selected choice sets and returns review rows", () => {
     const views = buildQuizQuestionViews(questions);
     const result = scoreQuizAnswers(views, {
@@ -86,8 +114,36 @@ describe("learner quiz helpers", () => {
     assert.deepEqual(result.review, []);
   });
 
+  it("builds clamped one-question quiz navigation state", () => {
+    assert.deepEqual(buildQuizNavigationState(20, 0), {
+      activeIndex: 0,
+      questionNumber: 1,
+      isFirst: true,
+      isLast: false,
+      previousIndex: 0,
+      nextIndex: 1,
+    });
+    assert.deepEqual(buildQuizNavigationState(20, 10), {
+      activeIndex: 10,
+      questionNumber: 11,
+      isFirst: false,
+      isLast: false,
+      previousIndex: 9,
+      nextIndex: 11,
+    });
+    assert.deepEqual(buildQuizNavigationState(20, 99), {
+      activeIndex: 19,
+      questionNumber: 20,
+      isFirst: false,
+      isLast: true,
+      previousIndex: 18,
+      nextIndex: 19,
+    });
+  });
+
   it("builds stage-specific practice guidance for learner onboarding", () => {
     const guide = buildPracticeStageGuide({ stage: "G1", categoryCount: 5, questionCount: 20 });
+    const fullGGuide = buildPracticeStageGuide({ stage: "G", categoryCount: 3, questionCount: 20 });
 
     assert.equal(guide.title, "G1 knowledge test practice");
     assert.equal(guide.questionTargetLabel, "20-question set loaded");
@@ -97,6 +153,8 @@ describe("learner quiz helpers", () => {
       "Answer with feedback",
       "Save and fix weak areas",
     ]);
+    assert.match(fullGGuide.description, /road-test preparation scenarios/i);
+    assert.match(fullGGuide.description, /not an official written test/i);
   });
 
   it("explains the empty practice state for the selected stage", () => {
@@ -120,6 +178,23 @@ describe("learner quiz helpers", () => {
     assert.deepEqual(firstSet.questions.map((question) => question.id), Array.from({ length: 20 }, (_, index) => `q${index + 1}`));
     assert.deepEqual(secondSet.questions.map((question) => question.id), Array.from({ length: 20 }, (_, index) => `q${index + 21}`));
     assert.equal(clampedSet.activeSet, 2);
+  });
+
+  it("builds deterministic category-balanced practice sets", () => {
+    const pool = [
+      ...Array.from({ length: 6 }, (_, index) => ({ id: `sign-${index + 1}`, categoryName: "Signs" })),
+      ...Array.from({ length: 6 }, (_, index) => ({ id: `rule-${index + 1}`, categoryName: "Rules" })),
+      ...Array.from({ length: 6 }, (_, index) => ({ id: `safety-${index + 1}`, categoryName: "Safety" })),
+    ];
+
+    const firstSet = buildBalancedPracticeQuestionSet(pool, { requestedSet: 1, pageSize: 9, seed: "G1" });
+    const repeatedSet = buildBalancedPracticeQuestionSet(pool, { requestedSet: 1, pageSize: 9, seed: "G1" });
+    const secondSet = buildBalancedPracticeQuestionSet(pool, { requestedSet: 2, pageSize: 9, seed: "G1" });
+
+    assert.deepEqual(repeatedSet, firstSet);
+    assert.deepEqual(firstSet.questions.slice(0, 3).map((question) => question.categoryName), ["Signs", "Rules", "Safety"]);
+    assert.equal(new Set(firstSet.questions.map((question) => question.categoryName)).size, 3);
+    assert.equal(firstSet.questions.some((question) => secondSet.questions.some((candidate) => candidate.id === question.id)), false);
   });
 
   it("builds dedicated road-sign practice guidance", () => {

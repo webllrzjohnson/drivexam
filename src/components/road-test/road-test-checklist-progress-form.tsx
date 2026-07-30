@@ -1,22 +1,17 @@
-import Link from "next/link";
-
 import { toggleRoadTestChecklistProgress } from "@/app/(public)/road-test/actions";
 import { Button } from "@/components/ui/button";
 
 type RoadTestChecklistProgressFormProps = {
   itemId: string;
+  itemTitle: string;
   stage: "G2" | "G";
   isCompleted: boolean;
   canSaveProgress: boolean;
 };
 
-export function RoadTestChecklistProgressForm({ canSaveProgress, isCompleted, itemId, stage }: RoadTestChecklistProgressFormProps) {
+export function RoadTestChecklistProgressForm({ canSaveProgress, isCompleted, itemId, itemTitle, stage }: RoadTestChecklistProgressFormProps) {
   if (!canSaveProgress) {
-    return (
-      <Button asChild size="sm" variant="outline">
-        <Link href="/sign-in">Sign in to save checklist progress</Link>
-      </Button>
-    );
+    return null;
   }
 
   return (
@@ -27,7 +22,7 @@ export function RoadTestChecklistProgressForm({ canSaveProgress, isCompleted, it
         <input defaultChecked={isCompleted} name="completed" type="checkbox" />
         {isCompleted ? "Completed" : "Mark complete"}
       </label>
-      <Button className="ml-2" size="sm" type="submit" variant={isCompleted ? "outline" : "default"}>Save</Button>
+      <Button className="ml-2" size="sm" type="submit" variant={isCompleted ? "outline" : "default"}>Save <span className="sr-only">{itemTitle}</span></Button>
     </form>
   );
 }

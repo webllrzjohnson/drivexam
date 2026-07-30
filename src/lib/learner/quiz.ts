@@ -90,9 +90,22 @@ export type PracticeQuestionSet<T> = {
   pageSize: number;
 };
 
+export type QuizNavigationState = {
+  activeIndex: number;
+  questionNumber: number;
+  isFirst: boolean;
+  isLast: boolean;
+  previousIndex: number;
+  nextIndex: number;
+};
+
 type PracticeQuestionSetInput = {
   requestedSet?: number;
   pageSize?: number;
+};
+
+type BalancedPracticeQuestionSetInput = PracticeQuestionSetInput & {
+  seed: string;
 };
 
 function sortedUnique(values: string[]) {
@@ -105,6 +118,31 @@ function sameChoiceSet(left: string[], right: string[]) {
   return a.length === b.length && a.every((value, index) => value === b[index]);
 }
 
+function stableHash(value: string) {
+  let hash = 0;
+  for (const character of value) hash = ((hash << 5) - hash + character.charCodeAt(0)) | 0;
+  return Math.abs(hash);
+}
+
+function rotateByStableSeed<T>(items: T[], seed: string) {
+  if (items.length < 2) return items;
+  const offset = stableHash(seed) % items.length;
+  return [...items.slice(offset), ...items.slice(0, offset)];
+}
+
+export function buildQuizNavigationState(totalCount: number, requestedIndex: number): QuizNavigationState {
+  const lastIndex = Math.max(0, totalCount - 1);
+  const activeIndex = Math.min(Math.max(0, Math.floor(requestedIndex) || 0), lastIndex);
+  return {
+    activeIndex,
+    questionNumber: totalCount ? activeIndex + 1 : 0,
+    isFirst: activeIndex === 0,
+    isLast: activeIndex === lastIndex,
+    previousIndex: Math.max(0, activeIndex - 1),
+    nextIndex: Math.min(lastIndex, activeIndex + 1),
+  };
+}
+
 export function buildQuizQuestionViews(questions: QuizQuestionInput[]): QuizQuestionView[] {
   return questions.map((question) => ({
     id: question.id,
@@ -114,8 +152,7 @@ export function buildQuizQuestionViews(questions: QuizQuestionInput[]): QuizQues
     type: question.type,
     categoryName: question.category?.name ?? null,
     assets: question.assets.map(({ asset }) => ({ path: asset.path, title: asset.title ?? asset.filename ?? "Question image" })),
-    choices: [...question.choices]
-      .sort((a, b) => a.sortOrder - b.sortOrder)
+    choices: rotateByStableSeed([...question.choices].sort((a, b) => a.sortOrder - b.sortOrder), question.id)
       .map((choice) => ({
         id: choice.id,
         text: choice.text,
@@ -163,6 +200,28 @@ export function buildPracticeQuestionSet<T>(questions: T[], { pageSize = 20, req
   };
 }
 
+export function buildBalancedPracticeQuestionSet<T extends { categoryName: string | null }>(
+  questions: T[],
+  { pageSize = 20, requestedSet = 1, seed }: BalancedPracticeQuestionSetInput,
+): PracticeQuestionSet<T> {
+  const groups = new Map<string, T[]>();
+  for (const question of questions) {
+    const key = question.categoryName ?? "Other";
+    groups.set(key, [...(groups.get(key) ?? []), question]);
+  }
+
+  const queues = [...groups.entries()].map(([category, items]) => rotateByStableSeed(items, `${seed}:${category}`));
+  const balanced: T[] = [];
+  for (let index = 0; balanced.length < questions.length; index += 1) {
+    for (const queue of queues) {
+      const question = queue[index];
+      if (question) balanced.push(question);
+    }
+  }
+
+  return buildPracticeQuestionSet(balanced, { pageSize, requestedSet });
+}
+
 const stageGuideCopy: Record<LicenseStage, Pick<PracticeStageGuide, "title" | "description" | "readinessTarget">> = {
   G1: {
     title: "G1 knowledge test practice",
@@ -176,7 +235,7 @@ const stageGuideCopy: Record<LicenseStage, Pick<PracticeStageGuide, "title" | "d
   },
   G: {
     title: "Full G road test prep",
-    description: "Focus on highway readiness, advanced observation, lane changes, merging, defensive spacing, and confident route decisions.",
+    description: "Use road-test preparation scenarios to practise highway readiness, observation, lane changes, merging, spacing, and route decisions. These are learning scenarios, not an official written test.",
     readinessTarget: "Aim for strong highway and city-driving consistency",
   },
 };

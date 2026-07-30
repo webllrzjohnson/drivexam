@@ -1,10 +1,18 @@
 import { db } from "../src/lib/db";
 import { hashPassword } from "../src/lib/auth/password";
-import { ontarioG1RoadSignAssets, ontarioG1SeedCategories, ontarioG1SeedQuestions } from "../src/lib/seed/ontario-g1-content";
+import {
+  ontarioG1RoadSignAssets,
+  ontarioG1SeedCategories,
+  ontarioG1SeedQuestions,
+  retiredOntarioG1SeedPrompts,
+} from "../src/lib/seed/ontario-g1-content";
 import {
   ontarioRoadTestChecklistItems,
+  ontarioRoadTestIllustrationAssets,
   ontarioRoadTestSeedCategories,
   ontarioRoadTestSeedQuestions,
+  retiredOntarioRoadTestChecklistTitles,
+  retiredOntarioRoadTestSeedPrompts,
 } from "../src/lib/seed/ontario-road-test-content";
 
 async function seedAdmin() {
@@ -73,7 +81,7 @@ async function seedOntarioG1Content() {
     assets.set(asset.slug, saved.id);
   }
 
-  const seedPrompts = ontarioG1SeedQuestions.map((question) => question.prompt);
+  const seedPrompts = [...ontarioG1SeedQuestions.map((question) => question.prompt), ...retiredOntarioG1SeedPrompts];
   await db.question.deleteMany({ where: { prompt: { in: seedPrompts }, sourceReference: { not: null } } });
 
   for (const [questionIndex, question] of ontarioG1SeedQuestions.entries()) {
@@ -116,6 +124,7 @@ async function seedOntarioG1Content() {
 
 async function seedOntarioRoadTestContent() {
   const categories = new Map<string, string>();
+  const assets = new Map<string, string>();
 
   for (const category of ontarioRoadTestSeedCategories) {
     const saved = await db.category.upsert({
@@ -139,12 +148,37 @@ async function seedOntarioRoadTestContent() {
     categories.set(category.slug, saved.id);
   }
 
-  const seedPrompts = ontarioRoadTestSeedQuestions.map((question) => question.prompt);
+  await db.uploadAsset.deleteMany({ where: { category: "Ontario road-test illustrations" } });
+
+  for (const asset of ontarioRoadTestIllustrationAssets) {
+    const saved = await db.uploadAsset.create({
+      data: {
+        type: "CONTENT_IMAGE",
+        filename: asset.filename,
+        path: asset.path,
+        mimeType: asset.mimeType,
+        sizeBytes: asset.sizeBytes,
+        title: asset.title,
+        category: "Ontario road-test illustrations",
+        description: asset.description,
+        sourceCredit: asset.sourceCredit,
+      },
+    });
+    assets.set(asset.slug, saved.id);
+  }
+
+  const seedPrompts = [...ontarioRoadTestSeedQuestions.map((question) => question.prompt), ...retiredOntarioRoadTestSeedPrompts];
   await db.question.deleteMany({ where: { prompt: { in: seedPrompts }, sourceReference: { not: null } } });
 
   for (const question of ontarioRoadTestSeedQuestions) {
     const categoryId = categories.get(question.categorySlug);
     if (!categoryId) throw new Error(`Missing seeded category for ${question.categorySlug}`);
+
+    const questionAssets = (question.assetSlugs ?? []).map((slug, assetIndex) => {
+      const assetId = assets.get(slug);
+      if (!assetId) throw new Error(`Missing seeded road-test illustration for ${slug}`);
+      return { assetId, sortOrder: assetIndex + 1 };
+    });
 
     await db.question.create({
       data: {
@@ -157,6 +191,7 @@ async function seedOntarioRoadTestContent() {
         selectCount: 1,
         sourceReference: question.sourceReference,
         publishedAt: new Date(),
+        assets: questionAssets.length ? { create: questionAssets } : undefined,
         choices: {
           create: question.choices.map((choice, choiceIndex) => ({
             text: choice.text,
@@ -168,7 +203,7 @@ async function seedOntarioRoadTestContent() {
     });
   }
 
-  const checklistTitles = ontarioRoadTestChecklistItems.map((item) => item.title);
+  const checklistTitles = [...ontarioRoadTestChecklistItems.map((item) => item.title), ...retiredOntarioRoadTestChecklistTitles];
   await db.roadTestChecklistItem.deleteMany({ where: { title: { in: checklistTitles } } });
 
   for (const item of ontarioRoadTestChecklistItems) {

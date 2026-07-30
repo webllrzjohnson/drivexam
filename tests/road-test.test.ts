@@ -5,6 +5,7 @@ import {
   buildRoadTestStageGuide,
   groupRoadTestChecklistItems,
   roadTestSectionLabels,
+  splitRoadTestChecklistDescription,
   type RoadTestChecklistInput,
 } from "../src/lib/learner/road-test";
 
@@ -55,8 +56,11 @@ describe("road-test checklist helpers", () => {
     assert.equal(g2Guide.title, "G2 road-test checklist");
     assert.equal(g2Guide.summaryLabel, "8 checklist items ready");
     assert.match(g2Guide.description, /turns, parking, observation/i);
+    assert.equal(g2Guide.formatNotice, null);
     assert.equal(gGuide.title, "Full G road-test checklist");
     assert.match(gGuide.description, /highway/i);
+    assert.match(gGuide.formatNotice ?? "", /currently excludes.*parallel parking.*roadside stops.*three-point turns.*residential/i);
+    assert.match(gGuide.formatSourceUrl ?? "", /^https:\/\/www\.ontario\.ca\/document\/official-mto-drivers-handbook\/level-two-road-test$/);
   });
 
   it("groups checklist items in learner-friendly section order", () => {
@@ -80,5 +84,23 @@ describe("road-test checklist helpers", () => {
     assert.equal(sections.length, 4);
     assert.ok(sections.every((section) => section.items.length === 0));
     assert.match(sections[0].emptyState, /Seed or add checklist items/i);
+  });
+
+  it("separates checklist guidance from its official source link", () => {
+    assert.deepEqual(
+      splitRoadTestChecklistDescription("Check mirrors before moving.\n\nSource: https://www.ontario.ca/example"),
+      {
+        guidance: "Check mirrors before moving.",
+        sourceUrl: "https://www.ontario.ca/example",
+      },
+    );
+    assert.equal(
+      splitRoadTestChecklistDescription("Practise merging.\n\nSource: https://www.ontario.ca/example#stale-section").sourceUrl,
+      "https://www.ontario.ca/example",
+    );
+    assert.deepEqual(splitRoadTestChecklistDescription("Practice this habit."), {
+      guidance: "Practice this habit.",
+      sourceUrl: null,
+    });
   });
 });

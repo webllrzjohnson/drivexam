@@ -41,6 +41,32 @@ export const ontarioG1SourceUrls = {
   nightBadWeather: "https://www.ontario.ca/document/official-mto-drivers-handbook/driving-night-and-bad-weather",
 } as const;
 
+// These prompts were shipped with generated SVG signal/marking art that was
+// replaced by Louie's JSON-backed Ontario sign bank. Keep the prompt list so
+// an idempotent reseed removes the now image-less legacy database rows.
+export const retiredOntarioG1SeedPrompts = [
+  "What does this sign prohibit?",
+  "What should you do when this right-curve sign is shown?",
+  "What should you do when this left-curve sign is shown?",
+  "What should this sign make you watch for?",
+  "What is this sign warning you about?",
+  "What right-turn movement is prohibited by this sign?",
+  "What do the crosswalk markings shown identify?",
+  "What do the continuity lines shown usually warn you about?",
+  "What does the broken yellow line shown mean at the left of your lane?",
+  "What does the solid yellow line shown mean at the left of your lane?",
+  "When pedestrians are already crossing and the orange hand appears, what must drivers remember?",
+  "At an intersection pedestrian signal with push-buttons, what should pedestrians do to get the walk signal?",
+  "What does the orange hand signal shown mean for pedestrians?",
+  "What does the pedestrian walk signal shown tell pedestrians?",
+  "What does the green left-turn arrow shown mean?",
+  "What does the flashing yellow light shown tell you?",
+  "How should you treat the flashing red light shown?",
+  "Where should you stop for the red traffic light shown?",
+  "What should you do when the yellow traffic light shown appears?",
+  "What does the green traffic light shown allow you to do?",
+] as const;
+
 export const ontarioG1SeedCategories: SeedCategory[] = [
   {
     slug: "g1-signs-and-lights",

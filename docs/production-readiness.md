@@ -5,11 +5,11 @@ This checklist is for deploying `drivexam` from `main` to a production Next.js h
 ## Current app shape
 
 - Stack: Next.js 15 App Router, React 19, TypeScript, Tailwind, Prisma 7, Postgres, Auth.js/NextAuth.
-- Database-backed features: Auth.js users/accounts/sessions, admin CMS, questions/categories/lessons, quiz attempts, question reports, contact submissions, road-test checklist progress.
+- Database-backed features: Auth.js users/accounts/sessions, admin CMS, questions/categories/lessons, quiz attempts, question reports, contact submissions, and road-test checklist progress. The road-test page also includes a guest-usable mock-drive assessment that is intentionally not persisted.
 - Seeded learner content:
-  - 40 published G1 questions across 8 active G1 categories.
-  - 12 published G2 questions across 3 active G2 categories.
-  - 12 published full-G questions across 3 active G categories.
+  - 68 published G1 questions across 8 active G1 categories.
+  - 40 published G2 road-test preparation scenarios across 3 active G2 categories.
+  - 40 published full-G road-test preparation scenarios across 3 active G categories.
   - 8 G2 road-test checklist items.
   - 8 full-G road-test checklist items.
 - PWA install assets are included under `public/manifest.webmanifest` and `public/icons/`.
@@ -110,9 +110,9 @@ npm run prisma:validate
 
 Current expected local gate:
 
-- 92 tests / 23 suites / 0 failures.
-- 35 Next.js routes generated.
-- Prisma schema valid.
+- `npm run test`, `npm run lint`, and `npm run build` pass without failures.
+- 36 Next.js routes are generated.
+- Prisma schema is valid.
 
 ## Live smoke-test routes
 
@@ -147,8 +147,9 @@ Smoke checks:
 1. Create or sign in as a verified learner.
 2. Complete a practice quiz and save progress.
 3. Toggle at least one road-test checklist item.
-4. Confirm `/dashboard` shows quiz and road-test progress.
-5. Submit a contact message from a verified learner.
+4. Complete a guest mock-drive assessment and confirm critical safety errors prevent a ready verdict.
+5. Confirm `/dashboard` shows quiz and road-test progress.
+6. Submit a contact message from a verified learner.
 
 ### Admin routes
 

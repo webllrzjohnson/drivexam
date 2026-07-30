@@ -4,10 +4,10 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { PracticeQuiz } from "@/components/quiz/practice-quiz";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getOptionalSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
-import { buildPracticeQuestionSet, buildPracticeStageGuide, buildQuizQuestionViews } from "@/lib/learner/quiz";
+import { buildBalancedPracticeQuestionSet, buildPracticeStageGuide, buildQuizQuestionViews } from "@/lib/learner/quiz";
 
 type PracticePageProps = {
   searchParams: Promise<{ stage?: string; categoryId?: string; reported?: string; questionSet?: string }>;
@@ -60,17 +60,17 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
     }),
   ]);
   const quizQuestions = buildQuizQuestionViews(questions);
-  const questionSet = buildPracticeQuestionSet(quizQuestions, { requestedSet, pageSize: 20 });
+  const questionSet = buildBalancedPracticeQuestionSet(quizQuestions, { requestedSet, pageSize: 20, seed: `${stage}:${categoryId ?? "all"}` });
   const guide = buildPracticeStageGuide({ stage, categoryCount: categories.length, questionCount: questionSet.questions.length });
 
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-6xl space-y-8 px-4 py-10">
+      <main className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 sm:py-10">
         <section className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
           <div className="space-y-4">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-800">Practice quiz</p>
-            <h1 className="text-4xl font-bold tracking-tight text-slate-950">{guide.title}</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{guide.title}</h1>
             <p className="max-w-3xl text-lg leading-8 text-slate-600">{guide.description}</p>
             <div className="flex flex-wrap gap-3 text-sm font-medium">
               <span className="rounded-full bg-green-100 px-3 py-1 text-green-900">{guide.questionTargetLabel}</span>
@@ -79,7 +79,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
           </div>
           <Card className="border-green-200 bg-green-50">
             <CardHeader>
-              <CardTitle className="text-xl">How to use this practice set</CardTitle>
+              <h2 className="text-xl font-semibold leading-none tracking-tight">How to use this practice set</h2>
             </CardHeader>
             <CardContent className="space-y-3">
               {guide.milestones.map((milestone, index) => (
@@ -97,7 +97,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
 
         <Card>
           <CardHeader>
-            <CardTitle>Choose practice set</CardTitle>
+            <h2 className="text-2xl font-semibold leading-none tracking-tight">Choose practice set</h2>
           </CardHeader>
           <CardContent>
             <form className="grid gap-4 md:grid-cols-[1fr_1fr_auto]" method="get">
@@ -122,7 +122,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
           </CardContent>
         </Card>
 
-        {params.reported === "question" ? <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900">Thanks — your question report was sent to admins.</p> : null}
+        {params.reported === "question" ? <p aria-live="polite" className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900" role="status">Thanks — your question report was sent to admins.</p> : null}
 
         {questionSet.totalSets > 1 ? (
           <Card className="border-slate-200 bg-slate-50">
@@ -133,7 +133,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
               <div className="flex flex-wrap gap-2">
                 {Array.from({ length: questionSet.totalSets }, (_, index) => index + 1).map((set) => (
                   <Button asChild key={set} size="sm" variant={set === questionSet.activeSet ? "default" : "outline"}>
-                    <Link href={buildPracticeUrl(stage, categoryId, set)}>Set {set}</Link>
+                    <Link aria-current={set === questionSet.activeSet ? "page" : undefined} href={buildPracticeUrl(stage, categoryId, set)}>Set {set}</Link>
                   </Button>
                 ))}
               </div>

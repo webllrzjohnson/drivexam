@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { saveQuizAttempt } from "@/app/(public)/practice/actions";
 import { createQuestionReport } from "@/app/(public)/practice/report-actions";
-import { scoreQuizAnswers, type QuizQuestionView } from "@/lib/learner/quiz";
+import { buildQuizNavigationState, scoreQuizAnswers, type QuizQuestionView } from "@/lib/learner/quiz";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -44,8 +44,25 @@ function toggleMultiChoice(selection: Record<string, string[]>, questionId: stri
 export function PracticeQuiz({ canSaveProgress, emptyState, questions, returnTo, stage }: PracticeQuizProps) {
   const [selection, setSelection] = useState<Record<string, string[]>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const hasMounted = useRef(false);
   const result = useMemo(() => scoreQuizAnswers(questions, selection), [questions, selection]);
   const reviewByQuestion = new Map(result.review.map((row) => [row.questionId, row]));
+  const navigation = buildQuizNavigationState(questions.length, activeIndex);
+  const question = questions[navigation.activeIndex];
+  const answeredCount = Object.values(selection).filter((choiceIds) => choiceIds.length > 0).length;
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+    document.getElementById(`question-${question?.id}-heading`)?.focus();
+  }, [question?.id]);
+
+  useEffect(() => {
+    if (submitted) document.getElementById("quiz-result-heading")?.focus();
+  }, [submitted]);
 
   if (!questions.length) {
     return (
@@ -58,19 +75,22 @@ export function PracticeQuiz({ canSaveProgress, emptyState, questions, returnTo,
     );
   }
 
+  const isMulti = question.type === "MULTI_SELECT";
+  const review = reviewByQuestion.get(question.id);
+
   return (
     <div className="space-y-6">
       {submitted ? (
-        <Card className="border-green-200 bg-green-50">
+        <Card aria-live="polite" className="border-green-200 bg-green-50" role="status">
           <CardHeader>
-            <CardTitle>Score: {result.correctCount}/{result.totalCount} ({result.percent}%)</CardTitle>
+            <CardTitle className="outline-none" id="quiz-result-heading" tabIndex={-1}>Score: {result.correctCount}/{result.totalCount} ({result.percent}%)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-green-950">
-            <p>Review each explanation below, then save progress or try again.</p>
+            <p>Review each explanation one question at a time, then save progress or try again.</p>
             {canSaveProgress ? (
               <form action={saveQuizAttempt}>
                 <input name="stage" type="hidden" value={stage} />
-                <input name="questionIds" type="hidden" value={JSON.stringify(questions.map((question) => question.id))} />
+                <input name="questionIds" type="hidden" value={JSON.stringify(questions.map((candidate) => candidate.id))} />
                 <input name="selectedChoiceIdsByQuestion" type="hidden" value={JSON.stringify(selection)} />
                 <Button type="submit">Save progress</Button>
               </form>
@@ -81,84 +101,113 @@ export function PracticeQuiz({ canSaveProgress, emptyState, questions, returnTo,
         </Card>
       ) : null}
 
-      {questions.map((question, index) => {
-        const isMulti = question.type === "MULTI_SELECT";
-        const review = reviewByQuestion.get(question.id);
-        return (
-          <Card key={question.id}>
-            <CardHeader>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-green-800">
-                Question {index + 1} · {question.stage}{question.categoryName ? ` · ${question.categoryName}` : ""}
-              </p>
-              <CardTitle className="text-xl leading-7">{question.prompt}</CardTitle>
-              {isMulti ? <p className="text-sm text-slate-600">Select all correct answers.</p> : null}
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {question.assets.length ? (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {question.assets.map((asset) => (
-                    <Image alt={asset.title} className="max-h-56 rounded-xl border bg-white object-contain p-3" height={224} key={asset.path} src={asset.path} width={360} />
-                  ))}
-                </div>
-              ) : null}
+      <div className="rounded-xl border bg-slate-50 p-4">
+        <div className="flex items-center justify-between gap-4 text-sm font-medium text-slate-700">
+          <span>Question {navigation.questionNumber} of {questions.length}</span>
+          <span>{answeredCount} answered</span>
+        </div>
+        <div aria-label={`Quiz progress: question ${navigation.questionNumber} of ${questions.length}`} className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-valuemax={questions.length} aria-valuemin={1} aria-valuenow={navigation.questionNumber}>
+          <div className="h-full rounded-full bg-green-700 transition-all" style={{ width: `${(navigation.questionNumber / questions.length) * 100}%` }} />
+        </div>
+      </div>
 
-              <div className="space-y-3">
-                {question.choices.map((choice) => {
-                  const checked = hasChoice(selection, question.id, choice.id);
-                  const isCorrectChoice = submitted && choice.isCorrect;
-                  const isWrongSelected = submitted && checked && !choice.isCorrect;
-                  return (
-                    <label className={`flex cursor-pointer gap-3 rounded-xl border p-3 text-sm ${isCorrectChoice ? "border-green-300 bg-green-50" : "bg-white"} ${isWrongSelected ? "border-red-300 bg-red-50" : ""}`} key={choice.id}>
-                      <input
-                        checked={checked}
-                        name={`question-${question.id}`}
-                        onChange={() => setSelection((current) => isMulti ? toggleMultiChoice(current, question.id, choice.id) : setSingleChoice(current, question.id, choice.id))}
-                        type={isMulti ? "checkbox" : "radio"}
-                      />
-                      <span className="space-y-2">
-                        {choice.text ? <span className="block">{choice.text}</span> : null}
-                        {choice.asset ? <Image alt={choice.asset.title} className="max-h-32 rounded-lg border bg-white object-contain p-2" height={128} src={choice.asset.path} width={220} /> : null}
-                      </span>
-                    </label>
-                  );
-                })}
+      <Card key={question.id}>
+        <CardHeader>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-green-800">
+            Question {navigation.questionNumber} · {question.stage}{question.categoryName ? ` · ${question.categoryName}` : ""}
+          </p>
+          <h2 className="text-xl font-semibold leading-7 tracking-tight outline-none" id={`question-${question.id}-heading`} tabIndex={-1}>{question.prompt}</h2>
+          {isMulti ? <p className="text-sm text-slate-600">Select all correct answers.</p> : null}
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {question.assets.length ? (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {question.assets.map((asset) => (
+                <Image alt="Illustration for this question" className="max-h-72 rounded-xl border bg-white object-contain p-3" height={288} key={asset.path} priority src={asset.path} width={480} />
+              ))}
+            </div>
+          ) : null}
+
+          <fieldset className="space-y-3">
+            <legend className="sr-only">{question.prompt}</legend>
+            {question.choices.map((choice) => {
+              const checked = hasChoice(selection, question.id, choice.id);
+              const isCorrectChoice = submitted && choice.isCorrect;
+              const isWrongSelected = submitted && checked && !choice.isCorrect;
+              const choiceStatus = isCorrectChoice ? "Correct answer" : isWrongSelected ? "Your incorrect answer" : null;
+              return (
+                <label className={`flex gap-3 rounded-xl border p-3 text-sm ${submitted ? "cursor-default" : "cursor-pointer"} ${isCorrectChoice ? "border-green-300 bg-green-50" : "bg-white"} ${isWrongSelected ? "border-red-300 bg-red-50" : ""}`} key={choice.id}>
+                  <input
+                    aria-describedby={choiceStatus ? `choice-${choice.id}-status` : undefined}
+                    aria-disabled={submitted}
+                    checked={checked}
+                    name={`question-${question.id}`}
+                    onChange={() => {
+                      if (submitted) return;
+                      setSelection((current) => isMulti ? toggleMultiChoice(current, question.id, choice.id) : setSingleChoice(current, question.id, choice.id));
+                    }}
+                    type={isMulti ? "checkbox" : "radio"}
+                  />
+                  <span className="space-y-2">
+                    {choice.text ? <span className="block">{choice.text}</span> : null}
+                    {choice.asset ? <Image alt="Illustrated answer option" className="max-h-32 rounded-lg border bg-white object-contain p-2" height={128} src={choice.asset.path} width={220} /> : null}
+                    {choiceStatus ? <span className={`block font-semibold ${isWrongSelected ? "text-red-800" : "text-green-800"}`} id={`choice-${choice.id}-status`}>{choiceStatus}</span> : null}
+                  </span>
+                </label>
+              );
+            })}
+          </fieldset>
+
+          {submitted && review ? (
+            <div className="space-y-3">
+              <div className={`rounded-xl border p-4 text-sm ${review.isCorrect ? "border-green-200 bg-green-50 text-green-950" : "border-amber-200 bg-amber-50 text-amber-950"}`}>
+                <p className="font-semibold">{review.isCorrect ? "Correct" : "Review this one"}</p>
+                <p>{question.explanation}</p>
               </div>
+              <details className="rounded-xl border bg-slate-50 p-4 text-sm">
+                <summary className="cursor-pointer font-semibold text-slate-900">Report this question</summary>
+                <form action={createQuestionReport} className="mt-4 grid gap-3">
+                  <input name="questionId" type="hidden" value={question.id} />
+                  <input name="returnTo" type="hidden" value={returnTo} />
+                  <label className="space-y-1">
+                    <span className="font-medium">Reason</span>
+                    <select className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm" name="reason" required>
+                      {reportReasonOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                    </select>
+                  </label>
+                  <label className="space-y-1">
+                    <span className="font-medium">Comment</span>
+                    <textarea className="min-h-20 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm" name="comment" placeholder="Tell us what looks wrong or confusing." />
+                  </label>
+                  {!canSaveProgress ? (
+                    <label className="space-y-1">
+                      <span className="font-medium">Email <span className="font-normal text-slate-500">(optional)</span></span>
+                      <input className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm" name="reporterEmail" type="email" />
+                    </label>
+                  ) : null}
+                  <Button type="submit" variant="outline">Send report</Button>
+                </form>
+              </details>
+            </div>
+          ) : null}
+        </CardContent>
+      </Card>
 
-              {submitted && review ? (
-                <div className="space-y-3">
-                  <div className={`rounded-xl border p-4 text-sm ${review.isCorrect ? "border-green-200 bg-green-50 text-green-950" : "border-amber-200 bg-amber-50 text-amber-950"}`}>
-                    <p className="font-semibold">{review.isCorrect ? "Correct" : "Review this one"}</p>
-                    <p>{question.explanation}</p>
-                  </div>
-                  <details className="rounded-xl border bg-slate-50 p-4 text-sm">
-                    <summary className="cursor-pointer font-semibold text-slate-900">Report this question</summary>
-                    <form action={createQuestionReport} className="mt-4 grid gap-3">
-                      <input name="questionId" type="hidden" value={question.id} />
-                      <input name="returnTo" type="hidden" value={returnTo} />
-                      <label className="space-y-1">
-                        <span className="font-medium">Reason</span>
-                        <select className="h-10 w-full rounded-lg border border-border bg-white px-3 text-sm" name="reason" required>
-                          {reportReasonOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-                        </select>
-                      </label>
-                      <label className="space-y-1">
-                        <span className="font-medium">Comment</span>
-                        <textarea className="min-h-20 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm" name="comment" placeholder="Tell us what looks wrong or confusing." />
-                      </label>
-                      {!canSaveProgress ? <input className="h-10 rounded-lg border border-border bg-white px-3 text-sm" name="reporterEmail" placeholder="Email optional" type="email" /> : null}
-                      <Button type="submit" variant="outline">Send report</Button>
-                    </form>
-                  </details>
-                </div>
-              ) : null}
-            </CardContent>
-          </Card>
-        );
-      })}
-
-      <div className="flex flex-wrap gap-3">
-        <Button onClick={() => setSubmitted(true)} type="button">Check answers</Button>
-        <Button onClick={() => { setSelection({}); setSubmitted(false); }} type="button" variant="outline">Try again</Button>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Button disabled={navigation.isFirst} onClick={() => setActiveIndex(navigation.previousIndex)} type="button" variant="outline">Previous</Button>
+        <div className="flex flex-wrap gap-3">
+          {submitted ? <Button onClick={() => {
+            setSelection({});
+            setSubmitted(false);
+            setActiveIndex(0);
+            requestAnimationFrame(() => document.getElementById(`question-${questions[0].id}-heading`)?.focus());
+          }} type="button" variant="outline">Try again</Button> : null}
+          {!navigation.isLast ? (
+            <Button onClick={() => setActiveIndex(navigation.nextIndex)} type="button">Next question</Button>
+          ) : !submitted ? (
+            <Button onClick={() => { setSubmitted(true); setActiveIndex(0); }} type="button">Check answers</Button>
+          ) : null}
+        </div>
       </div>
     </div>
   );
