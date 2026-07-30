@@ -12,7 +12,8 @@ This checklist is for deploying `drivexam` from `main` to a production Next.js h
   - 40 published full-G road-test preparation scenarios across 3 active G categories.
   - 8 G2 road-test checklist items.
   - 8 full-G road-test checklist items.
-- PWA install assets are included under `public/manifest.webmanifest` and `public/icons/`.
+- PWA support includes the install manifest/icons, a production-only service-worker registration, update and connection-status messaging, static-asset caching, and a network-first `/offline` fallback.
+- The service worker intentionally bypasses mutations, API/authentication requests, and admin/account/dashboard routes. Personalized or authenticated HTML is never cached.
 
 ## Required production environment variables
 
@@ -175,7 +176,13 @@ Smoke checks:
 
 - Open `/manifest.webmanifest` and confirm valid JSON.
 - Confirm `/icons/icon-192.png`, `/icons/icon-512.png`, and `/icons/icon.svg` return 200.
+- Confirm `/sw.js` returns JavaScript with `Cache-Control: public, max-age=0, must-revalidate` and `Service-Worker-Allowed: /`.
+- Verify the production build registers an activated service worker with `/` scope and creates the current `drivexam-pwa-*` cache.
+- Take the browser offline and navigate to an uncached public route; confirm the `/offline` fallback renders.
+- Confirm API, sign-in, admin, account, and dashboard requests remain network-only and are absent from Cache Storage.
+- Publish a service-worker version change and confirm the accessible update prompt refreshes only after the learner accepts it.
 - On mobile Chrome/Edge, verify the app is installable or appears in the browser install menu.
+- On iOS Safari, use Add to Home Screen and verify the app opens in standalone mode with the expected icon and theme.
 
 ## Known launch blockers to resolve before public release
 

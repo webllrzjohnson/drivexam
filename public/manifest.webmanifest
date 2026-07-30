@@ -1,12 +1,33 @@
 {
   "name": "drivexam",
   "short_name": "drivexam",
+  "id": "/",
   "description": "A trustworthy Ontario G1, G2, and full G driving exam study companion.",
   "start_url": "/",
   "scope": "/",
+  "lang": "en-CA",
+  "dir": "ltr",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#14532d",
+  "categories": ["education", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Practice questions",
+      "short_name": "Practice",
+      "url": "/practice"
+    },
+    {
+      "name": "Road-test preparation",
+      "short_name": "Road test",
+      "url": "/road-test"
+    },
+    {
+      "name": "Ontario road signs",
+      "short_name": "Road signs",
+      "url": "/road-signs"
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.png",

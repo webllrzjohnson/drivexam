@@ -8,6 +8,7 @@ const publicDir = path.join(process.cwd(), "public");
 const manifestPath = path.join(publicDir, "manifest.webmanifest");
 
 type WebManifest = {
+  id?: string;
   name?: string;
   short_name?: string;
   description?: string;
@@ -32,6 +33,7 @@ describe("PWA install manifest", () => {
     assert.equal(manifest.start_url, "/");
     assert.equal(manifest.scope, "/");
     assert.equal(manifest.display, "standalone");
+    assert.equal(manifest.id, "/");
     assert.equal(manifest.background_color, "#ffffff");
     assert.equal(manifest.theme_color, "#14532d");
     assert.match(manifest.description ?? "", /Ontario/i);
