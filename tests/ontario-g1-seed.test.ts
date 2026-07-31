@@ -38,6 +38,14 @@ describe("Ontario G1 seed content", () => {
     assert.equal(fingerprint, "c2b54933e37864e43c54aa4e2a4146214fde0da2fd5eac19830e6128092a7089");
   });
 
+  it("keeps durable choice IDs bound to the same answer text and correctness", () => {
+    const fingerprint = createHash("sha256")
+      .update(ontarioG1SeedQuestions.flatMap((question) => question.choices
+        .map((choice) => `${question.publicId}:${choice.publicId}:${choice.text}:${choice.isCorrect}`)).join("\n"))
+      .digest("hex");
+    assert.equal(fingerprint, "62a552f1822725cdc19bb7a690b4926fa40ce608befb2009ddcfb9c375094151");
+  });
+
   it("tracks retired image-dependent prompts so reseeding removes stale database questions", () => {
     const currentPrompts = new Set(ontarioG1SeedQuestions.map((question) => question.prompt));
 

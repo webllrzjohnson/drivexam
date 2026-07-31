@@ -104,6 +104,14 @@ describe("Ontario G2/G road-test seed content", () => {
     assert.equal(fingerprint, "a18e431b040693b7fc40c7fc6b665f7e963e6c0c7b961aba1eee34d2c5b599a8");
   });
 
+  it("keeps durable choice IDs bound to the same answer text and correctness", () => {
+    const fingerprint = createHash("sha256")
+      .update(ontarioRoadTestSeedQuestions.flatMap((question) => question.choices
+        .map((choice) => `${question.publicId}:${choice.publicId}:${choice.text}:${choice.isCorrect}`)).join("\n"))
+      .digest("hex");
+    assert.equal(fingerprint, "2c4abcf363f7a5a65df61b5e777637a0a7d72d35d63b967f1409c8ae4e15c173");
+  });
+
   it("does not reuse G1 prompts because prompt-based reseeding deletes older rows", () => {
     const g1Prompts = new Set(ontarioG1SeedQuestions.map((question) => question.prompt));
     const reusedPrompt = ontarioRoadTestSeedQuestions.find((question) => g1Prompts.has(question.prompt));

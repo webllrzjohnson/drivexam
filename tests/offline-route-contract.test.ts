@@ -23,6 +23,9 @@ describe("offline practice route contracts", () => {
     assert.match(syncRoute, /getCurrentUser/);
     assert.match(syncRoute, /status:\s*401/);
     assert.match(syncRoute, /emailVerified/);
+    assert.match(syncRoute, /readBoundedRequestText/);
+    assert.match(syncRoute, /publicId:\s*\{\s*in:\s*publicIds\s*\}/);
+    assert.doesNotMatch(syncRoute, /OR:\s*\[\{\s*publicId/);
     assert.match(syncRoute, /synchronizeOfflineAttempts/);
   });
 });

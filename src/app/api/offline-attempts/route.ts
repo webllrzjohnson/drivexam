@@ -32,15 +32,13 @@ export async function POST(request: Request) {
         select: { id: true },
       })),
       loadQuestions: async (attempt: OfflineSyncAttempt) => {
-        const ids = attempt.answers.map((answer) => answer.questionId);
         const publicIds = attempt.answers.map((answer) => answer.questionPublicId);
-        const prompts = attempt.answers.map((answer) => answer.questionPrompt);
         const questions = await db.question.findMany({
           where: {
             stage: attempt.stage,
             status: "PUBLISHED",
             choices: { some: { isCorrect: true } },
-            OR: [{ publicId: { in: publicIds } }, { id: { in: ids } }, { prompt: { in: prompts } }],
+            publicId: { in: publicIds },
           },
           include: {
             category: true,

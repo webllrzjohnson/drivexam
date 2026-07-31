@@ -117,7 +117,7 @@ npm run prisma:validate
 
 Current verified local gate:
 
-- `npm run test` passes 144 tests across 31 suites.
+- `npm run test` passes 148 tests across 31 suites.
 - `npm run lint` and `npm run build` pass without failures.
 - 39 Next.js pages are generated; `/offline-practice` is static while the two offline APIs remain dynamic.
 - Prisma schema is valid.

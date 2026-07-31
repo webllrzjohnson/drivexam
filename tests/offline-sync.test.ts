@@ -107,11 +107,45 @@ describe("offline attempt synchronization", () => {
     assert.equal(saved.length, 0);
   });
 
+  it("does not fall back to an internal ID or prompt when a public question ID is retired", async () => {
+    const payload = buildPayload();
+    payload.attempts[0].answers[0].questionPublicId = "retired-question-public-id";
+    const saved: OfflineAttemptSaveInput[] = [];
+
+    const result = await synchronizeOfflineAttempts(payload, {
+      now: new Date("2026-07-29T12:00:00.000Z"),
+      hasAttempt: async () => false,
+      loadQuestions: async () => questions,
+      saveAttempt: async (attempt) => { saved.push(attempt); },
+    });
+
+    assert.equal(result.results[0].status, "stale");
+    assert.equal(result.results[0].reason, "retired-questions");
+    assert.equal(saved.length, 0);
+  });
+
   it("rejects the whole attempt when a selected choice can no longer be resolved", async () => {
     const payload = buildPayload();
     payload.attempts[0].answers[0].selectedChoiceIds = ["retired-choice-id"];
     payload.attempts[0].answers[0].selectedChoicePublicIds = ["retired-choice-public-id"];
     payload.attempts[0].answers[0].selectedChoiceTexts = ["A retired answer"];
+    const saved: OfflineAttemptSaveInput[] = [];
+
+    const result = await synchronizeOfflineAttempts(payload, {
+      now: new Date("2026-07-29T12:00:00.000Z"),
+      hasAttempt: async () => false,
+      loadQuestions: async () => questions,
+      saveAttempt: async (attempt) => { saved.push(attempt); },
+    });
+
+    assert.equal(result.results[0].status, "stale");
+    assert.equal(result.results[0].reason, "retired-questions");
+    assert.equal(saved.length, 0);
+  });
+
+  it("does not fall back to an internal ID or text when a public choice ID is retired", async () => {
+    const payload = buildPayload();
+    payload.attempts[0].answers[0].selectedChoicePublicIds = ["retired-choice-public-id"];
     const saved: OfflineAttemptSaveInput[] = [];
 
     const result = await synchronizeOfflineAttempts(payload, {

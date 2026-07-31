@@ -216,14 +216,12 @@ export function parseOfflineSyncPayload(input: unknown) {
 
 export function resolveOfflineAttempt(questions: QuizQuestionView[], attempt: OfflineSyncAttempt) {
   const questionByPublicId = new Map(questions.flatMap((question) => question.publicId ? [[question.publicId, question] as const] : []));
-  const questionById = new Map(questions.map((question) => [question.id, question]));
-  const questionByPrompt = new Map(questions.map((question) => [question.prompt, question]));
   const resolvedQuestions: QuizQuestionView[] = [];
   const selectedChoiceIdsByQuestion: Record<string, string[]> = {};
   let skippedQuestionCount = 0;
 
   for (const answer of attempt.answers) {
-    const question = questionByPublicId.get(answer.questionPublicId) ?? questionById.get(answer.questionId) ?? questionByPrompt.get(answer.questionPrompt);
+    const question = questionByPublicId.get(answer.questionPublicId);
     if (!question || question.stage !== attempt.stage || resolvedQuestions.some((candidate) => candidate.id === question.id)) {
       skippedQuestionCount += 1;
       continue;
@@ -231,9 +229,8 @@ export function resolveOfflineAttempt(questions: QuizQuestionView[], attempt: Of
 
     const selectedIdSet = new Set(answer.selectedChoiceIds);
     const selectedPublicIdSet = new Set(answer.selectedChoicePublicIds);
-    const selectedTextSet = new Set(answer.selectedChoiceTexts);
     const resolvedChoiceIds = question.choices
-      .filter((choice) => (choice.publicId && selectedPublicIdSet.has(choice.publicId)) || selectedIdSet.has(choice.id) || (choice.text !== null && selectedTextSet.has(choice.text)))
+      .filter((choice) => choice.publicId && selectedPublicIdSet.has(choice.publicId))
       .map((choice) => choice.id);
     const expectedChoiceCount = selectedPublicIdSet.size;
     if (
