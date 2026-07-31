@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { statSync } from "node:fs";
 import path from "node:path";
 import { describe, it } from "node:test";
@@ -88,7 +89,19 @@ describe("Ontario G2/G road-test seed content", () => {
   it("uses stable unique category slugs, question prompts, and checklist titles", () => {
     assert.equal(new Set(ontarioRoadTestSeedCategories.map((category) => category.slug)).size, ontarioRoadTestSeedCategories.length);
     assert.equal(new Set(ontarioRoadTestSeedQuestions.map((question) => question.prompt)).size, ontarioRoadTestSeedQuestions.length);
+    assert.equal(new Set(ontarioRoadTestSeedQuestions.map((question) => question.publicId)).size, ontarioRoadTestSeedQuestions.length);
+    assert.equal(
+      new Set(ontarioRoadTestSeedQuestions.flatMap((question) => question.choices.map((choice) => choice.publicId))).size,
+      ontarioRoadTestSeedQuestions.reduce((count, question) => count + question.choices.length, 0),
+    );
     assert.equal(new Set(ontarioRoadTestChecklistItems.map((item) => `${item.stage}:${item.section}:${item.title}`)).size, ontarioRoadTestChecklistItems.length);
+  });
+
+  it("keeps the durable public-ID-to-prompt contract append-only", () => {
+    const fingerprint = createHash("sha256")
+      .update(ontarioRoadTestSeedQuestions.map((question) => `${question.publicId}:${question.prompt}`).join("\n"))
+      .digest("hex");
+    assert.equal(fingerprint, "a18e431b040693b7fc40c7fc6b665f7e963e6c0c7b961aba1eee34d2c5b599a8");
   });
 
   it("does not reuse G1 prompts because prompt-based reseeding deletes older rows", () => {

@@ -2,6 +2,7 @@ import type { LicenseStage, QuestionType } from "@prisma/client";
 
 export type QuizQuestionInput = {
   id: string;
+  publicId?: string;
   prompt: string;
   explanation: string;
   stage: LicenseStage;
@@ -10,6 +11,7 @@ export type QuizQuestionInput = {
   assets: Array<{ asset: { path: string; title: string | null; filename?: string } }>;
   choices: Array<{
     id: string;
+    publicId?: string;
     text: string | null;
     isCorrect: boolean;
     sortOrder: number;
@@ -19,6 +21,7 @@ export type QuizQuestionInput = {
 
 export type QuizChoiceView = {
   id: string;
+  publicId?: string;
   text: string | null;
   isCorrect: boolean;
   asset: { path: string; title: string } | null;
@@ -26,6 +29,7 @@ export type QuizChoiceView = {
 
 export type QuizQuestionView = {
   id: string;
+  publicId?: string;
   prompt: string;
   explanation: string;
   stage: LicenseStage;
@@ -146,6 +150,7 @@ export function buildQuizNavigationState(totalCount: number, requestedIndex: num
 export function buildQuizQuestionViews(questions: QuizQuestionInput[]): QuizQuestionView[] {
   return questions.map((question) => ({
     id: question.id,
+    ...(question.publicId ? { publicId: question.publicId } : {}),
     prompt: question.prompt,
     explanation: question.explanation,
     stage: question.stage,
@@ -155,6 +160,7 @@ export function buildQuizQuestionViews(questions: QuizQuestionInput[]): QuizQues
     choices: rotateByStableSeed([...question.choices].sort((a, b) => a.sortOrder - b.sortOrder), question.id)
       .map((choice) => ({
         id: choice.id,
+        ...(choice.publicId ? { publicId: choice.publicId } : {}),
         text: choice.text,
         isCorrect: choice.isCorrect,
         asset: choice.asset ? { path: choice.asset.path, title: choice.asset.title ?? choice.asset.filename ?? "Choice image" } : null,

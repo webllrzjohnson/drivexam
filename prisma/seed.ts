@@ -1,3 +1,5 @@
+import type { LicenseStage } from "@prisma/client";
+
 import { db } from "../src/lib/db";
 import { hashPassword } from "../src/lib/auth/password";
 import {
@@ -34,6 +36,89 @@ async function seedAdmin() {
   });
 
   console.info("Seeded admin user from SEED_ADMIN_EMAIL.");
+}
+
+type DurableSeedQuestion = {
+  publicId: string;
+  sourceReference: string;
+  prompt: string;
+  explanation: string;
+  choices: Array<{ publicId: string; text: string; isCorrect: boolean }>;
+};
+
+async function reconcileSeedQuestion({
+  question,
+  stage,
+  categoryId,
+  questionAssets,
+}: {
+  question: DurableSeedQuestion;
+  stage: LicenseStage;
+  categoryId: string;
+  questionAssets: Array<{ assetId: string; sortOrder: number }>;
+}) {
+  const existing = await db.question.findFirst({
+    where: {
+      OR: [{ publicId: question.publicId }, { prompt: question.prompt }],
+      sourceReference: { not: null },
+    },
+    select: { id: true },
+  });
+
+  const saved = existing
+    ? await db.question.update({
+        where: { id: existing.id },
+        data: {
+          publicId: question.publicId,
+          type: "MULTIPLE_CHOICE",
+          prompt: question.prompt,
+          explanation: question.explanation,
+          stage,
+          categoryId,
+          status: "PUBLISHED",
+          selectCount: 1,
+          sourceReference: question.sourceReference,
+        },
+      })
+    : await db.question.create({
+        data: {
+          publicId: question.publicId,
+          type: "MULTIPLE_CHOICE",
+          prompt: question.prompt,
+          explanation: question.explanation,
+          stage,
+          categoryId,
+          status: "PUBLISHED",
+          selectCount: 1,
+          sourceReference: question.sourceReference,
+          publishedAt: new Date(),
+        },
+      });
+
+  await db.questionAsset.deleteMany({ where: { questionId: saved.id } });
+  if (questionAssets.length) await db.questionAsset.createMany({ data: questionAssets.map((asset) => ({ ...asset, questionId: saved.id })) });
+
+  for (const [choiceIndex, choice] of question.choices.entries()) {
+    const existingChoice = await db.answerChoice.findFirst({
+      where: {
+        OR: [{ publicId: choice.publicId }, { questionId: saved.id, text: choice.text }],
+      },
+      select: { id: true },
+    });
+    const data = {
+      publicId: choice.publicId,
+      questionId: saved.id,
+      text: choice.text,
+      isCorrect: choice.isCorrect,
+      sortOrder: choiceIndex + 1,
+    };
+    if (existingChoice) await db.answerChoice.update({ where: { id: existingChoice.id }, data });
+    else await db.answerChoice.create({ data });
+  }
+
+  await db.answerChoice.deleteMany({
+    where: { questionId: saved.id, publicId: { notIn: question.choices.map((choice) => choice.publicId) } },
+  });
 }
 
 async function seedOntarioG1Content() {
@@ -81,8 +166,7 @@ async function seedOntarioG1Content() {
     assets.set(asset.slug, saved.id);
   }
 
-  const seedPrompts = [...ontarioG1SeedQuestions.map((question) => question.prompt), ...retiredOntarioG1SeedPrompts];
-  await db.question.deleteMany({ where: { prompt: { in: seedPrompts }, sourceReference: { not: null } } });
+  await db.question.deleteMany({ where: { prompt: { in: [...retiredOntarioG1SeedPrompts] }, sourceReference: { not: null } } });
 
   for (const [questionIndex, question] of ontarioG1SeedQuestions.entries()) {
     const categoryId = categories.get(question.categorySlug);
@@ -94,27 +178,7 @@ async function seedOntarioG1Content() {
       return { assetId, sortOrder: assetIndex + 1 };
     });
 
-    await db.question.create({
-      data: {
-        type: "MULTIPLE_CHOICE",
-        prompt: question.prompt,
-        explanation: question.explanation,
-        stage: "G1",
-        categoryId,
-        status: "PUBLISHED",
-        selectCount: 1,
-        sourceReference: question.sourceReference,
-        publishedAt: new Date(),
-        assets: questionAssets.length ? { create: questionAssets } : undefined,
-        choices: {
-          create: question.choices.map((choice, choiceIndex) => ({
-            text: choice.text,
-            isCorrect: choice.isCorrect,
-            sortOrder: choiceIndex + 1,
-          })),
-        },
-      },
-    });
+    await reconcileSeedQuestion({ question, stage: "G1", categoryId, questionAssets });
 
     if ((questionIndex + 1) % 10 === 0) console.info(`Seeded ${questionIndex + 1} Ontario G1 questions...`);
   }
@@ -167,8 +231,7 @@ async function seedOntarioRoadTestContent() {
     assets.set(asset.slug, saved.id);
   }
 
-  const seedPrompts = [...ontarioRoadTestSeedQuestions.map((question) => question.prompt), ...retiredOntarioRoadTestSeedPrompts];
-  await db.question.deleteMany({ where: { prompt: { in: seedPrompts }, sourceReference: { not: null } } });
+  await db.question.deleteMany({ where: { prompt: { in: [...retiredOntarioRoadTestSeedPrompts] }, sourceReference: { not: null } } });
 
   for (const question of ontarioRoadTestSeedQuestions) {
     const categoryId = categories.get(question.categorySlug);
@@ -180,27 +243,7 @@ async function seedOntarioRoadTestContent() {
       return { assetId, sortOrder: assetIndex + 1 };
     });
 
-    await db.question.create({
-      data: {
-        type: "MULTIPLE_CHOICE",
-        prompt: question.prompt,
-        explanation: question.explanation,
-        stage: question.stage,
-        categoryId,
-        status: "PUBLISHED",
-        selectCount: 1,
-        sourceReference: question.sourceReference,
-        publishedAt: new Date(),
-        assets: questionAssets.length ? { create: questionAssets } : undefined,
-        choices: {
-          create: question.choices.map((choice, choiceIndex) => ({
-            text: choice.text,
-            isCorrect: choice.isCorrect,
-            sortOrder: choiceIndex + 1,
-          })),
-        },
-      },
-    });
+    await reconcileSeedQuestion({ question, stage: question.stage, categoryId, questionAssets });
   }
 
   const checklistTitles = [...ontarioRoadTestChecklistItems.map((item) => item.title), ...retiredOntarioRoadTestChecklistTitles];

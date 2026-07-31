@@ -1,3 +1,5 @@
+import { ontarioG1SeedIdentities } from "@/lib/seed/ontario-question-public-ids";
+
 export type SeedCategory = {
   slug: string;
   name: string;
@@ -5,10 +7,12 @@ export type SeedCategory = {
   sortOrder: number;
 };
 
-export type SeedQuestionChoice = {
+type SeedQuestionChoiceInput = {
   text: string;
   isCorrect: boolean;
 };
+
+export type SeedQuestionChoice = SeedQuestionChoiceInput & { publicId: string };
 
 export type SeedRoadSignAsset = {
   slug: string;
@@ -21,14 +25,16 @@ export type SeedRoadSignAsset = {
   sourceCredit: string;
 };
 
-export type SeedQuestion = {
+type SeedQuestionInput = {
   sourceReference: string;
   categorySlug: string;
   prompt: string;
   explanation: string;
   assetSlugs?: string[];
-  choices: SeedQuestionChoice[];
+  choices: SeedQuestionChoiceInput[];
 };
+
+export type SeedQuestion = Omit<SeedQuestionInput, "choices"> & { publicId: string; choices: SeedQuestionChoice[] };
 
 export const ontarioG1SourceUrls = {
   signsAndLights: "https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-signs-and-lights",
@@ -901,7 +907,7 @@ export const ontarioG1RoadSignAssets: SeedRoadSignAsset[] = [
   },
 ];
 
-export const ontarioG1SeedQuestions: SeedQuestion[] = [
+const ontarioG1SeedQuestionInputs: SeedQuestionInput[] = [
   {
     sourceReference: `${ontarioG1SourceUrls.intersections}#controlled-intersections`,
     categorySlug: "g1-right-of-way",
@@ -1755,6 +1761,20 @@ export const ontarioG1SeedQuestions: SeedQuestion[] = [
     ],
   },
 ];
+
+export const ontarioG1SeedQuestions: SeedQuestion[] = ontarioG1SeedQuestionInputs.map((question) => {
+  const identity = ontarioG1SeedIdentities[question.prompt];
+  if (!identity) throw new Error(`Missing durable public identity for G1 question: ${question.prompt}`);
+  return {
+    ...question,
+    publicId: identity.publicId,
+    choices: question.choices.map((choice) => {
+      const publicId = identity.choices[choice.text];
+      if (!publicId) throw new Error(`Missing durable public identity for G1 choice: ${question.prompt} / ${choice.text}`);
+      return { ...choice, publicId };
+    }),
+  };
+});
 
 export function getOntarioG1SeedSummary() {
   return {

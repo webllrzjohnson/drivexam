@@ -18,6 +18,11 @@
       "url": "/practice"
     },
     {
+      "name": "Offline practice",
+      "short_name": "Offline",
+      "url": "/offline-practice"
+    },
+    {
       "name": "Road-test preparation",
       "short_name": "Road test",
       "url": "/road-test"

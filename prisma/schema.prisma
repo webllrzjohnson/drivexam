@@ -224,6 +224,7 @@ model Lesson {
 
 model Question {
   id              String        @id @default(cuid())
+  publicId        String        @unique @default(cuid())
   type            QuestionType
   prompt          String        @db.Text
   explanation     String        @db.Text
@@ -252,6 +253,7 @@ model Question {
 
 model AnswerChoice {
   id          String  @id @default(cuid())
+  publicId    String  @unique @default(cuid())
   questionId  String
   text        String?
   assetId     String?
@@ -313,25 +315,27 @@ model RoadTestChecklistProgress {
 }
 
 model QuizAttempt {
-  id           String       @id @default(cuid())
-  userId       String
-  stage        LicenseStage
-  correctCount Int
-  totalCount   Int
-  percent      Int
-  createdAt    DateTime     @default(now())
+  id              String       @id @default(cuid())
+  userId          String
+  clientAttemptId String?
+  stage           LicenseStage
+  correctCount    Int
+  totalCount      Int
+  percent         Int
+  createdAt       DateTime     @default(now())
 
   user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
   answers QuizAttemptAnswer[]
 
   @@index([userId, createdAt])
   @@index([stage, createdAt])
+  @@unique([userId, clientAttemptId])
 }
 
 model QuizAttemptAnswer {
   id                String   @id @default(cuid())
   attemptId         String
-  questionId        String
+  questionId        String?
   categoryId        String?
   categoryName      String?
   isCorrect         Boolean
@@ -340,7 +344,7 @@ model QuizAttemptAnswer {
   createdAt         DateTime @default(now())
 
   attempt  QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
-  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  question Question? @relation(fields: [questionId], references: [id], onDelete: SetNull)
   category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   @@index([attemptId])

@@ -18,6 +18,7 @@ type WebManifest = {
   background_color?: string;
   theme_color?: string;
   icons?: Array<{ src?: string; sizes?: string; type?: string; purpose?: string }>;
+  shortcuts?: Array<{ name?: string; url?: string }>;
 };
 
 async function readManifest() {
@@ -54,5 +55,10 @@ describe("PWA install manifest", () => {
     const manifest = await readManifest();
 
     assert.ok((manifest.icons ?? []).some((icon) => icon.sizes === "512x512" && icon.purpose?.includes("maskable")));
+  });
+
+  it("exposes downloaded offline practice from installed app shortcuts", async () => {
+    const manifest = await readManifest();
+    assert.ok((manifest.shortcuts ?? []).some((shortcut) => shortcut.url === "/offline-practice" && /offline/i.test(shortcut.name ?? "")));
   });
 });

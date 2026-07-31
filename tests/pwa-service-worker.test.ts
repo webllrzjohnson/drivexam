@@ -55,4 +55,15 @@ describe("PWA service worker", () => {
     assert.match(worker, /STATIC_PATH_PREFIXES/);
     assert.match(worker, /STATIC_FILE_PATTERN/);
   });
+
+  it("caches the explicitly downloaded offline-practice route and its safe resources", async () => {
+    const worker = await readProjectFile("public/sw.js");
+
+    assert.match(worker, /CACHE_OFFLINE_RESOURCES/);
+    assert.match(worker, /OFFLINE_PRACTICE_URL\s*=\s*"\/offline-practice"/);
+    assert.match(worker, /MAX_OFFLINE_RESOURCE_URLS\s*=\s*300/);
+    assert.match(worker, /isOfflineResource/);
+    assert.match(worker, /caches\.match\(OFFLINE_PRACTICE_URL\)/);
+    assert.match(worker, /drivexam-pwa-v2/);
+  });
 });

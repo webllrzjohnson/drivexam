@@ -12,8 +12,11 @@ This checklist is for deploying `drivexam` from `main` to a production Next.js h
   - 40 published full-G road-test preparation scenarios across 3 active G categories.
   - 8 G2 road-test checklist items.
   - 8 full-G road-test checklist items.
-- PWA support includes the install manifest/icons, a production-only service-worker registration, update and connection-status messaging, static-asset caching, and a network-first `/offline` fallback.
-- The service worker intentionally bypasses mutations, API/authentication requests, and admin/account/dashboard routes. Personalized or authenticated HTML is never cached.
+- PWA support includes the install manifest/icons, production-only service-worker registration, update and connection-status messaging, a network-first `/offline` fallback, and an explicit `/offline-practice` download flow.
+- The public offline pack contains 148 sanitized questions: 68 G1, 40 G2, and 40 Full G road-test preparation scenarios. Questions, choices, packs, and queued attempts use versioned contracts and durable public IDs.
+- Downloaded packs and local attempts are stored in IndexedDB. Guests can complete practice locally; verified learners can explicitly synchronize pending results after reconnecting.
+- `/api/offline-attempts` is authenticated, request-bounded, runtime-validated, user-scoped/idempotent, and re-fetches and re-scores current published questions on the server. Client-submitted scores, correctness, and identity are not trusted.
+- The service worker intentionally bypasses mutations, authentication, general API traffic, and admin/account/dashboard routes. `/api/offline-pack` is the only public API exception, handled through an explicit resource-download flow. Personalized or authenticated HTML is never cached.
 
 ## Required production environment variables
 
@@ -90,12 +93,15 @@ Current migrations in order:
 2. `20260722220500_phase2_admin_cms`
 3. `20260724110848_add_quiz_attempts`
 4. `20260726175437_add_road_test_checklist_progress`
+5. `20260729233000_add_offline_attempt_idempotency`
 
 Notes:
 
 - The app currently has `npm run db:migrate` mapped to `prisma migrate dev`, which is appropriate for local development, not production.
 - Use `npx prisma migrate deploy` in production until a production-specific npm script is added.
-- `npm run db:seed` is idempotent for the bundled Ontario seed content. It also creates/updates the first admin only when `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` are set.
+- The offline migration adds nullable `QuizAttempt.clientAttemptId`, a user-scoped unique key, durable question/choice public IDs, and changes historical attempt-answer question deletion to `ON DELETE SET NULL`.
+- `npm run db:seed` reconciles bundled Ontario questions and choices by durable public ID instead of recreating active rows. Retired public IDs must never be reassigned to different content.
+- The seed also creates/updates the first admin only when `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` are set.
 - Seed logs intentionally avoid printing the admin email/password.
 
 ## Pre-launch verification commands
@@ -109,11 +115,14 @@ npm run build
 npm run prisma:validate
 ```
 
-Current expected local gate:
+Current verified local gate:
 
-- `npm run test`, `npm run lint`, and `npm run build` pass without failures.
-- 36 Next.js routes are generated.
+- `npm run test` passes 144 tests across 31 suites.
+- `npm run lint` and `npm run build` pass without failures.
+- 39 Next.js pages are generated; `/offline-practice` is static while the two offline APIs remain dynamic.
 - Prisma schema is valid.
+- `node --check public/sw.js` and `git diff --check` pass.
+- Running the seed twice preserves the same 148 question and 592 choice database IDs.
 
 ## Live smoke-test routes
 
@@ -126,6 +135,7 @@ After deployment and migrations/seeding, test these routes on the production ori
 - `/practice?stage=G1&questionSet=2`
 - `/practice?stage=G2`
 - `/practice?stage=G`
+- `/offline-practice`
 - `/road-test?stage=G2`
 - `/road-test?stage=G`
 - `/contact`
@@ -151,6 +161,7 @@ Smoke checks:
 4. Complete a guest mock-drive assessment and confirm critical safety errors prevent a ready verdict.
 5. Confirm `/dashboard` shows quiz and road-test progress.
 6. Submit a contact message from a verified learner.
+7. Download the offline pack as a guest, finish one set, sign in, synchronize it, and confirm the attempt appears once in learner progress.
 
 ### Admin routes
 
@@ -180,6 +191,13 @@ Smoke checks:
 - Verify the production build registers an activated service worker with `/` scope and creates the current `drivexam-pwa-*` cache.
 - Take the browser offline and navigate to an uncached public route; confirm the `/offline` fallback renders.
 - Confirm API, sign-in, admin, account, and dashboard requests remain network-only and are absent from Cache Storage.
+- Open `/offline-practice`, explicitly download the pack, and confirm counts of 68 G1, 40 G2, and 40 Full G scenarios.
+- Complete a set as a guest, reload, and confirm the pack plus pending attempt remain in IndexedDB.
+- Navigate through sign-in and confirm the same pack version and `clientAttemptId` survive the authentication round trip.
+- Synchronize from a verified account, replay the exact same `clientAttemptId`, and confirm the replay is returned as `duplicate` without a second attempt row.
+- Stop the application server and reload `/offline-practice`; confirm the cached route, questions, assets, and attempt history remain usable.
+- Confirm Cache Storage contains only `drivexam-pwa-v2` and no `/api/`, sign-in, admin, account, dashboard, credential, cookie, or token response.
+- Confirm deleting/retiring a question preserves historical `QuizAttemptAnswer` rows and clears only the nullable question relation.
 - Publish a service-worker version change and confirm the accessible update prompt refreshes only after the learner accepts it.
 - On mobile Chrome/Edge, verify the app is installable or appears in the browser install menu.
 - On iOS Safari, use Add to Home Screen and verify the app opens in standalone mode with the expected icon and theme.
@@ -191,6 +209,8 @@ Smoke checks:
 - Real SMTP delivery has not been exercised unless production SMTP secrets are configured and `npm run email:smoke` passes.
 - Real Google OAuth cannot be fully tested until production OAuth credentials and callback URI are configured.
 - Production migrations should use `npx prisma migrate deploy`; do not run `prisma migrate dev` against production.
+- Configure the canonical Auth.js URL and deliberate trusted-host/proxy behavior for the actual HTTPS domain. Do not broadly trust arbitrary forwarded hosts.
+- Confirm Coolify/Postgres backups before applying the offline identity migration, because Prisma migrations are forward-only by default.
 
 ## Rollback notes
 

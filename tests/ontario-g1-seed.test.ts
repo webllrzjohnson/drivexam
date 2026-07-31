@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, it } from "node:test";
@@ -23,6 +24,18 @@ describe("Ontario G1 seed content", () => {
   it("uses stable unique category slugs and prompts", () => {
     assert.equal(new Set(ontarioG1SeedCategories.map((category) => category.slug)).size, ontarioG1SeedCategories.length);
     assert.equal(new Set(ontarioG1SeedQuestions.map((question) => question.prompt)).size, ontarioG1SeedQuestions.length);
+    assert.equal(new Set(ontarioG1SeedQuestions.map((question) => question.publicId)).size, ontarioG1SeedQuestions.length);
+    assert.equal(
+      new Set(ontarioG1SeedQuestions.flatMap((question) => question.choices.map((choice) => choice.publicId))).size,
+      ontarioG1SeedQuestions.reduce((count, question) => count + question.choices.length, 0),
+    );
+  });
+
+  it("keeps the durable public-ID-to-prompt contract append-only", () => {
+    const fingerprint = createHash("sha256")
+      .update(ontarioG1SeedQuestions.map((question) => `${question.publicId}:${question.prompt}`).join("\n"))
+      .digest("hex");
+    assert.equal(fingerprint, "c2b54933e37864e43c54aa4e2a4146214fde0da2fd5eac19830e6128092a7089");
   });
 
   it("tracks retired image-dependent prompts so reseeding removes stale database questions", () => {

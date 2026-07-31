@@ -7,11 +7,16 @@ export default function OfflinePage() {
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-800">drivexam</p>
         <h1 className="text-3xl font-bold tracking-tight text-slate-950">You’re offline</h1>
         <p className="leading-7 text-slate-600">
-          Reconnect to load practice questions, save progress, or access your account. Previously loaded static images may still be available.
+          Reconnect to access account features. If you downloaded an offline question pack earlier, you can continue practising on this device.
         </p>
-        <Link className="inline-flex rounded-lg bg-green-800 px-4 py-2 font-semibold text-white hover:bg-green-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2" href="/">
-          Try again
-        </Link>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Link className="inline-flex rounded-lg bg-green-800 px-4 py-2 font-semibold text-white hover:bg-green-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2" href="/offline-practice">
+            Open downloaded practice
+          </Link>
+          <Link className="inline-flex rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-800 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2" href="/">
+            Try again
+          </Link>
+        </div>
       </section>
     </main>
   );

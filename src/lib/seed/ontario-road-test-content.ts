@@ -1,5 +1,7 @@
 import type { LicenseStage, RoadTestChecklistSection } from "@prisma/client";
 
+import { ontarioRoadTestSeedIdentities } from "@/lib/seed/ontario-question-public-ids";
+
 export type RoadTestSeedCategory = {
   slug: string;
   name: string;
@@ -8,20 +10,24 @@ export type RoadTestSeedCategory = {
   sortOrder: number;
 };
 
-export type RoadTestSeedChoice = {
+type RoadTestSeedChoiceInput = {
   text: string;
   isCorrect: boolean;
 };
 
-export type RoadTestSeedQuestion = {
+export type RoadTestSeedChoice = RoadTestSeedChoiceInput & { publicId: string };
+
+type RoadTestSeedQuestionInput = {
   stage: LicenseStage;
   sourceReference: string;
   categorySlug: string;
   prompt: string;
   explanation: string;
   assetSlugs?: string[];
-  choices: RoadTestSeedChoice[];
+  choices: RoadTestSeedChoiceInput[];
 };
+
+export type RoadTestSeedQuestion = Omit<RoadTestSeedQuestionInput, "choices"> & { publicId: string; choices: RoadTestSeedChoice[] };
 
 export type RoadTestIllustrationAsset = {
   slug: string;
@@ -140,7 +146,7 @@ export const ontarioRoadTestSeedCategories: RoadTestSeedCategory[] = [
   },
 ];
 
-export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
+const ontarioRoadTestSeedQuestionInputs: RoadTestSeedQuestionInput[] = [
   {
     stage: "G2",
     sourceReference: `${ontarioRoadTestSourceUrls.newDrivers}#g2-road-test-g1-exit-test`,
@@ -1188,6 +1194,20 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = [
     ],
   },
 ];
+
+export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = ontarioRoadTestSeedQuestionInputs.map((question) => {
+  const identity = ontarioRoadTestSeedIdentities[question.prompt];
+  if (!identity) throw new Error(`Missing durable public identity for road-test question: ${question.prompt}`);
+  return {
+    ...question,
+    publicId: identity.publicId,
+    choices: question.choices.map((choice) => {
+      const publicId = identity.choices[choice.text];
+      if (!publicId) throw new Error(`Missing durable public identity for road-test choice: ${question.prompt} / ${choice.text}`);
+      return { ...choice, publicId };
+    }),
+  };
+});
 
 export const ontarioRoadTestChecklistItems: RoadTestSeedChecklistItem[] = [
   {

@@ -76,6 +76,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
               <span className="rounded-full bg-green-100 px-3 py-1 text-green-900">{guide.questionTargetLabel}</span>
               <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">{guide.readinessTarget}</span>
             </div>
+            <Button asChild variant="outline"><Link href="/offline-practice">Download offline practice</Link></Button>
           </div>
           <Card className="border-green-200 bg-green-50">
             <CardHeader>
