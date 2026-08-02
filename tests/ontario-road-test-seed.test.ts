@@ -126,11 +126,13 @@ describe("Ontario G2/G road-test seed content", () => {
     for (const question of ontarioRoadTestSeedQuestions) {
       assert.ok(slugs.has(question.categorySlug), `${question.prompt} has a seeded category`);
       assert.match(question.sourceReference, officialSource);
+      assert.equal(new URL(question.sourceReference).hash, "", `${question.prompt} uses a stable canonical source page`);
     }
 
     for (const item of ontarioRoadTestChecklistItems) {
       assert.ok(slugs.has(item.categorySlug), `${item.title} has a seeded category`);
       assert.match(item.sourceReference, officialSource);
+      assert.equal(new URL(item.sourceReference).hash, "", `${item.title} uses a stable canonical source page`);
     }
   });
 

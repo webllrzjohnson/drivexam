@@ -35,7 +35,7 @@ describe("Ontario G1 seed content", () => {
     const fingerprint = createHash("sha256")
       .update(ontarioG1SeedQuestions.map((question) => `${question.publicId}:${question.prompt}`).join("\n"))
       .digest("hex");
-    assert.equal(fingerprint, "c2b54933e37864e43c54aa4e2a4146214fde0da2fd5eac19830e6128092a7089");
+    assert.equal(fingerprint, "a9a3e16414478def881e308a0dea0cd310d85e19167bee352abcb44d5f1b0293");
   });
 
   it("keeps durable choice IDs bound to the same answer text and correctness", () => {
@@ -43,7 +43,7 @@ describe("Ontario G1 seed content", () => {
       .update(ontarioG1SeedQuestions.flatMap((question) => question.choices
         .map((choice) => `${question.publicId}:${choice.publicId}:${choice.text}:${choice.isCorrect}`)).join("\n"))
       .digest("hex");
-    assert.equal(fingerprint, "62a552f1822725cdc19bb7a690b4926fa40ce608befb2009ddcfb9c375094151");
+    assert.equal(fingerprint, "7024184e317c1e664246e0360128d9609628b3b60103c752dea939add8e0bbd4");
   });
 
   it("tracks retired image-dependent prompts so reseeding removes stale database questions", () => {
@@ -62,6 +62,7 @@ describe("Ontario G1 seed content", () => {
     for (const question of ontarioG1SeedQuestions) {
       assert.ok(slugs.has(question.categorySlug), `${question.prompt} has a seeded category`);
       assert.match(question.sourceReference, /^https:\/\/www\.ontario\.ca\/document\/official-mto-drivers-handbook\//);
+      assert.equal(new URL(question.sourceReference).hash, "", `${question.prompt} uses a stable canonical source page`);
     }
   });
 
@@ -100,9 +101,9 @@ describe("Ontario G1 seed content", () => {
     assert.ok(assetSlugs.has("ontario-route-to-airport"), "includes signs from the PDF information/direction page");
 
     const signQuestionsWithAssets = ontarioG1SeedQuestions.filter((question) => question.assetSlugs?.length);
-    assert.ok(signQuestionsWithAssets.length >= 35, "attaches road-sign images to a meaningful set of G1 sign questions");
+    assert.ok(signQuestionsWithAssets.length >= 33, "attaches road-sign images only where they match the learner question");
     assert.ok(
-      signQuestionsWithAssets.filter((question) => /this sign|shown|image/i.test(question.prompt)).length >= 28,
+      signQuestionsWithAssets.filter((question) => /this sign|shown|image/i.test(question.prompt)).length >= 27,
       "includes dedicated image-recognition questions, not only decorative sign attachments",
     );
 
@@ -129,9 +130,32 @@ describe("Ontario G1 seed content", () => {
     const schoolCrossingQuestions = questionsByAssetSlug.get("ontario-a-school-crossing-ahead") ?? [];
     assert.ok(schoolCrossingQuestions.every((question) => /school crossing|children/i.test(`${question.prompt} ${question.explanation}`)));
 
-    const windingRoadQuestions = questionsByAssetSlug.get("ontario-road-ahead-turns-right-then-left") ?? [];
-    assert.ok(windingRoadQuestions.every((question) => /right-then-left|right and then left|winding|successive curves/i.test(`${question.prompt} ${question.explanation}`)));
-    assert.ok(windingRoadQuestions.every((question) => !/left-curve sign|right-curve sign/i.test(`${question.prompt} ${question.explanation}`)));
+    const reverseCurveQuestions = questionsByAssetSlug.get("ontario-road-ahead-turns-right-then-left") ?? [];
+    assert.ok(reverseCurveQuestions.every((question) => /right-then-left|right and then left/i.test(`${question.prompt} ${question.explanation}`)));
+    assert.ok(reverseCurveQuestions.every((question) => !/winding|successive curves|left-curve sign|right-curve sign/i.test(`${question.prompt} ${question.explanation}`)));
+
+    const windingRoadQuestions = questionsByAssetSlug.get("ontario-winding-road") ?? [];
+    assert.ok(windingRoadQuestions.some((question) => /winding|successive curves/i.test(`${question.prompt} ${question.explanation}`)));
+
+    const speedChangeQuestions = questionsByAssetSlug.get("ontario-speed-limit-changes-ahead-with-maximum-speed-of-50-km-h") ?? [];
+    assert.ok(speedChangeQuestions.some((question) => question.choices.some((choice) => choice.isCorrect && /50 km\/h.*ahead|ahead.*50 km\/h/i.test(choice.text))));
+    assert.ok(speedChangeQuestions.every((question) => question.choices.every((choice) => !choice.isCorrect || !/maximum legal speed is 50 km\/h when conditions allow/i.test(choice.text))));
+
+    const rightLaneEndsQuestions = questionsByAssetSlug.get("ontario-right-lane-ends-ahead") ?? [];
+    assert.ok(rightLaneEndsQuestions.some((question) => question.choices.some((choice) => choice.isCorrect && /right lane ends.*merge left|merge left.*right lane ends/i.test(choice.text))));
+    assert.ok(rightLaneEndsQuestions.every((question) => question.choices.every((choice) => !choice.isCorrect || !/merge from the left toward the right/i.test(choice.text))));
+
+    const roundaboutDestinationQuestions = questionsByAssetSlug.get("ontario-the-upcoming-roundabout-exits-and-where-they-will-take-you") ?? [];
+    assert.ok(roundaboutDestinationQuestions.some((question) => /exits|destinations/i.test(`${question.prompt} ${question.explanation}`)));
+    assert.ok(roundaboutDestinationQuestions.every((question) => !/warning about|warning sign|slow down and prepare to yield/i.test(`${question.prompt} ${question.explanation}`)));
+
+    const amberSchoolBusQuestion = ontarioG1SeedQuestions.find((question) => question.prompt.includes("overhead amber lights flashing"));
+    assert.ok(amberSchoolBusQuestion);
+    assert.deepEqual(amberSchoolBusQuestion.assetSlugs ?? [], []);
+
+    const activeRailwaySignalQuestion = ontarioG1SeedQuestions.find((question) => question.prompt.includes("flashing lights or a lowered gate"));
+    assert.ok(activeRailwaySignalQuestion);
+    assert.deepEqual(activeRailwaySignalQuestion.assetSlugs ?? [], []);
 
     const timedParkingQuestions = questionsByAssetSlug.get("ontario-you-may-park-in-the-designated-area-during-the-posted-times") ?? [];
     assert.ok(timedParkingQuestions.every((question) => /may park|posted times|time limit/i.test(`${question.prompt} ${question.explanation}`)));

@@ -388,7 +388,7 @@ export const ontarioG1SeedIdentities: Readonly<Record<string, SeedIdentity>> = {
   "What does the number shown on this sign mean?": {
     "publicId": "ontario-g1-043",
     "choices": {
-      "The maximum legal speed is 50 km/h when conditions allow": "ontario-g1-043-choice-1",
+      "The maximum speed limit changes to 50 km/h ahead": "ontario-g1-043-choice-1",
       "The minimum speed is 50 km/h": "ontario-g1-043-choice-2",
       "The recommended ramp speed is 50 km/h": "ontario-g1-043-choice-3",
       "Only trucks must obey 50 km/h": "ontario-g1-043-choice-4"
@@ -511,10 +511,10 @@ export const ontarioG1SeedIdentities: Readonly<Record<string, SeedIdentity>> = {
       "The sidewalk ends immediately": "ontario-g1-056-choice-4"
     }
   },
-  "What road feature is this sign warning about?": {
+  "What information does this roundabout sign provide?": {
     "publicId": "ontario-g1-057",
     "choices": {
-      "A roundabout is ahead": "ontario-g1-057-choice-1",
+      "The upcoming roundabout exits and their destinations": "ontario-g1-057-choice-1",
       "A dead end is ahead": "ontario-g1-057-choice-2",
       "A tunnel is ahead": "ontario-g1-057-choice-3",
       "A school bus stop is ahead": "ontario-g1-057-choice-4"
@@ -538,10 +538,10 @@ export const ontarioG1SeedIdentities: Readonly<Record<string, SeedIdentity>> = {
       "Parking starts on the shoulder": "ontario-g1-059-choice-4"
     }
   },
-  "What does this sign tell you to expect at a right merge?": {
+  "What does this sign tell a driver in the right lane?": {
     "publicId": "ontario-g1-060",
     "choices": {
-      "Traffic will merge from the left toward the right": "ontario-g1-060-choice-1",
+      "The right lane ends ahead, so merge left when safe": "ontario-g1-060-choice-1",
       "You must stop for a flag person": "ontario-g1-060-choice-2",
       "The road changes to gravel": "ontario-g1-060-choice-3",
       "No vehicles may pass": "ontario-g1-060-choice-4"

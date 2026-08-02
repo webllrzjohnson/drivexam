@@ -1,6 +1,7 @@
 import type { LicenseStage, RoadTestChecklistSection } from "@prisma/client";
 
 import { ontarioRoadTestSeedIdentities } from "@/lib/seed/ontario-question-public-ids";
+import { canonicalizeOntarioSourceReference } from "@/lib/seed/ontario-source-reference";
 
 export type RoadTestSeedCategory = {
   slug: string;
@@ -1200,6 +1201,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = ontarioRoadT
   if (!identity) throw new Error(`Missing durable public identity for road-test question: ${question.prompt}`);
   return {
     ...question,
+    sourceReference: canonicalizeOntarioSourceReference(question.sourceReference),
     publicId: identity.publicId,
     choices: question.choices.map((choice) => {
       const publicId = identity.choices[choice.text];
@@ -1209,7 +1211,7 @@ export const ontarioRoadTestSeedQuestions: RoadTestSeedQuestion[] = ontarioRoadT
   };
 });
 
-export const ontarioRoadTestChecklistItems: RoadTestSeedChecklistItem[] = [
+const ontarioRoadTestChecklistItemInputs: RoadTestSeedChecklistItem[] = [
   {
     stage: "G2",
     section: "BEFORE_TEST",
@@ -1355,6 +1357,11 @@ export const ontarioRoadTestChecklistItems: RoadTestSeedChecklistItem[] = [
     sortOrder: 180,
   },
 ];
+
+export const ontarioRoadTestChecklistItems: RoadTestSeedChecklistItem[] = ontarioRoadTestChecklistItemInputs.map((item) => ({
+  ...item,
+  sourceReference: canonicalizeOntarioSourceReference(item.sourceReference),
+}));
 
 export function getOntarioRoadTestSeedSummary() {
   const questionCountsByStage = ontarioRoadTestSeedQuestions.reduce<Record<LicenseStage, number>>((acc, question) => {

@@ -1,4 +1,5 @@
 import { ontarioG1SeedIdentities } from "@/lib/seed/ontario-question-public-ids";
+import { canonicalizeOntarioSourceReference } from "@/lib/seed/ontario-source-reference";
 
 export type SeedCategory = {
   slug: string;
@@ -37,7 +38,7 @@ type SeedQuestionInput = {
 export type SeedQuestion = Omit<SeedQuestionInput, "choices"> & { publicId: string; choices: SeedQuestionChoice[] };
 
 export const ontarioG1SourceUrls = {
-  signsAndLights: "https://www.ontario.ca/document/official-mto-drivers-handbook/traffic-signs-and-lights",
+  signsAndLights: "https://www.ontario.ca/document/official-mto-drivers-handbook/signs",
   intersections: "https://www.ontario.ca/document/official-mto-drivers-handbook/driving-through-intersections",
   sharingRoad: "https://www.ontario.ca/document/official-mto-drivers-handbook/sharing-road-other-road-users",
   safeDriving: "https://www.ontario.ca/document/official-mto-drivers-handbook/safe-and-responsible-driving",
@@ -1037,7 +1038,6 @@ const ontarioG1SeedQuestionInputs: SeedQuestionInput[] = [
     categorySlug: "g1-sharing-the-road",
     prompt: "When a school bus has overhead amber lights flashing, what should nearby drivers do?",
     explanation: "The Ontario handbook says flashing amber lights mean the bus is preparing to stop to pick up or drop off passengers. Drivers should slow down and prepare to stop.",
-    assetSlugs: ["ontario-you-must-stop-if-a-school-bus-has-flashing-signals"],
     choices: [
       { text: "Slow down and prepare to stop", isCorrect: true },
       { text: "Pass quickly before the bus stops", isCorrect: false },
@@ -1135,7 +1135,6 @@ const ontarioG1SeedQuestionInputs: SeedQuestionInput[] = [
     categorySlug: "g1-special-conditions",
     prompt: "At a railway crossing with flashing lights or a lowered gate, what must you do?",
     explanation: "Stop before the railway crossing when warning lights are flashing, gates are lowered, or a train is approaching. Proceed only when the signals stop and it is safe.",
-    assetSlugs: ["ontario-railway-crossing-ahead"],
     choices: [
       { text: "Stop and wait until it is safe to cross", isCorrect: true },
       { text: "Drive around the gate if the train looks far away", isCorrect: false },
@@ -1426,10 +1425,10 @@ const ontarioG1SeedQuestionInputs: SeedQuestionInput[] = [
     sourceReference: `${ontarioG1SourceUrls.signsAndLights}#regulatory-signs`,
     categorySlug: "g1-signs-and-lights",
     prompt: "What does the number shown on this sign mean?",
-    explanation: "A maximum speed sign shows the highest legal speed in kilometres per hour under ideal conditions. Drivers must go slower when conditions require it.",
+    explanation: "This sign gives advance notice that the speed limit changes to a maximum of 50 km/h ahead. Adjust smoothly and obey the new limit when it begins.",
     assetSlugs: ["ontario-speed-limit-changes-ahead-with-maximum-speed-of-50-km-h"],
     choices: [
-      { text: "The maximum legal speed is 50 km/h when conditions allow", isCorrect: true },
+      { text: "The maximum speed limit changes to 50 km/h ahead", isCorrect: true },
       { text: "The minimum speed is 50 km/h", isCorrect: false },
       { text: "The recommended ramp speed is 50 km/h", isCorrect: false },
       { text: "Only trucks must obey 50 km/h", isCorrect: false },
@@ -1605,13 +1604,13 @@ const ontarioG1SeedQuestionInputs: SeedQuestionInput[] = [
     ],
   },
   {
-    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#warning-signs`,
+    sourceReference: `${ontarioG1SourceUrls.signsAndLights}#information-and-direction-signs`,
     categorySlug: "g1-signs-and-lights",
-    prompt: "What road feature is this sign warning about?",
-    explanation: "A roundabout-ahead sign tells you to slow down and prepare to yield to traffic already in the roundabout.",
+    prompt: "What information does this roundabout sign provide?",
+    explanation: "This information-and-direction sign shows the exits from the upcoming roundabout and the destinations reached from each exit.",
     assetSlugs: ["ontario-the-upcoming-roundabout-exits-and-where-they-will-take-you"],
     choices: [
-      { text: "A roundabout is ahead", isCorrect: true },
+      { text: "The upcoming roundabout exits and their destinations", isCorrect: true },
       { text: "A dead end is ahead", isCorrect: false },
       { text: "A tunnel is ahead", isCorrect: false },
       { text: "A school bus stop is ahead", isCorrect: false },
@@ -1646,11 +1645,11 @@ const ontarioG1SeedQuestionInputs: SeedQuestionInput[] = [
   {
     sourceReference: `${ontarioG1SourceUrls.signsAndLights}#warning-signs`,
     categorySlug: "g1-signs-and-lights",
-    prompt: "What does this sign tell you to expect at a right merge?",
-    explanation: "A merge sign warns that traffic streams will join. Check mirrors, manage space, and be ready for merging vehicles.",
+    prompt: "What does this sign tell a driver in the right lane?",
+    explanation: "The right lane ends ahead. A driver in that lane must check mirrors and blind spots, find a safe gap, and merge left.",
     assetSlugs: ["ontario-right-lane-ends-ahead"],
     choices: [
-      { text: "Traffic will merge from the left toward the right", isCorrect: true },
+      { text: "The right lane ends ahead, so merge left when safe", isCorrect: true },
       { text: "You must stop for a flag person", isCorrect: false },
       { text: "The road changes to gravel", isCorrect: false },
       { text: "No vehicles may pass", isCorrect: false },
@@ -1674,7 +1673,7 @@ const ontarioG1SeedQuestionInputs: SeedQuestionInput[] = [
     categorySlug: "g1-signs-and-lights",
     prompt: "What should you do when this winding-road warning sign is shown?",
     explanation: "A winding-road warning sign means successive curves are ahead. Reduce speed before the curves and keep your vehicle in the proper lane.",
-    assetSlugs: ["ontario-road-ahead-turns-right-then-left"],
+    assetSlugs: ["ontario-winding-road"],
     choices: [
       { text: "Slow down before the successive curves", isCorrect: true },
       { text: "Pass another vehicle immediately", isCorrect: false },
@@ -1767,6 +1766,7 @@ export const ontarioG1SeedQuestions: SeedQuestion[] = ontarioG1SeedQuestionInput
   if (!identity) throw new Error(`Missing durable public identity for G1 question: ${question.prompt}`);
   return {
     ...question,
+    sourceReference: canonicalizeOntarioSourceReference(question.sourceReference),
     publicId: identity.publicId,
     choices: question.choices.map((choice) => {
       const publicId = identity.choices[choice.text];
