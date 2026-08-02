@@ -58,8 +58,8 @@ export function OnboardingForm() {
 
       <div className="space-y-2">
         <Label htmlFor="targetTestDate">When is your test?</Label>
-        <Input id="targetTestDate" name="targetTestDate" type="date" />
-        <p className="text-sm leading-6 text-slate-600">Optional. You can add or change this later in Account settings.</p>
+        <Input aria-describedby="onboarding-test-date-help" id="targetTestDate" name="targetTestDate" type="date" />
+        <p className="text-sm leading-6 text-slate-600" id="onboarding-test-date-help">Optional. You can add or change this later in Account settings.</p>
       </div>
 
       <SubmitButton pendingText="Saving your plan...">Save and start my plan</SubmitButton>

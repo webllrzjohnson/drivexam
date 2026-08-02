@@ -32,4 +32,15 @@ describe("G1 mock exam UI", () => {
     assert.match(component, /Keep practising/i);
     assert.match(component, /questions\.filter\(\(candidate\) => \(selection\[candidate\.id\]/);
   });
+
+  it("provides direct question navigation and an unanswered-question review path", async () => {
+    const component = await fs.readFile(path.join(root, "src", "components", "quiz", "practice-quiz.tsx"), "utf8");
+
+    assert.match(component, /aria-label="Question navigation"/);
+    assert.match(component, /aria-current=\{index === navigation\.activeIndex \? "step" : undefined\}/);
+    assert.match(component, /unansweredIndexes/);
+    assert.match(component, /Review unanswered/);
+    assert.match(component, /setActiveIndex\(unansweredIndexes\[0\]\)/);
+    assert.match(component, /answeredCount === questions\.length/);
+  });
 });

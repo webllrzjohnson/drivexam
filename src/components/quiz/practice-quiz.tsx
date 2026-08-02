@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { saveQuizAttempt } from "@/app/(public)/practice/actions";
 import { createQuestionReport } from "@/app/(public)/practice/report-actions";
-import { buildQuizNavigationState, scoreG1MockExam, scoreQuizAnswers, type QuizQuestionView } from "@/lib/learner/quiz";
+import { buildQuizNavigationState, getOfficialOntarioSourceUrl, scoreG1MockExam, scoreQuizAnswers, type QuizQuestionView } from "@/lib/learner/quiz";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -17,6 +17,7 @@ type PracticeQuizProps = {
   returnTo: string;
   stage: "G1" | "G2" | "G";
   experience?: "practice" | "g1-mock-exam";
+  initialQuestionId?: string;
 };
 
 const reportReasonOptions = [
@@ -42,10 +43,10 @@ function toggleMultiChoice(selection: Record<string, string[]>, questionId: stri
   return { ...selection, [questionId]: next };
 }
 
-export function PracticeQuiz({ canSaveProgress, emptyState, experience = "practice", questions, returnTo, stage }: PracticeQuizProps) {
+export function PracticeQuiz({ canSaveProgress, emptyState, experience = "practice", initialQuestionId, questions, returnTo, stage }: PracticeQuizProps) {
   const [selection, setSelection] = useState<Record<string, string[]>>({});
   const [submitted, setSubmitted] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(() => Math.max(0, questions.findIndex((candidate) => candidate.id === initialQuestionId)));
   const hasMounted = useRef(false);
   const result = useMemo(() => scoreQuizAnswers(questions, selection), [questions, selection]);
   const mockResult = useMemo(
@@ -57,6 +58,8 @@ export function PracticeQuiz({ canSaveProgress, emptyState, experience = "practi
   const question = questions[navigation.activeIndex];
   const answeredCount = questions.filter((candidate) => (selection[candidate.id]?.length ?? 0) > 0).length;
   const isMockExam = experience === "g1-mock-exam";
+  const unansweredIndexes = questions.flatMap((candidate, index) => (selection[candidate.id]?.length ?? 0) > 0 ? [] : [index]);
+  const canSubmitMockExam = answeredCount === questions.length;
 
   useEffect(() => {
     if (!hasMounted.current) {
@@ -83,13 +86,14 @@ export function PracticeQuiz({ canSaveProgress, emptyState, experience = "practi
 
   const isMulti = question.type === "MULTI_SELECT";
   const review = reviewByQuestion.get(question.id);
+  const officialSourceUrl = getOfficialOntarioSourceUrl(question.sourceReference);
 
   return (
     <div className="space-y-6">
       {submitted ? (
         <Card aria-live="polite" className={mockResult?.passed === false ? "border-amber-200 bg-amber-50" : "border-green-200 bg-green-50"} role="status">
           <CardHeader>
-            <CardTitle className="outline-none" id="quiz-result-heading" tabIndex={-1}>
+            <CardTitle as="h2" className="outline-none" id="quiz-result-heading" tabIndex={-1}>
               {mockResult ? (mockResult.passed ? "Mock exam passed" : "Keep practising") : "Practice complete"}: {result.correctCount}/{result.totalCount} ({result.percent}%)
             </CardTitle>
           </CardHeader>
@@ -124,6 +128,29 @@ export function PracticeQuiz({ canSaveProgress, emptyState, experience = "practi
           <div className="h-full rounded-full bg-green-700 transition-all" style={{ width: `${(navigation.questionNumber / questions.length) * 100}%` }} />
         </div>
       </div>
+
+      {isMockExam ? (
+        <nav aria-label="Question navigation" className="rounded-xl border bg-white p-4">
+          <p className="mb-3 text-sm font-semibold text-slate-900">Jump to a question</p>
+          <div className="grid grid-cols-5 gap-2 sm:grid-cols-8 md:grid-cols-10">
+            {questions.map((candidate, index) => {
+              const isAnswered = (selection[candidate.id]?.length ?? 0) > 0;
+              return (
+                <button
+                  aria-current={index === navigation.activeIndex ? "step" : undefined}
+                  aria-label={`Question ${index + 1}: ${isAnswered ? "answered" : "unanswered"}`}
+                  className={`min-h-10 rounded-lg border text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2 ${index === navigation.activeIndex ? "border-green-800 bg-green-800 text-white" : isAnswered ? "border-green-300 bg-green-50 text-green-950" : "border-slate-300 bg-white text-slate-700"}`}
+                  key={candidate.id}
+                  onClick={() => setActiveIndex(index)}
+                  type="button"
+                >
+                  {index + 1}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      ) : null}
 
       <Card key={question.id}>
         <CardHeader>
@@ -177,6 +204,11 @@ export function PracticeQuiz({ canSaveProgress, emptyState, experience = "practi
               <div className={`rounded-xl border p-4 text-sm ${review.isCorrect ? "border-green-200 bg-green-50 text-green-950" : "border-amber-200 bg-amber-50 text-amber-950"}`}>
                 <p className="font-semibold">{review.isCorrect ? "Correct" : "Review this one"}</p>
                 <p>{question.explanation}</p>
+                {submitted && officialSourceUrl ? (
+                  <p className="mt-2">
+                    Source: <a className="font-semibold underline" href={officialSourceUrl}>Official Ontario guidance for {question.categoryName ?? `${question.stage} driving`}</a>
+                  </p>
+                ) : null}
               </div>
               <details className="rounded-xl border bg-slate-50 p-4 text-sm">
                 <summary className="cursor-pointer font-semibold text-slate-900">Report this question</summary>
@@ -207,6 +239,18 @@ export function PracticeQuiz({ canSaveProgress, emptyState, experience = "practi
         </CardContent>
       </Card>
 
+      {isMockExam && !submitted ? (
+        <div className="flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <p aria-live="polite" className="text-sm text-amber-950">
+            {canSubmitMockExam ? "All 40 questions are answered. You can submit now." : `Answer all 40 questions before submitting. ${unansweredIndexes.length} unanswered.`}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {unansweredIndexes.length ? <Button onClick={() => setActiveIndex(unansweredIndexes[0])} type="button" variant="outline">Review unanswered</Button> : null}
+            <Button disabled={!canSubmitMockExam} onClick={() => { setSubmitted(true); setActiveIndex(0); }} type="button">Submit mock exam</Button>
+          </div>
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Button disabled={navigation.isFirst} onClick={() => setActiveIndex(navigation.previousIndex)} type="button" variant="outline">Previous</Button>
         <div className="flex flex-wrap gap-3">
@@ -218,13 +262,8 @@ export function PracticeQuiz({ canSaveProgress, emptyState, experience = "practi
           }} type="button" variant="outline">Try again</Button> : null}
           {!navigation.isLast ? (
             <Button onClick={() => setActiveIndex(navigation.nextIndex)} type="button">Next question</Button>
-          ) : !submitted ? (
-            <div className="space-y-2 text-right">
-              {isMockExam && answeredCount < questions.length ? <p className="text-sm text-amber-800">Answer all 40 questions before submitting.</p> : null}
-              <Button disabled={isMockExam && answeredCount < questions.length} onClick={() => { setSubmitted(true); setActiveIndex(0); }} type="button">
-                {isMockExam ? "Submit mock exam" : "Check answers"}
-              </Button>
-            </div>
+          ) : !submitted && !isMockExam ? (
+            <Button onClick={() => { setSubmitted(true); setActiveIndex(0); }} type="button">Check answers</Button>
           ) : null}
         </div>
       </div>

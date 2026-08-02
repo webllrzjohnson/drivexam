@@ -25,5 +25,5 @@ export async function createQuestionReport(formData: FormData) {
   });
 
   revalidatePath("/admin/reports");
-  redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}reported=question`);
+  redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}reported=question&reportedQuestionId=${encodeURIComponent(parsed.questionId)}#question-${encodeURIComponent(parsed.questionId)}-heading`);
 }

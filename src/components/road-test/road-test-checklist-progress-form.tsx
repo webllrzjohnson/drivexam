@@ -15,7 +15,7 @@ export function RoadTestChecklistProgressForm({ canSaveProgress, isCompleted, it
   }
 
   return (
-    <form action={toggleRoadTestChecklistProgress}>
+    <form action={toggleRoadTestChecklistProgress} className="scroll-mt-24 outline-none" id={`checklist-item-${itemId}`} tabIndex={-1}>
       <input name="itemId" type="hidden" value={itemId} />
       <input name="stage" type="hidden" value={stage} />
       <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm font-medium shadow-sm">

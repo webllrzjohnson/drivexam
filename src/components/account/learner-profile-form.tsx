@@ -30,8 +30,8 @@ export function LearnerProfileForm({ currentStage, targetTestDate }: LearnerProf
     <form action={formAction} className="space-y-5">
       <FormMessage state={state} />
 
-      <div className="space-y-3">
-        <Label>Current licence goal</Label>
+      <fieldset className="space-y-3">
+        <legend className="text-sm font-medium leading-none">Current licence goal</legend>
         <div className="grid gap-3">
           {stageOptions.map((option) => (
             <label className="flex cursor-pointer gap-3 rounded-xl border bg-white p-4 shadow-sm transition hover:border-green-300" key={option.value}>
@@ -50,12 +50,12 @@ export function LearnerProfileForm({ currentStage, targetTestDate }: LearnerProf
             </label>
           ))}
         </div>
-      </div>
+      </fieldset>
 
       <div className="space-y-2">
         <Label htmlFor="targetTestDate">Target test date</Label>
-        <Input id="targetTestDate" name="targetTestDate" type="date" defaultValue={targetTestDate} />
-        <p className="text-sm leading-6 text-slate-600">Optional. This helps drivexam decide if your dashboard plan should be steady or urgent.</p>
+        <Input aria-describedby="target-test-date-help" id="targetTestDate" name="targetTestDate" type="date" defaultValue={targetTestDate} />
+        <p className="text-sm leading-6 text-slate-600" id="target-test-date-help">Optional. This helps drivexam decide if your dashboard plan should be steady or urgent.</p>
       </div>
 
       <SubmitButton pendingText="Saving profile...">Save learner profile</SubmitButton>

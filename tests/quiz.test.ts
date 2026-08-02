@@ -10,6 +10,7 @@ import {
   buildRoadSignFlashcardGroups,
   buildRoadSignPracticeGuide,
   buildQuizQuestionViews,
+  getOfficialOntarioSourceUrl,
   getNextG1MockExamAttempt,
   normalizeG1MockExamAttempt,
   scoreQuizAnswers,
@@ -23,6 +24,7 @@ const questions: QuizQuestionInput[] = [
     id: "q1",
     prompt: "What should you do at a stop sign?",
     explanation: "Come to a complete stop and proceed only when safe.",
+    sourceReference: "https://www.ontario.ca/document/official-mto-drivers-handbook/signs",
     stage: "G1",
     type: "MULTIPLE_CHOICE",
     category: { name: "Signs" },
@@ -74,6 +76,7 @@ describe("learner quiz helpers", () => {
       id: "q1",
       prompt: "What should you do at a stop sign?",
       explanation: "Come to a complete stop and proceed only when safe.",
+      sourceReference: "https://www.ontario.ca/document/official-mto-drivers-handbook/signs",
       stage: "G1",
       type: "MULTIPLE_CHOICE",
       categoryName: "Signs",
@@ -83,6 +86,16 @@ describe("learner quiz helpers", () => {
         { id: "c2", text: "Slow down only", isCorrect: false, asset: null },
       ],
     });
+  });
+
+  it("allows only official HTTPS Ontario learner sources", () => {
+    assert.equal(
+      getOfficialOntarioSourceUrl("https://www.ontario.ca/document/official-mto-drivers-handbook/signs"),
+      "https://www.ontario.ca/document/official-mto-drivers-handbook/signs",
+    );
+    assert.equal(getOfficialOntarioSourceUrl("http://www.ontario.ca/document/official-mto-drivers-handbook"), null);
+    assert.equal(getOfficialOntarioSourceUrl("https://ontario.ca.evil.example/phishing"), null);
+    assert.equal(getOfficialOntarioSourceUrl("javascript:alert(1)"), null);
   });
 
   it("deterministically mixes answer positions instead of exposing the stored correct-first order", () => {

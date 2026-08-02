@@ -27,7 +27,7 @@ export default async function Page() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Study plan settings</CardTitle>
+          <CardTitle as="h2">Study plan settings</CardTitle>
         </CardHeader>
         <CardContent>
           <LearnerProfileForm currentStage={profile?.currentStage ?? null} targetTestDate={formatTargetTestDateInput(profile?.targetTestDate ?? null)} />

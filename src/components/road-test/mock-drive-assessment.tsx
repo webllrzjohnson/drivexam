@@ -82,7 +82,7 @@ export function MockDriveAssessment({ canSaveProgress, recentAssessments, stage 
   }
 
   return (
-    <section aria-labelledby="mock-drive-heading" className="scroll-mt-24" id="mock-drive-assessment">
+    <section aria-labelledby="mock-drive-heading" className="scroll-mt-24 outline-none" id="mock-drive-assessment" tabIndex={-1}>
       <Card>
         <CardHeader className="space-y-3">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-800">Practice-route assessment</p>
@@ -101,10 +101,10 @@ export function MockDriveAssessment({ canSaveProgress, recentAssessments, stage 
           <>
           <div className="grid gap-4 lg:grid-cols-2">
             {criteria.map((criterion, index) => (
-              <fieldset className="min-w-0 rounded-xl border bg-slate-50 p-4" key={criterion.id}>
+              <fieldset aria-describedby={`${criterion.id}-description`} className="min-w-0 rounded-xl border bg-slate-50 p-4" key={criterion.id}>
                 <legend className="px-1 font-semibold text-slate-950">{index + 1}. {criterion.label}</legend>
                 <p className="mb-4 mt-1 text-sm leading-6 text-slate-600" id={`${criterion.id}-description`}>{criterion.description}</p>
-                <div aria-describedby={`${criterion.id}-description`} className="grid gap-2 sm:grid-cols-3">
+                <div className="grid gap-2 sm:grid-cols-3">
                   {ratingOptions.map((option) => (
                     <label className={`cursor-pointer rounded-lg border p-3 text-sm transition-colors focus-within:ring-2 focus-within:ring-green-700 focus-within:ring-offset-2 ${ratings[criterion.id] === option.value ? "border-green-700 bg-green-50" : "bg-white"}`} key={option.value}>
                       <span className="flex items-center gap-2 font-medium text-slate-950">
@@ -128,12 +128,12 @@ export function MockDriveAssessment({ canSaveProgress, recentAssessments, stage 
             ))}
           </div>
 
-          <fieldset className="rounded-xl border border-red-200 bg-red-50 p-4">
+          <fieldset aria-describedby="critical-errors-description" className="rounded-xl border border-red-200 bg-red-50 p-4">
             <legend className="px-1 font-semibold text-red-950">Critical safety errors</legend>
             <p className="mb-3 mt-1 text-sm leading-6 text-red-900" id="critical-errors-description">
               Count any instructor intervention, dangerous action, traffic-law violation, or situation that forced another road user to avoid you.
             </p>
-            <div aria-describedby="critical-errors-description" className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
               {[0, 1, 2].map((count) => (
                 <label className={`cursor-pointer rounded-lg border px-4 py-3 text-sm font-medium focus-within:ring-2 focus-within:ring-red-700 focus-within:ring-offset-2 ${criticalErrorCount === count ? "border-red-700 bg-white text-red-950" : "border-red-200 bg-red-50 text-red-900"}`} key={count}>
                   <input

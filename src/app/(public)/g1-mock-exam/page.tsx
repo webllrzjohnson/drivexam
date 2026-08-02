@@ -12,7 +12,7 @@ import { buildG1MockExam, buildQuizQuestionViews, getNextG1MockExamAttempt, norm
 const handbookUrl = "https://www.ontario.ca/document/official-mto-drivers-handbook";
 
 type G1MockExamPageProps = {
-  searchParams: Promise<{ attempt?: string; reported?: string }>;
+  searchParams: Promise<{ attempt?: string; reported?: string; reportedQuestionId?: string }>;
 };
 
 export default async function G1MockExamPage({ searchParams }: G1MockExamPageProps) {
@@ -72,6 +72,7 @@ export default async function G1MockExamPage({ searchParams }: G1MockExamPagePro
           <PracticeQuiz
             canSaveProgress={Boolean(session?.user?.emailVerified)}
             experience="g1-mock-exam"
+            initialQuestionId={params.reportedQuestionId}
             key={attempt}
             questions={exam.questions}
             returnTo={returnTo}

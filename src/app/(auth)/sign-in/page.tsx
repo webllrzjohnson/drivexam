@@ -17,7 +17,7 @@ export default async function Page({ searchParams }: SignInPageProps) {
     <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-4 py-12">
       <Card className="w-full">
         <CardHeader className="space-y-2">
-          <CardTitle>Sign in</CardTitle>
+          <CardTitle as="h1">Sign in</CardTitle>
           <p className="text-sm text-slate-600">Access your Ontario driving exam dashboard and admin tools.</p>
         </CardHeader>
         <CardContent className="space-y-4">

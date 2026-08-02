@@ -23,7 +23,7 @@ export default async function OnboardingPage() {
 
       <Card className="border-green-200 shadow-sm">
         <CardHeader>
-          <CardTitle>Step 1 of 1 · Set your goal</CardTitle>
+          <CardTitle as="h2">Step 1 of 1 · Set your goal</CardTitle>
         </CardHeader>
         <CardContent>
           <OnboardingForm />

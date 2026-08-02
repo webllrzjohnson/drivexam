@@ -15,7 +15,7 @@ const stageOptions = ["G1", "G2", "G"] as const;
 type ReviewStage = (typeof stageOptions)[number];
 
 type MistakeReviewPageProps = {
-  searchParams: Promise<{ stage?: string; category?: string; reported?: string }>;
+  searchParams: Promise<{ stage?: string; category?: string; reported?: string; reportedQuestionId?: string }>;
 };
 
 function parseStage(value: string | undefined, fallback: ReviewStage): ReviewStage {
@@ -120,13 +120,13 @@ export default async function MistakeReviewPage({ searchParams }: MistakeReviewP
         <CardHeader><CardTitle>Choose a targeted drill</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-2" aria-label="License stage">
-            {stageOptions.map((option) => <Button asChild key={option} variant={option === stage ? "default" : "outline"}><Link href={`/mistake-review?stage=${option}`}>{option === "G" ? "Full G" : option}</Link></Button>)}
+            {stageOptions.map((option) => <Button asChild key={option} variant={option === stage ? "default" : "outline"}><Link aria-current={option === stage ? "page" : undefined} href={`/mistake-review?stage=${option}`}>{option === "G" ? "Full G" : option}</Link></Button>)}
           </div>
           <div className="flex flex-wrap gap-2" aria-label="Weak category">
-            <Button asChild variant={requestedCategory ? "outline" : "default"}><Link href={`/mistake-review?stage=${stage}`}>All weak areas</Link></Button>
+            <Button asChild variant={requestedCategory ? "outline" : "default"}><Link aria-current={requestedCategory ? undefined : "page"} href={`/mistake-review?stage=${stage}`}>All weak areas</Link></Button>
             {categories.map((category) => (
               <Button asChild key={category} variant={requestedCategory === category ? "default" : "outline"}>
-                <Link href={`/mistake-review?stage=${stage}&category=${encodeURIComponent(category)}`}>{category}</Link>
+                <Link aria-current={requestedCategory === category ? "page" : undefined} href={`/mistake-review?stage=${stage}&category=${encodeURIComponent(category)}`}>{category}</Link>
               </Button>
             ))}
           </div>
@@ -137,6 +137,7 @@ export default async function MistakeReviewPage({ searchParams }: MistakeReviewP
         <PracticeQuiz
           canSaveProgress
           emptyState="No active mistakes match this drill."
+          initialQuestionId={params.reportedQuestionId}
           key={returnTo}
           questions={quizQuestions}
           returnTo={returnTo}

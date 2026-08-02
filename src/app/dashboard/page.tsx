@@ -24,7 +24,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     return (
       <main className="mx-auto w-full max-w-3xl px-4 py-12">
         <Alert>
-          <AlertTitle>Email verification required</AlertTitle>
+          <AlertTitle as="h1">Email verification required</AlertTitle>
           <AlertDescription>Verify your email before accessing saved progress and daily plans.</AlertDescription>
         </Alert>
         <Button asChild className="mt-4"><Link href="/verify-email">Verification help</Link></Button>
@@ -108,8 +108,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         <h1 className="text-3xl font-bold">Your drivexam dashboard</h1>
         <p className="text-slate-600">Track saved practice scores, weak areas, and next study actions.</p>
       </div>
-      {params.saved === "quiz" ? <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900">Quiz progress saved.</p> : null}
-      {params.saved === "checklist" ? <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900">Checklist progress saved.</p> : null}
+      {params.saved === "quiz" ? <p aria-live="polite" className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900" role="status">Quiz progress saved.</p> : null}
+      {params.saved === "checklist" ? <p aria-live="polite" className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900" role="status">Checklist progress saved.</p> : null}
       <DashboardShell attempts={attempts} checklistProgress={checklistProgress} mistakeReview={mistakeReview} plan={plan} roadTestAssessments={roadTestAssessments} summary={summary} />
     </main>
   );

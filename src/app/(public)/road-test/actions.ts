@@ -71,5 +71,5 @@ export async function toggleRoadTestChecklistProgress(formData: FormData) {
 
   revalidatePath("/road-test");
   revalidatePath("/dashboard");
-  redirect(`/road-test?stage=${stage}&saved=checklist`);
+  redirect(`/road-test?stage=${stage}&saved=checklist#checklist-item-${encodeURIComponent(itemId)}`);
 }

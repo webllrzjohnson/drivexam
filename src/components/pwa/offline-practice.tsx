@@ -24,7 +24,7 @@ import {
   putOfflinePack,
   updateOfflineAttemptStatus,
 } from "@/lib/learner/offline-storage";
-import { buildBalancedPracticeQuestionSet, type QuizQuestionView } from "@/lib/learner/quiz";
+import { buildBalancedPracticeQuestionSet, getOfficialOntarioSourceUrl, type QuizQuestionView } from "@/lib/learner/quiz";
 import { cn } from "@/lib/utils";
 
 const STAGES: Array<{ value: LicenseStage; label: string }> = [
@@ -73,10 +73,10 @@ async function cacheOfflineResources(pack: OfflineQuestionPack) {
   });
 }
 
-function QuestionAsset({ path, title }: { path: string; title: string }) {
+function QuestionAsset({ alt, path }: { alt: string; path: string }) {
   return (
     <div className="overflow-hidden rounded-xl border bg-white">
-      <Image src={path} alt={title} width={900} height={520} unoptimized className="h-auto max-h-72 w-full object-contain" />
+      <Image src={path} alt={alt} width={900} height={520} unoptimized className="h-auto max-h-72 w-full object-contain" />
     </div>
   );
 }
@@ -94,11 +94,12 @@ function OfflineQuestion({
 }) {
   const multiple = question.type === "MULTI_SELECT";
   const selectedSet = new Set(selectedIds);
+  const officialSourceUrl = getOfficialOntarioSourceUrl(question.sourceReference);
   return (
-    <fieldset disabled={submitted} className="space-y-4">
+    <fieldset aria-describedby={`offline-question-${question.id}-instructions`} className="space-y-4">
       <legend className="text-xl font-bold text-slate-950">{question.prompt}</legend>
-      {question.assets.map((asset) => <QuestionAsset key={asset.path} path={asset.path} title={asset.title} />)}
-      <p className="text-sm text-slate-600">{multiple ? "Select all answers that apply." : "Select one answer."}</p>
+      {question.assets.map((asset) => <QuestionAsset alt="Illustration for this question" key={asset.path} path={asset.path} />)}
+      <p className="text-sm text-slate-600" id={`offline-question-${question.id}-instructions`}>{multiple ? "Select all answers that apply." : "Select one answer."}</p>
       <div className="space-y-3">
         {question.choices.map((choice) => {
           const selected = selectedSet.has(choice.id);
@@ -112,8 +113,9 @@ function OfflineQuestion({
               ? "border-green-700 bg-green-50"
               : "border-slate-200 bg-white hover:border-green-500";
           return (
-            <label key={choice.id} className={cn("flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition", resultStyle)}>
+            <label key={choice.id} className={cn("flex items-start gap-3 rounded-xl border p-4 transition", submitted ? "cursor-default" : "cursor-pointer", resultStyle)}>
               <input
+                aria-disabled={submitted}
                 type={multiple ? "checkbox" : "radio"}
                 name={`offline-question-${question.id}`}
                 checked={selected}
@@ -122,7 +124,7 @@ function OfflineQuestion({
               />
               <span className="min-w-0 flex-1">
                 {choice.text ? <span className="font-medium text-slate-900">{choice.text}</span> : null}
-                {choice.asset ? <span className="mt-3 block"><QuestionAsset path={choice.asset.path} title={choice.asset.title} /></span> : null}
+                {choice.asset ? <span className="mt-3 block"><QuestionAsset alt="Illustrated answer option" path={choice.asset.path} /></span> : null}
                 {submitted && choice.isCorrect ? <span className="mt-1 block text-sm font-semibold text-green-800">Correct answer</span> : null}
                 {submitted && selected && !choice.isCorrect ? <span className="mt-1 block text-sm font-semibold text-red-800">Your answer</span> : null}
               </span>
@@ -130,7 +132,14 @@ function OfflineQuestion({
           );
         })}
       </div>
-      {submitted ? <div className="rounded-xl bg-slate-100 p-4 text-sm text-slate-700"><strong>Explanation:</strong> {question.explanation}</div> : null}
+      {submitted ? (
+        <div className="rounded-xl bg-slate-100 p-4 text-sm text-slate-700">
+          <strong>Explanation:</strong> {question.explanation}
+          {submitted && officialSourceUrl ? (
+            <p className="mt-2">Source: <a className="font-semibold underline" href={officialSourceUrl}>Official Ontario guidance for {question.categoryName ?? `${question.stage} driving`}</a></p>
+          ) : null}
+        </div>
+      ) : null}
     </fieldset>
   );
 }
@@ -324,7 +333,7 @@ export function OfflinePractice() {
       <section aria-labelledby="offline-pack-title" className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle id="offline-pack-title">Offline question pack</CardTitle>
+            <CardTitle as="h2" id="offline-pack-title">Offline question pack</CardTitle>
             <CardDescription>Download public practice content once, then study without a connection. Account pages and admin tools remain online-only.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -342,7 +351,7 @@ export function OfflinePractice() {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle>Local progress</CardTitle><CardDescription>Results stay on this device until a verified account synchronizes them.</CardDescription></CardHeader>
+          <CardHeader><CardTitle as="h2">Local progress</CardTitle><CardDescription>Results stay on this device until a verified account synchronizes them.</CardDescription></CardHeader>
           <CardContent className="space-y-3 text-sm">
             <p><strong>{pendingAttempts.length}</strong> Pending sync</p>
             <p><strong>{attempts.filter((attempt) => attempt.status === "synced").length}</strong> Synchronized</p>

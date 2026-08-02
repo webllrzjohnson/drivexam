@@ -59,14 +59,14 @@ export function RoadSignFlashcards({ groups }: RoadSignFlashcardsProps) {
 
       {cards.length ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map((card) => {
+          {cards.map((card, index) => {
             const isFlipped = flippedPaths.includes(card.path);
             const status = knownPaths.includes(card.path) ? "Known" : reviewPaths.includes(card.path) ? "Need review" : null;
             return (
               <Card className="overflow-hidden" key={card.path}>
                 <CardContent className="space-y-3 p-4">
                   <button
-                    aria-label={isFlipped ? `Hide meaning for ${card.title}` : `Reveal meaning for ${card.title}`}
+                    aria-label={isFlipped ? undefined : `Reveal meaning for road sign ${index + 1}`}
                     className="flex h-72 w-full items-center justify-center rounded-xl border bg-white p-3 text-left transition hover:border-green-300"
                     data-flipped={isFlipped ? "true" : "false"}
                     data-road-sign-card={card.path}
@@ -75,20 +75,21 @@ export function RoadSignFlashcards({ groups }: RoadSignFlashcardsProps) {
                   >
                     {isFlipped ? (
                       <span className="space-y-2 text-center">
+                        <span className="sr-only">Road sign {index + 1} meaning:</span>
                         <span className="block text-lg font-bold text-slate-950">{card.title}</span>
                         <span className="block text-sm leading-6 text-slate-600">{card.description ?? "Review this Ontario road sign and practise its meaning in the signs quiz."}</span>
                       </span>
                     ) : (
-                      <Image alt={card.title} className="max-h-64 w-auto max-w-full object-contain" height={280} src={card.path} width={320} />
+                      <Image alt="Road sign to identify" className="max-h-64 w-auto max-w-full object-contain" height={280} src={card.path} width={320} />
                     )}
                   </button>
                   <div className="flex items-center justify-between gap-2 text-xs text-slate-500">
                     <span>{isFlipped ? "Meaning shown" : "Tap to reveal"}</span>
-                    {status ? <span className="rounded-full bg-slate-100 px-2 py-1 font-medium text-slate-700">{status}</span> : null}
+                    {status ? <span aria-live="polite" className="rounded-full bg-slate-100 px-2 py-1 font-medium text-slate-700">{status}</span> : null}
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    <Button data-self-check="known" onClick={() => markKnown(card.path)} type="button" variant={knownPaths.includes(card.path) ? "default" : "outline"}>I knew it</Button>
-                    <Button data-self-check="review" onClick={() => markReview(card.path)} type="button" variant={reviewPaths.includes(card.path) ? "default" : "outline"}>Need review</Button>
+                    <Button aria-label={`Road sign ${index + 1}: mark as known`} aria-pressed={knownPaths.includes(card.path)} data-self-check="known" onClick={() => markKnown(card.path)} type="button" variant={knownPaths.includes(card.path) ? "default" : "outline"}>I knew it</Button>
+                    <Button aria-label={`Road sign ${index + 1}: mark for review`} aria-pressed={reviewPaths.includes(card.path)} data-self-check="review" onClick={() => markReview(card.path)} type="button" variant={reviewPaths.includes(card.path) ? "default" : "outline"}>Need review</Button>
                   </div>
                 </CardContent>
               </Card>

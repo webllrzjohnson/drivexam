@@ -10,7 +10,7 @@ import { db } from "@/lib/db";
 import { buildBalancedPracticeQuestionSet, buildPracticeStageGuide, buildQuizQuestionViews } from "@/lib/learner/quiz";
 
 type PracticePageProps = {
-  searchParams: Promise<{ stage?: string; categoryId?: string; reported?: string; questionSet?: string }>;
+  searchParams: Promise<{ stage?: string; categoryId?: string; reported?: string; reportedQuestionId?: string; questionSet?: string }>;
 };
 
 const stageOptions = [
@@ -145,7 +145,7 @@ export default async function PracticePage({ searchParams }: PracticePageProps) 
           </Card>
         ) : null}
 
-        <PracticeQuiz canSaveProgress={Boolean(session?.user?.emailVerified)} emptyState={guide.emptyState} questions={questionSet.questions} returnTo={returnTo} stage={stage} />
+        <PracticeQuiz canSaveProgress={Boolean(session?.user?.emailVerified)} emptyState={guide.emptyState} initialQuestionId={params.reportedQuestionId} questions={questionSet.questions} returnTo={returnTo} stage={stage} />
       </main>
       <SiteFooter />
     </>

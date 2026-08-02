@@ -5,6 +5,7 @@ export type QuizQuestionInput = {
   publicId?: string;
   prompt: string;
   explanation: string;
+  sourceReference?: string | null;
   stage: LicenseStage;
   type: QuestionType;
   category: { name: string; slug?: string } | null;
@@ -32,6 +33,7 @@ export type QuizQuestionView = {
   publicId?: string;
   prompt: string;
   explanation: string;
+  sourceReference?: string | null;
   stage: LicenseStage;
   type: QuestionType;
   categoryName: string | null;
@@ -144,6 +146,17 @@ function sameChoiceSet(left: string[], right: string[]) {
   return a.length === b.length && a.every((value, index) => value === b[index]);
 }
 
+export function getOfficialOntarioSourceUrl(sourceReference?: string | null) {
+  if (!sourceReference) return null;
+  try {
+    const sourceUrl = new URL(sourceReference);
+    if (sourceUrl.protocol !== "https:" || !["ontario.ca", "www.ontario.ca"].includes(sourceUrl.hostname)) return null;
+    return sourceUrl.href;
+  } catch {
+    return null;
+  }
+}
+
 function stableHash(value: string) {
   let hash = 0;
   for (const character of value) hash = ((hash << 5) - hash + character.charCodeAt(0)) | 0;
@@ -175,6 +188,7 @@ export function buildQuizQuestionViews(questions: QuizQuestionInput[]): QuizQues
     ...(question.publicId ? { publicId: question.publicId } : {}),
     prompt: question.prompt,
     explanation: question.explanation,
+    sourceReference: question.sourceReference ?? null,
     stage: question.stage,
     type: question.type,
     categoryName: question.category?.name ?? null,

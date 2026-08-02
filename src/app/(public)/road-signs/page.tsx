@@ -51,7 +51,7 @@ export default async function RoadSignsPage() {
           </div>
           <Card className="border-green-200 bg-green-50">
             <CardHeader>
-              <CardTitle>How to study these signs</CardTitle>
+              <CardTitle as="h2">How to study these signs</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm leading-6 text-slate-700">
               <p>1. Scan the image first and say the meaning out loud before reading the card title.</p>
