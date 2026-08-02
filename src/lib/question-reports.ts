@@ -43,7 +43,7 @@ export function getQuestionReportReasonLabel(reason: QuestionReportReason) {
 
 export function getSafeQuestionReportReturnTo(value: FormDataEntryValue | null) {
   if (typeof value !== "string") return "/practice";
-  if (/^\/practice(?:\?|$)/.test(value) || /^\/g1-mock-exam(?:\?|$)/.test(value)) return value;
+  if (/^\/practice(?:\?|$)/.test(value) || /^\/g1-mock-exam(?:\?|$)/.test(value) || /^\/mistake-review(?:\?|$)/.test(value)) return value;
   return "/practice";
 }
 

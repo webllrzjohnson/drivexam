@@ -3,6 +3,8 @@ import { describe, it } from "node:test";
 
 import {
   buildDailyStudyPlan,
+  buildMistakeReviewQueue,
+  filterMistakeReviewItems,
   buildQuizAttemptRows,
   summarizeQuizProgress,
   type ProgressAttemptInput,
@@ -69,6 +71,48 @@ describe("learner progress helpers", () => {
     ]);
   });
 
+  it("keeps missed questions active until two consecutive correct retries", () => {
+    const review = buildMistakeReviewQueue([
+      { questionId: "q1", categoryName: "Signs", stage: "G1", isCorrect: false, createdAt: new Date("2026-07-01T10:00:00Z") },
+      { questionId: "q1", categoryName: "Signs", stage: "G1", isCorrect: true, createdAt: new Date("2026-07-02T10:00:00Z") },
+      { questionId: "q1", categoryName: "Signs", stage: "G1", isCorrect: true, createdAt: new Date("2026-07-03T10:00:00Z") },
+      { questionId: "q2", categoryName: "Rules", stage: "G1", isCorrect: false, createdAt: new Date("2026-07-01T11:00:00Z") },
+      { questionId: "q2", categoryName: "Rules", stage: "G1", isCorrect: true, createdAt: new Date("2026-07-02T11:00:00Z") },
+      { questionId: "q3", categoryName: "Rules", stage: "G1", isCorrect: false, createdAt: new Date("2026-07-01T12:00:00Z") },
+      { questionId: "q3", categoryName: "Rules", stage: "G1", isCorrect: true, createdAt: new Date("2026-07-02T12:00:00Z") },
+      { questionId: "q3", categoryName: "Rules", stage: "G1", isCorrect: false, createdAt: new Date("2026-07-03T12:00:00Z") },
+      { questionId: null, categoryName: "Retired", stage: null, isCorrect: false, createdAt: new Date("2026-07-04T12:00:00Z") },
+    ]);
+
+    assert.equal(review.activeCount, 2);
+    assert.deepEqual(review.items, [
+      { questionId: "q3", categoryName: "Rules", stage: "G1", missedCount: 2, correctStreak: 0, lastAnsweredAt: new Date("2026-07-03T12:00:00Z") },
+      { questionId: "q2", categoryName: "Rules", stage: "G1", missedCount: 1, correctStreak: 1, lastAnsweredAt: new Date("2026-07-02T11:00:00Z") },
+    ]);
+    assert.deepEqual(review.byCategory, [{ categoryName: "Rules", activeCount: 2 }]);
+  });
+
+  it("uses the attempt time instead of delayed offline synchronization time", () => {
+    const review = buildMistakeReviewQueue([
+      { questionId: "q1", categoryName: "Rules", stage: "G1", isCorrect: false, createdAt: new Date("2026-07-10T10:00:00Z"), attemptCreatedAt: new Date("2026-07-01T10:00:00Z"), answerId: "late-sync" },
+      { questionId: "q1", categoryName: "Rules", stage: "G1", isCorrect: true, createdAt: new Date("2026-07-02T10:00:00Z"), attemptCreatedAt: new Date("2026-07-02T10:00:00Z"), answerId: "correct-1" },
+      { questionId: "q1", categoryName: "Rules", stage: "G1", isCorrect: true, createdAt: new Date("2026-07-03T10:00:00Z"), attemptCreatedAt: new Date("2026-07-03T10:00:00Z"), answerId: "correct-2" },
+    ]);
+
+    assert.equal(review.activeCount, 0);
+  });
+
+  it("filters and limits targeted mistake-review questions", () => {
+    const review = buildMistakeReviewQueue([
+      { questionId: "q1", categoryName: "Signs", stage: "G1", isCorrect: false, createdAt: new Date("2026-07-01T10:00:00Z") },
+      { questionId: "q2", categoryName: "Rules", stage: "G1", isCorrect: false, createdAt: new Date("2026-07-02T10:00:00Z") },
+      { questionId: "q3", categoryName: "Rules", stage: "G2", isCorrect: false, createdAt: new Date("2026-07-03T10:00:00Z") },
+    ]);
+
+    assert.deepEqual(filterMistakeReviewItems(review.items, { stage: "G1", categoryName: "Rules", limit: 10 }).map((item) => item.questionId), ["q2"]);
+    assert.deepEqual(filterMistakeReviewItems(review.items, { stage: "G1", categoryName: null, limit: 1 }).map((item) => item.questionId), ["q2"]);
+  });
+
   it("handles empty progress", () => {
     const summary = summarizeQuizProgress([]);
 
@@ -82,8 +126,12 @@ describe("learner progress helpers", () => {
 
   it("builds a daily study plan from weak areas and target test date", () => {
     const summary = summarizeQuizProgress(attempts);
+    const mistakeReview = buildMistakeReviewQueue([
+      { questionId: "q2", categoryName: "Rules", stage: "G1", isCorrect: false, createdAt: new Date("2026-07-23T10:00:00Z") },
+    ]);
     const plan = buildDailyStudyPlan({
       currentStage: "G1",
+      mistakeReview,
       targetTestDate: new Date("2026-07-30T12:00:00Z"),
       today: new Date("2026-07-24T12:00:00Z"),
       summary,
@@ -97,7 +145,27 @@ describe("learner progress helpers", () => {
       "Take a 20-question G1 practice quiz",
       "Read one G1 knowledge lesson",
     ]);
+    assert.equal(plan.actions[0].href, "/mistake-review?stage=G1&category=Rules");
     assert.equal(plan.readinessTone, "steady");
+  });
+
+  it("stops recommending retired mistakes after two correct answers", () => {
+    const mistakeReview = buildMistakeReviewQueue([
+      { questionId: "q1", categoryName: "Rules", stage: "G1", isCorrect: false, createdAt: new Date("2026-07-01T10:00:00Z") },
+      { questionId: "q1", categoryName: "Rules", stage: "G1", isCorrect: true, createdAt: new Date("2026-07-02T10:00:00Z") },
+      { questionId: "q1", categoryName: "Rules", stage: "G1", isCorrect: true, createdAt: new Date("2026-07-03T10:00:00Z") },
+    ]);
+    const plan = buildDailyStudyPlan({
+      currentStage: "G1",
+      targetTestDate: null,
+      today: new Date("2026-07-04T10:00:00Z"),
+      summary: summarizeQuizProgress(attempts),
+      mistakeReview,
+    });
+
+    assert.equal(plan.focusArea, "Road signs and rules");
+    assert.equal(plan.actions[0].href, "/practice?stage=G1");
+    assert.doesNotMatch(plan.actions[0].title, /Review Rules/);
   });
 
   it("gives a starter plan when no quizzes are saved yet", () => {

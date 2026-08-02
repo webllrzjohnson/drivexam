@@ -13,6 +13,7 @@ This checklist is for deploying `drivexam` from `main` to a production Next.js h
   - 8 G2 road-test checklist items.
   - 8 full-G road-test checklist items.
 - G1 learners can take an unofficial 40-question mock exam with separate 20-question signs and rules sections, delayed answer feedback, and a 16/20 pass threshold in each section.
+- Verified learners can review active mistakes by stage or weak category. Current published questions stay in the retry queue until answered correctly twice in a row, then retire from active dashboard guidance.
 - PWA support includes the install manifest/icons, production-only service-worker registration, update and connection-status messaging, a network-first `/offline` fallback, and an explicit `/offline-practice` download flow.
 - The public offline pack contains 148 sanitized questions: 68 G1, 40 G2, and 40 Full G road-test preparation scenarios. Questions, choices, packs, and queued attempts use versioned contracts and durable public IDs.
 - Downloaded packs and local attempts are stored in IndexedDB. Guests can complete practice locally; verified learners can explicitly synchronize pending results after reconnecting.
@@ -118,9 +119,9 @@ npm run prisma:validate
 
 Current verified local gate:
 
-- `npm run test` passes 155 tests across 32 suites.
+- `npm run test` passes 163 tests across 33 suites.
 - `npm run lint` and `npm run build` pass without failures.
-- 40 Next.js pages are generated; `/g1-mock-exam` is dynamic, `/offline-practice` is static, and the two offline APIs remain dynamic.
+- 41 Next.js pages are generated; `/g1-mock-exam` and `/mistake-review` are dynamic, `/offline-practice` is static, and the two offline APIs remain dynamic.
 - Prisma schema is valid.
 - `node --check public/sw.js` and `git diff --check` pass.
 - Running the seed twice preserves the same 148 question and 592 choice database IDs.
@@ -161,7 +162,7 @@ Smoke checks:
 2. Complete a practice quiz and save progress.
 3. Toggle at least one road-test checklist item.
 4. Complete a guest mock-drive assessment and confirm critical safety errors prevent a ready verdict.
-5. Confirm `/dashboard` shows quiz and road-test progress.
+5. Confirm `/dashboard` shows quiz, active mistake review, and road-test progress; complete two correct mistake retries and confirm the question retires from active guidance.
 6. Submit a contact message from a verified learner.
 7. Download the offline pack as a guest, finish one set, sign in, synchronize it, and confirm the attempt appears once in learner progress.
 

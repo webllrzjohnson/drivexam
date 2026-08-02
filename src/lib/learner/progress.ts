@@ -38,6 +38,82 @@ export function buildQuizAttemptRows(questions: QuizQuestionView[], selectedChoi
   }));
 }
 
+export type MistakeHistoryAnswer = {
+  answerId?: string;
+  questionId: string | null;
+  categoryName: string | null;
+  stage: LicenseStage | null;
+  isCorrect: boolean;
+  createdAt: Date;
+  attemptCreatedAt?: Date;
+  missedCount?: number;
+};
+
+export type MistakeReviewItem = {
+  questionId: string;
+  categoryName: string;
+  stage: LicenseStage | null;
+  missedCount: number;
+  correctStreak: number;
+  lastAnsweredAt: Date;
+};
+
+export function buildMistakeReviewQueue(history: MistakeHistoryAnswer[]) {
+  const byQuestion = new Map<string, MistakeHistoryAnswer[]>();
+  for (const answer of history) {
+    if (!answer.questionId) continue;
+    const answers = byQuestion.get(answer.questionId);
+    if (answers) answers.push(answer);
+    else byQuestion.set(answer.questionId, [answer]);
+  }
+
+  const items: MistakeReviewItem[] = Array.from(byQuestion.entries()).flatMap(([questionId, answers]) => {
+    const newestFirst = answers.sort((a, b) => {
+      const attemptDifference = (b.attemptCreatedAt ?? b.createdAt).getTime() - (a.attemptCreatedAt ?? a.createdAt).getTime();
+      if (attemptDifference) return attemptDifference;
+      const answerDifference = b.createdAt.getTime() - a.createdAt.getTime();
+      return answerDifference || (b.answerId ?? "").localeCompare(a.answerId ?? "");
+    });
+    const missedCount = Math.max(...newestFirst.map((answer) => answer.missedCount ?? 0), newestFirst.filter((answer) => !answer.isCorrect).length);
+    let correctStreak = 0;
+    for (const answer of newestFirst) {
+      if (!answer.isCorrect) break;
+      correctStreak += 1;
+    }
+    if (!missedCount || correctStreak >= 2) return [];
+    const latest = newestFirst[0];
+    return [{
+      questionId,
+      categoryName: latest.categoryName ?? "Uncategorized",
+      stage: latest.stage,
+      missedCount,
+      correctStreak,
+      lastAnsweredAt: latest.attemptCreatedAt ?? latest.createdAt,
+    }];
+  }).sort((a, b) => b.missedCount - a.missedCount || b.lastAnsweredAt.getTime() - a.lastAnsweredAt.getTime());
+
+  const categoryCounts = new Map<string, number>();
+  for (const item of items) categoryCounts.set(item.categoryName, (categoryCounts.get(item.categoryName) ?? 0) + 1);
+
+  return {
+    activeCount: items.length,
+    items,
+    byCategory: Array.from(categoryCounts.entries())
+      .map(([categoryName, activeCount]) => ({ categoryName, activeCount }))
+      .sort((a, b) => b.activeCount - a.activeCount || a.categoryName.localeCompare(b.categoryName)),
+  };
+}
+
+export function filterMistakeReviewItems(
+  items: MistakeReviewItem[],
+  options: { stage: LicenseStage | null; categoryName: string | null; limit?: number },
+) {
+  return items
+    .filter((item) => !options.stage || item.stage === options.stage)
+    .filter((item) => !options.categoryName || item.categoryName === options.categoryName)
+    .slice(0, options.limit ?? 20);
+}
+
 export function summarizeQuizProgress(attempts: ProgressAttemptInput[]) {
   const attemptCount = attempts.length;
   const totalQuestionsAnswered = attempts.reduce((sum, attempt) => sum + attempt.totalCount, 0);
@@ -73,6 +149,7 @@ type ProgressSummary = ReturnType<typeof summarizeQuizProgress>;
 
 type DailyStudyPlanInput = {
   currentStage: LicenseStage | null;
+  mistakeReview?: ReturnType<typeof buildMistakeReviewQueue>;
   targetTestDate: Date | null;
   today?: Date;
   summary: ProgressSummary;
@@ -111,11 +188,15 @@ function getReadinessTone(summary: ProgressSummary, daysUntilTest: number | null
   return "steady";
 }
 
-export function buildDailyStudyPlan({ currentStage, targetTestDate, today = new Date(), summary }: DailyStudyPlanInput): DailyStudyPlan {
+export function buildDailyStudyPlan({ currentStage, mistakeReview, targetTestDate, today = new Date(), summary }: DailyStudyPlanInput): DailyStudyPlan {
   const stage = currentStage ?? "G1";
   const stageLabel = stageLabels[stage];
   const days = daysUntil(targetTestDate, today);
-  const focusArea = summary.weakAreas[0]?.categoryName ?? "Road signs and rules";
+  const stageMistakes = mistakeReview?.items.filter((item) => item.stage === stage) ?? [];
+  const activeByCategory = new Map<string, number>();
+  for (const item of stageMistakes) activeByCategory.set(item.categoryName, (activeByCategory.get(item.categoryName) ?? 0) + 1);
+  const activeFocusArea = Array.from(activeByCategory.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0];
+  const focusArea = mistakeReview ? activeFocusArea ?? "Road signs and rules" : summary.weakAreas[0]?.categoryName ?? "Road signs and rules";
 
   if (summary.attemptCount === 0) {
     return {
@@ -132,15 +213,22 @@ export function buildDailyStudyPlan({ currentStage, targetTestDate, today = new 
   }
 
   const quizSize = stage === "G1" ? "20-question G1" : `${stage} readiness`;
+  const actions: DailyStudyPlanAction[] = activeFocusArea ? [
+    { title: `Review ${activeFocusArea}`, detail: "Retry your most-missed category before another quiz.", href: `/mistake-review?stage=${stage}&category=${encodeURIComponent(activeFocusArea)}` },
+    { title: `Take a ${quizSize} practice quiz`, detail: "Aim to beat your latest saved score.", href: `/practice?stage=${stage}` },
+    { title: `Read one ${stage} knowledge lesson`, detail: "Use the lesson notes to close gaps before the next attempt.", href: "/blog" },
+  ] : [
+    { title: `Take a ${quizSize} practice quiz`, detail: "Keep your knowledge fresh and find the next area to improve.", href: `/practice?stage=${stage}` },
+    stage === "G1"
+      ? { title: "Take a realistic G1 mock exam", detail: "Check both signs and rules readiness under exam conditions.", href: "/g1-mock-exam" }
+      : { title: `Review ${stage} road-test readiness`, detail: "Strengthen practical habits and checklist progress.", href: `/road-test?stage=${stage}` },
+    { title: `Read one ${stage} knowledge lesson`, detail: "Use the lesson notes to reinforce safe decisions.", href: "/blog" },
+  ];
   return {
     stageLabel,
     daysUntilTest: days,
     focusArea,
     readinessTone: getReadinessTone(summary, days),
-    actions: [
-      { title: `Review ${focusArea}`, detail: "Spend 10 minutes on the most-missed category before another quiz.", href: "/practice" },
-      { title: `Take a ${quizSize} practice quiz`, detail: "Aim to beat your latest saved score.", href: "/practice" },
-      { title: `Read one ${stage} knowledge lesson`, detail: "Use the lesson notes to close gaps before the next attempt.", href: "/blog" },
-    ],
+    actions,
   };
 }

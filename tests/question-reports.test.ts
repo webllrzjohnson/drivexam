@@ -24,6 +24,7 @@ describe("question report helpers", () => {
   it("keeps reports on recognized learner quiz routes", () => {
     assert.equal(getSafeQuestionReportReturnTo("/practice?stage=G1"), "/practice?stage=G1");
     assert.equal(getSafeQuestionReportReturnTo("/g1-mock-exam?attempt=42"), "/g1-mock-exam?attempt=42");
+    assert.equal(getSafeQuestionReportReturnTo("/mistake-review?stage=G1&category=Signs"), "/mistake-review?stage=G1&category=Signs");
     assert.equal(getSafeQuestionReportReturnTo("/g1-mock-exam-evil"), "/practice");
     assert.equal(getSafeQuestionReportReturnTo("https://example.com/g1-mock-exam"), "/practice");
   });
