@@ -4,18 +4,21 @@ import type { QuizAttempt } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { buildRoadTestChecklistProgressSummary } from "@/lib/learner/road-test-progress";
+import type { buildRoadTestAssessmentProgressSummary } from "@/lib/learner/road-test-assessment";
 import type { buildDailyStudyPlan, buildMistakeReviewQueue, summarizeQuizProgress } from "@/lib/learner/progress";
 
 type ProgressSummary = ReturnType<typeof summarizeQuizProgress>;
 type DailyStudyPlan = ReturnType<typeof buildDailyStudyPlan>;
 type MistakeReview = ReturnType<typeof buildMistakeReviewQueue>;
 type RoadTestChecklistProgressSummary = ReturnType<typeof buildRoadTestChecklistProgressSummary>;
+type RoadTestAssessmentProgressSummary = ReturnType<typeof buildRoadTestAssessmentProgressSummary>;
 
 type DashboardShellProps = {
   attempts: Array<Pick<QuizAttempt, "id" | "stage" | "correctCount" | "totalCount" | "percent" | "createdAt">>;
   checklistProgress: RoadTestChecklistProgressSummary[];
   mistakeReview: MistakeReview;
   plan: DailyStudyPlan;
+  roadTestAssessments: RoadTestAssessmentProgressSummary[];
   summary: ProgressSummary;
 };
 
@@ -31,7 +34,7 @@ function MetricCard({ title, value, detail }: { title: string; value: string; de
   );
 }
 
-export function DashboardShell({ attempts, checklistProgress, mistakeReview, plan, summary }: DashboardShellProps) {
+export function DashboardShell({ attempts, checklistProgress, mistakeReview, plan, roadTestAssessments, summary }: DashboardShellProps) {
   const recentAttempts = attempts.slice(0, 5);
   const activeByStageCategory = new Map<string, { stage: NonNullable<(typeof mistakeReview.items)[number]["stage"]>; categoryName: string; activeCount: number }>();
   for (const item of mistakeReview.items) {
@@ -98,6 +101,28 @@ export function DashboardShell({ attempts, checklistProgress, mistakeReview, pla
               </div>
               <p className="mt-2 text-2xl font-bold text-green-900">{stageSummary.completedCount}/{stageSummary.totalCount} complete</p>
               <p className="mt-1 text-sm leading-6 text-slate-600">Next: {stageSummary.nextAction}</p>
+            </Link>
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Mock-drive readiness</CardTitle>
+          <p className="text-sm text-slate-600">Compare saved supervised practice routes separately from scenario-quiz scores.</p>
+        </CardHeader>
+        <CardContent className="grid gap-3 md:grid-cols-2">
+          {roadTestAssessments.map((assessment) => (
+            <Link className="rounded-xl border bg-slate-50 p-4 transition hover:border-green-300 hover:bg-green-50" href={`/road-test?stage=${assessment.stage}#mock-drive-assessment`} key={assessment.stage}>
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="font-semibold text-slate-950">{assessment.stage === "G" ? "Full G" : "G2"} mock drives</h2>
+                <span className="rounded-full bg-white px-2 py-1 text-xs font-semibold text-green-900">{assessment.assessmentCount} saved</span>
+              </div>
+              <p className="mt-2 text-2xl font-bold text-green-900">{assessment.assessmentCount ? `${assessment.latestPercent}% latest` : "Not scored"}</p>
+              <p className="mt-1 text-sm text-slate-600">
+                {assessment.trendPoints === null ? `Best: ${assessment.bestPercent}% · No trend yet` : `Best: ${assessment.bestPercent}% · ${assessment.trendPoints >= 0 ? "+" : ""}${assessment.trendPoints} points from prior drive`}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">Next: {assessment.nextAction}</p>
             </Link>
           ))}
         </CardContent>

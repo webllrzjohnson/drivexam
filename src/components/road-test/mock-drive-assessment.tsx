@@ -1,7 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useFormStatus } from "react-dom";
 
+import { saveMockDriveAssessment } from "@/app/(public)/road-test/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -12,6 +15,15 @@ import {
 } from "@/lib/learner/road-test-assessment";
 
 type MockDriveAssessmentProps = {
+  canSaveProgress: boolean;
+  recentAssessments: Array<{
+    id: string;
+    percent: number;
+    verdict: "NEEDS_PRACTICE" | "NEARLY_READY" | "READY";
+    criticalErrorCount: number;
+    priorityIds: string[];
+    createdAt: Date | string;
+  }>;
   stage: MockDriveStage;
 };
 
@@ -28,10 +40,22 @@ const verdictLabels = {
   READY: "Ready for another full mock route",
 } as const;
 
-export function MockDriveAssessment({ stage }: MockDriveAssessmentProps) {
+function SaveAssessmentButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <>
+      <Button disabled={pending} type="submit">{pending ? "Saving mock drive..." : "Save this mock drive"}</Button>
+      <span aria-live="polite" className="sr-only">{pending ? "Saving mock drive." : ""}</span>
+    </>
+  );
+}
+
+export function MockDriveAssessment({ canSaveProgress, recentAssessments, stage }: MockDriveAssessmentProps) {
   const criteria = useMemo(() => getMockDriveCriteria(stage), [stage]);
   const [ratings, setRatings] = useState<Record<string, number>>({});
   const [criticalErrorCount, setCriticalErrorCount] = useState(0);
+  const [clientAssessmentId, setClientAssessmentId] = useState("");
   const [hasAssessed, setHasAssessed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const resultHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -40,6 +64,7 @@ export function MockDriveAssessment({ stage }: MockDriveAssessmentProps) {
   useEffect(() => {
     setRatings({});
     setCriticalErrorCount(0);
+    setClientAssessmentId("");
     setHasAssessed(false);
     setIsOpen(false);
   }, [stage]);
@@ -51,6 +76,7 @@ export function MockDriveAssessment({ stage }: MockDriveAssessmentProps) {
   function resetAssessment() {
     setRatings({});
     setCriticalErrorCount(0);
+    setClientAssessmentId("");
     setHasAssessed(false);
     setIsOpen(false);
   }
@@ -67,7 +93,10 @@ export function MockDriveAssessment({ stage }: MockDriveAssessmentProps) {
         </CardHeader>
         <CardContent className="space-y-6">
           {!isOpen ? (
-            <Button onClick={() => setIsOpen(true)} type="button">Start mock-drive assessment</Button>
+            <Button onClick={() => {
+              setClientAssessmentId(crypto.randomUUID());
+              setIsOpen(true);
+            }} type="button">Start mock-drive assessment</Button>
           ) : (
           <>
           <div className="grid gap-4 lg:grid-cols-2">
@@ -142,10 +171,47 @@ export function MockDriveAssessment({ stage }: MockDriveAssessmentProps) {
                 </div>
               ) : null}
               {result.verdict === "READY" ? <p className="mt-4 text-sm font-medium text-green-950">Repeat this result on at least two different routes and in normal traffic before booking.</p> : null}
+              {result.verdict !== "INCOMPLETE" ? (
+                canSaveProgress ? (
+                  <form action={saveMockDriveAssessment} className="mt-4">
+                    <input name="stage" type="hidden" value={stage} />
+                    <input name="clientAssessmentId" type="hidden" value={clientAssessmentId} />
+                    <input name="ratings" type="hidden" value={JSON.stringify(ratings)} />
+                    <input name="criticalErrorCount" type="hidden" value={criticalErrorCount} />
+                    <SaveAssessmentButton />
+                  </form>
+                ) : (
+                  <Button asChild className="mt-4" variant="outline">
+                    <Link href={`/sign-in?callbackUrl=${encodeURIComponent(`/road-test?stage=${stage}#mock-drive-assessment`)}`}>Sign in to save future mock drives</Link>
+                  </Button>
+                )
+              ) : null}
             </div>
           ) : null}
           </>
           )}
+
+          {canSaveProgress ? (
+            <div className="border-t pt-5">
+              <h3 className="text-lg font-semibold text-slate-950">Recent saved mock drives</h3>
+              <div className="mt-3 space-y-2">
+                {recentAssessments.length ? recentAssessments.map((assessment) => {
+                  const priorityLabels = assessment.priorityIds
+                    .map((id) => criteria.find((criterion) => criterion.id === id)?.label)
+                    .filter((label): label is string => Boolean(label));
+                  return (
+                    <div className="rounded-lg border bg-slate-50 p-3 text-sm" key={assessment.id}>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <p className="font-semibold text-slate-950">{verdictLabels[assessment.verdict]} · {assessment.percent}%</p>
+                        <time className="text-slate-500" dateTime={new Date(assessment.createdAt).toISOString()}>{new Intl.DateTimeFormat("en-CA", { dateStyle: "medium", timeZone: "America/Toronto" }).format(new Date(assessment.createdAt))}</time>
+                      </div>
+                      <p className="mt-1 text-slate-600">{assessment.criticalErrorCount} critical error{assessment.criticalErrorCount === 1 ? "" : "s"}{priorityLabels.length ? ` · Focus: ${priorityLabels.join(", ")}` : " · No weak habits recorded"}</p>
+                    </div>
+                  );
+                }) : <p className="text-sm text-slate-600">No saved mock drives for this stage yet.</p>}
+              </div>
+            </div>
+          ) : null}
         </CardContent>
       </Card>
     </section>

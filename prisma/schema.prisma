@@ -68,6 +68,12 @@ enum RoadTestChecklistSection {
   SELF_ASSESSMENT
 }
 
+enum RoadTestAssessmentVerdict {
+  NEEDS_PRACTICE
+  NEARLY_READY
+  READY
+}
+
 model User {
   id             String    @id @default(cuid())
   name           String?
@@ -95,6 +101,7 @@ model User {
   contactSubmissions ContactSubmission[]
   quizAttempts QuizAttempt[]
   roadTestChecklistProgress RoadTestChecklistProgress[]
+  roadTestAssessments RoadTestAssessment[]
 }
 
 model Account {
@@ -312,6 +319,24 @@ model RoadTestChecklistProgress {
   @@unique([userId, itemId])
   @@index([userId, completedAt])
   @@index([itemId])
+}
+
+model RoadTestAssessment {
+  id                 String                    @id @default(cuid())
+  userId             String
+  clientAssessmentId String
+  stage              LicenseStage
+  percent            Int
+  verdict            RoadTestAssessmentVerdict
+  criticalErrorCount Int
+  ratings            Json
+  priorityIds        String[]
+  createdAt          DateTime                  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientAssessmentId])
+  @@index([userId, stage, createdAt])
 }
 
 model QuizAttempt {

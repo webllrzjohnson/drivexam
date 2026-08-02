@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/lib/auth/permissions";
 import { shouldRequireLearnerOnboarding } from "@/lib/auth/redirects";
 import { db } from "@/lib/db";
 import { getMistakeReviewHistory } from "@/lib/learner/mistake-review";
+import { buildRoadTestAssessmentProgressSummary } from "@/lib/learner/road-test-assessment";
 import { buildRoadTestChecklistProgressSummary } from "@/lib/learner/road-test-progress";
 import { buildDailyStudyPlan, buildMistakeReviewQueue, summarizeQuizProgress } from "@/lib/learner/progress";
 
@@ -37,7 +38,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   });
   if (shouldRequireLearnerOnboarding(user.role, learnerProfile?.currentStage ?? null)) redirect("/onboarding");
 
-  const [attempts, checklistItems, mistakeHistory] = await Promise.all([
+  const [attempts, checklistItems, mistakeHistory, g2AssessmentHistory, gAssessmentHistory, roadTestAssessmentTotals] = await Promise.all([
     db.quizAttempt.findMany({
       where: { userId: user.id },
       include: { answers: true },
@@ -50,7 +51,26 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       orderBy: [{ stage: "asc" }, { section: "asc" }, { sortOrder: "asc" }, { title: "asc" }],
     }),
     getMistakeReviewHistory(user.id),
+    db.roadTestAssessment.findMany({
+      where: { userId: user.id, stage: "G2" },
+      select: { id: true, stage: true, percent: true, verdict: true, criticalErrorCount: true, createdAt: true },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: 10,
+    }),
+    db.roadTestAssessment.findMany({
+      where: { userId: user.id, stage: "G" },
+      select: { id: true, stage: true, percent: true, verdict: true, criticalErrorCount: true, createdAt: true },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: 10,
+    }),
+    db.roadTestAssessment.groupBy({
+      by: ["stage"],
+      where: { userId: user.id, stage: { in: ["G2", "G"] } },
+      _count: { _all: true },
+      _max: { percent: true },
+    }),
   ]);
+  const roadTestAssessmentHistory = [...g2AssessmentHistory, ...gAssessmentHistory];
   const summary = summarizeQuizProgress(attempts.map((attempt) => ({
     ...attempt,
     answers: attempt.answers.map((answer) => ({ isCorrect: answer.isCorrect, categoryName: answer.categoryName })),
@@ -72,6 +92,15 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       isCompleted: item.progress.length > 0,
     })),
   }));
+  const roadTestAssessments = (["G2", "G"] as const).map((stage) => {
+    const totals = roadTestAssessmentTotals.find((total) => total.stage === stage);
+    return buildRoadTestAssessmentProgressSummary({
+      stage,
+      assessments: roadTestAssessmentHistory.filter((assessment) => assessment.stage === "G2" || assessment.stage === "G"),
+      assessmentCount: totals?._count._all ?? 0,
+      bestPercent: totals?._max.percent ?? 0,
+    });
+  });
 
   return (
     <main className="mx-auto w-full max-w-6xl space-y-6 px-4 py-8">
@@ -81,7 +110,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       </div>
       {params.saved === "quiz" ? <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900">Quiz progress saved.</p> : null}
       {params.saved === "checklist" ? <p className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900">Checklist progress saved.</p> : null}
-      <DashboardShell attempts={attempts} checklistProgress={checklistProgress} mistakeReview={mistakeReview} plan={plan} summary={summary} />
+      <DashboardShell attempts={attempts} checklistProgress={checklistProgress} mistakeReview={mistakeReview} plan={plan} roadTestAssessments={roadTestAssessments} summary={summary} />
     </main>
   );
 }

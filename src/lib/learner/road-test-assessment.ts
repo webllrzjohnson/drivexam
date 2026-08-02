@@ -17,6 +17,39 @@ export type MockDriveAssessmentResult = {
   unratedCount: number;
 };
 
+export type MockDriveAssessmentSubmissionResult =
+  | {
+      ok: true;
+      data: {
+        stage: MockDriveStage;
+        clientAssessmentId: string;
+        ratings: Record<string, MockDriveRating>;
+        criticalErrorCount: number;
+        result: MockDriveAssessmentResult;
+      };
+    }
+  | { ok: false; error: string };
+
+export type MockDriveAssessmentSubmission = Extract<MockDriveAssessmentSubmissionResult, { ok: true }>["data"];
+
+export type PersistedMockDriveAssessmentEvidence = {
+  stage: string;
+  percent: number;
+  verdict: string;
+  criticalErrorCount: number;
+  ratings: unknown;
+  priorityIds: string[];
+};
+
+export type SavedMockDriveAssessmentInput = {
+  id: string;
+  stage: MockDriveStage | "G1";
+  percent: number;
+  verdict: Exclude<MockDriveVerdict, "INCOMPLETE">;
+  criticalErrorCount: number;
+  createdAt: Date;
+};
+
 const coreCriteria: MockDriveCriterion[] = [
   {
     id: "mirror-checks",
@@ -89,6 +122,106 @@ const stageCriteria: Record<MockDriveStage, MockDriveCriterion[]> = {
 
 export function getMockDriveCriteria(stage: MockDriveStage): MockDriveCriterion[] {
   return [...coreCriteria, ...stageCriteria[stage]];
+}
+
+export function normalizeMockDriveAssessmentSubmission(formData: FormData): MockDriveAssessmentSubmissionResult {
+  const stageValue = String(formData.get("stage") ?? "").trim();
+  if (stageValue !== "G2" && stageValue !== "G") return { ok: false, error: "Choose a valid road-test stage." };
+
+  const clientAssessmentId = String(formData.get("clientAssessmentId") ?? "").trim();
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(clientAssessmentId)) {
+    return { ok: false, error: "Start a new mock-drive assessment before saving." };
+  }
+
+  const ratingsValue = String(formData.get("ratings") ?? "");
+  if (!ratingsValue || ratingsValue.length > 5_000) return { ok: false, error: "Complete every assessment rating before saving." };
+
+  let rawRatings: unknown;
+  try {
+    rawRatings = JSON.parse(ratingsValue);
+  } catch {
+    return { ok: false, error: "Complete every assessment rating before saving." };
+  }
+  if (!rawRatings || typeof rawRatings !== "object" || Array.isArray(rawRatings)) {
+    return { ok: false, error: "Complete every assessment rating before saving." };
+  }
+
+  const criteria = getMockDriveCriteria(stageValue);
+  const criterionIds = new Set(criteria.map((criterion) => criterion.id));
+  const rawRatingsRecord = rawRatings as Record<string, unknown>;
+  const entries = Object.entries(rawRatingsRecord);
+  if (entries.length !== criteria.length || entries.some(([id, rating]) => !criterionIds.has(id) || (rating !== 0 && rating !== 1 && rating !== 2))) {
+    return { ok: false, error: "Complete every assessment rating before saving." };
+  }
+
+  const criticalErrorCountValue = String(formData.get("criticalErrorCount") ?? "");
+  if (!/^[012]$/.test(criticalErrorCountValue)) {
+    return { ok: false, error: "Choose a valid critical safety error count." };
+  }
+  const criticalErrorCount = Number(criticalErrorCountValue);
+
+  const ratings = Object.fromEntries(criteria.map((criterion) => [criterion.id, rawRatingsRecord[criterion.id]])) as Record<string, MockDriveRating>;
+  const result = buildMockDriveAssessment({ stage: stageValue, ratings, criticalErrorCount });
+  if (result.verdict === "INCOMPLETE") return { ok: false, error: "Complete every assessment rating before saving." };
+
+  return { ok: true, data: { stage: stageValue, clientAssessmentId, ratings, criticalErrorCount, result } };
+}
+
+export function doesSavedMockDriveAssessmentMatchSubmission(
+  existing: PersistedMockDriveAssessmentEvidence,
+  submission: MockDriveAssessmentSubmission,
+) {
+  if (
+    existing.stage !== submission.stage
+    || existing.percent !== submission.result.percent
+    || existing.verdict !== submission.result.verdict
+    || existing.criticalErrorCount !== submission.criticalErrorCount
+  ) return false;
+  if (!existing.ratings || typeof existing.ratings !== "object" || Array.isArray(existing.ratings)) return false;
+
+  const criteria = getMockDriveCriteria(submission.stage);
+  const existingRatings = existing.ratings as Record<string, unknown>;
+  if (Object.keys(existingRatings).length !== criteria.length) return false;
+  if (criteria.some((criterion) => existingRatings[criterion.id] !== submission.ratings[criterion.id])) return false;
+
+  const priorityIds = submission.result.priorities.map((priority) => priority.id);
+  return existing.priorityIds.length === priorityIds.length
+    && existing.priorityIds.every((priorityId, index) => priorityId === priorityIds[index]);
+}
+
+export function buildRoadTestAssessmentProgressSummary({
+  stage,
+  assessments,
+  assessmentCount,
+  bestPercent,
+}: {
+  stage: MockDriveStage;
+  assessments: SavedMockDriveAssessmentInput[];
+  assessmentCount?: number;
+  bestPercent?: number;
+}) {
+  const stageAssessments = assessments
+    .filter((assessment) => assessment.stage === stage)
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime() || b.id.localeCompare(a.id));
+  const latest = stageAssessments[0] ?? null;
+  const previous = stageAssessments[1] ?? null;
+  const recentBestPercent = stageAssessments.reduce((best, assessment) => Math.max(best, assessment.percent), 0);
+
+  let nextAction = "Score a supervised mock drive after your next practice route.";
+  if (latest?.criticalErrorCount) nextAction = "Repeat the unsafe situation with your supervising driver before another full route.";
+  else if (latest?.verdict === "READY") nextAction = "Repeat the result on a different route and in normal traffic.";
+  else if (latest?.verdict === "NEARLY_READY") nextAction = "Strengthen the lowest-rated habits, then score another full route.";
+  else if (latest) nextAction = "Practise the weakest habits before scoring another full route.";
+
+  return {
+    stage,
+    assessmentCount: assessmentCount ?? stageAssessments.length,
+    latestPercent: latest?.percent ?? 0,
+    latestVerdict: latest?.verdict ?? null,
+    bestPercent: bestPercent ?? recentBestPercent,
+    trendPoints: latest && previous ? latest.percent - previous.percent : null,
+    nextAction,
+  };
 }
 
 export function buildMockDriveAssessment({

@@ -23,14 +23,24 @@ export default async function RoadTestPage({ searchParams }: RoadTestPageProps) 
   const [params, user] = await Promise.all([searchParams, getCurrentUser()]);
   const stage = getRoadTestStage(params.stage);
   const canSaveProgress = Boolean(user?.id && user.emailVerified);
-  const checklistItems = await db.roadTestChecklistItem.findMany({
-    where: { stage, isActive: true },
-    include: {
-      category: true,
-      progress: canSaveProgress ? { where: { userId: user?.id }, select: { itemId: true } } : false,
-    },
-    orderBy: [{ section: "asc" }, { sortOrder: "asc" }, { title: "asc" }],
-  });
+  const [checklistItems, recentAssessments] = await Promise.all([
+    db.roadTestChecklistItem.findMany({
+      where: { stage, isActive: true },
+      include: {
+        category: true,
+        progress: canSaveProgress ? { where: { userId: user?.id }, select: { itemId: true } } : false,
+      },
+      orderBy: [{ section: "asc" }, { sortOrder: "asc" }, { title: "asc" }],
+    }),
+    canSaveProgress && user?.id
+      ? db.roadTestAssessment.findMany({
+          where: { userId: user.id, stage },
+          select: { id: true, percent: true, verdict: true, criticalErrorCount: true, priorityIds: true, createdAt: true },
+          orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+          take: 5,
+        })
+      : Promise.resolve([]),
+  ]);
   const completedIds = new Set(checklistItems.flatMap((item) => item.progress?.map((progress) => progress.itemId) ?? []));
   const sections = groupRoadTestChecklistItems(checklistItems);
   const progressSummary = buildRoadTestChecklistProgressSummary({
@@ -60,6 +70,7 @@ export default async function RoadTestPage({ searchParams }: RoadTestPageProps) 
               <span className="rounded-full bg-blue-100 px-3 py-1 text-blue-900">{progressSummary.completedCount}/{progressSummary.totalCount} complete · {progressSummary.percent}%</span>
             </div>
             {params.saved === "checklist" ? <p aria-live="polite" className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900" role="status">Checklist progress saved.</p> : null}
+            {params.saved === "drive" && canSaveProgress ? <p aria-live="polite" className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900" role="status">Mock drive saved to your history.</p> : null}
           </div>
           <Card className="border-green-200 bg-green-50">
             <CardHeader>
@@ -107,7 +118,7 @@ export default async function RoadTestPage({ searchParams }: RoadTestPageProps) 
           </Card>
         ) : null}
 
-        <MockDriveAssessment stage={stage} />
+        <MockDriveAssessment canSaveProgress={canSaveProgress} recentAssessments={recentAssessments} stage={stage} />
 
         <section className="grid gap-4 md:grid-cols-2">
           {sections.map((section) => (

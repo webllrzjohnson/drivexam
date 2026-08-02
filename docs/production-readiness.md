@@ -5,7 +5,7 @@ This checklist is for deploying `drivexam` from `main` to a production Next.js h
 ## Current app shape
 
 - Stack: Next.js 15 App Router, React 19, TypeScript, Tailwind, Prisma 7, Postgres, Auth.js/NextAuth.
-- Database-backed features: Auth.js users/accounts/sessions, admin CMS, questions/categories/lessons, quiz attempts, question reports, contact submissions, and road-test checklist progress. The road-test page also includes a guest-usable mock-drive assessment that is intentionally not persisted.
+- Database-backed features: Auth.js users/accounts/sessions, admin CMS, questions/categories/lessons, quiz attempts, question reports, contact submissions, road-test checklist progress, and verified-user mock-drive history. Guests can still score a mock drive without saving it.
 - Seeded learner content:
   - 68 published G1 questions across 8 active G1 categories.
   - 40 published G2 road-test preparation scenarios across 3 active G2 categories.
@@ -15,6 +15,7 @@ This checklist is for deploying `drivexam` from `main` to a production Next.js h
 - G1 learners can take an unofficial 40-question mock exam with separate 20-question signs and rules sections, delayed answer feedback, and a 16/20 pass threshold in each section.
 - Verified learners can review active mistakes by stage or weak category. Current published questions stay in the retry queue until answered correctly twice in a row, then retire from active dashboard guidance.
 - First-time verified learners complete a guided licence-stage setup with an optional target test date, then continue directly to the G1 mock exam or the matching G2/Full G road-test plan.
+- Verified G2 and Full G learners can save server-recomputed mock-drive assessments, review their five most recent stage results, and compare latest, best, and trend summaries on the dashboard. Saves use owner-scoped idempotency identifiers to prevent duplicate submissions.
 - PWA support includes the install manifest/icons, production-only service-worker registration, update and connection-status messaging, a network-first `/offline` fallback, and an explicit `/offline-practice` download flow.
 - The public offline pack contains 148 sanitized questions: 68 G1, 40 G2, and 40 Full G road-test preparation scenarios. Questions, choices, packs, and queued attempts use versioned contracts and durable public IDs.
 - Downloaded packs and local attempts are stored in IndexedDB. Guests can complete practice locally; verified learners can explicitly synchronize pending results after reconnecting.
@@ -97,12 +98,15 @@ Current migrations in order:
 3. `20260724110848_add_quiz_attempts`
 4. `20260726175437_add_road_test_checklist_progress`
 5. `20260729233000_add_offline_attempt_idempotency`
+6. `20260802070000_add_road_test_assessments`
+7. `20260802071000_add_road_test_assessment_idempotency`
 
 Notes:
 
 - The app currently has `npm run db:migrate` mapped to `prisma migrate dev`, which is appropriate for local development, not production.
 - Use `npx prisma migrate deploy` in production until a production-specific npm script is added.
 - The offline migration adds nullable `QuizAttempt.clientAttemptId`, a user-scoped unique key, durable question/choice public IDs, and changes historical attempt-answer question deletion to `ON DELETE SET NULL`.
+- The road-test assessment migrations add owner-scoped G2/Full G result history, server-computed readiness evidence, and user-scoped idempotency for repeated form submissions.
 - `npm run db:seed` reconciles bundled Ontario questions and choices by durable public ID instead of recreating active rows. Retired public IDs must never be reassigned to different content.
 - The seed also creates/updates the first admin only when `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` are set.
 - Seed logs intentionally avoid printing the admin email/password.
@@ -120,7 +124,7 @@ npm run prisma:validate
 
 Current verified local gate:
 
-- `npm run test` passes 168 tests across 34 suites.
+- `npm run test` passes 178 tests across 35 suites.
 - `npm run lint` and `npm run build` pass without failures.
 - 42 Next.js pages are generated; `/onboarding`, `/g1-mock-exam`, and `/mistake-review` are dynamic, `/offline-practice` is static, and the two offline APIs remain dynamic.
 - Prisma schema is valid.
