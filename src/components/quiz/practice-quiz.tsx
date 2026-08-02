@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { saveQuizAttempt } from "@/app/(public)/practice/actions";
 import { createQuestionReport } from "@/app/(public)/practice/report-actions";
-import { buildQuizNavigationState, scoreQuizAnswers, type QuizQuestionView } from "@/lib/learner/quiz";
+import { buildQuizNavigationState, scoreG1MockExam, scoreQuizAnswers, type QuizQuestionView } from "@/lib/learner/quiz";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -16,6 +16,7 @@ type PracticeQuizProps = {
   emptyState?: string;
   returnTo: string;
   stage: "G1" | "G2" | "G";
+  experience?: "practice" | "g1-mock-exam";
 };
 
 const reportReasonOptions = [
@@ -41,16 +42,21 @@ function toggleMultiChoice(selection: Record<string, string[]>, questionId: stri
   return { ...selection, [questionId]: next };
 }
 
-export function PracticeQuiz({ canSaveProgress, emptyState, questions, returnTo, stage }: PracticeQuizProps) {
+export function PracticeQuiz({ canSaveProgress, emptyState, experience = "practice", questions, returnTo, stage }: PracticeQuizProps) {
   const [selection, setSelection] = useState<Record<string, string[]>>({});
   const [submitted, setSubmitted] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const hasMounted = useRef(false);
   const result = useMemo(() => scoreQuizAnswers(questions, selection), [questions, selection]);
+  const mockResult = useMemo(
+    () => experience === "g1-mock-exam" ? scoreG1MockExam(questions, selection) : null,
+    [experience, questions, selection],
+  );
   const reviewByQuestion = new Map(result.review.map((row) => [row.questionId, row]));
   const navigation = buildQuizNavigationState(questions.length, activeIndex);
   const question = questions[navigation.activeIndex];
-  const answeredCount = Object.values(selection).filter((choiceIds) => choiceIds.length > 0).length;
+  const answeredCount = questions.filter((candidate) => (selection[candidate.id]?.length ?? 0) > 0).length;
+  const isMockExam = experience === "g1-mock-exam";
 
   useEffect(() => {
     if (!hasMounted.current) {
@@ -81,11 +87,19 @@ export function PracticeQuiz({ canSaveProgress, emptyState, questions, returnTo,
   return (
     <div className="space-y-6">
       {submitted ? (
-        <Card aria-live="polite" className="border-green-200 bg-green-50" role="status">
+        <Card aria-live="polite" className={mockResult?.passed === false ? "border-amber-200 bg-amber-50" : "border-green-200 bg-green-50"} role="status">
           <CardHeader>
-            <CardTitle className="outline-none" id="quiz-result-heading" tabIndex={-1}>Score: {result.correctCount}/{result.totalCount} ({result.percent}%)</CardTitle>
+            <CardTitle className="outline-none" id="quiz-result-heading" tabIndex={-1}>
+              {mockResult ? (mockResult.passed ? "Mock exam passed" : "Keep practising") : "Practice complete"}: {result.correctCount}/{result.totalCount} ({result.percent}%)
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-green-950">
+          <CardContent className="space-y-3 text-sm text-slate-900">
+            {mockResult ? (
+              <div className="grid gap-2 sm:grid-cols-2">
+                <p className="rounded-lg bg-white p-3 font-semibold">Signs: {mockResult.sections.signs.correctCount}/20 · {mockResult.sections.signs.passed ? "Pass" : "Needs 16"}</p>
+                <p className="rounded-lg bg-white p-3 font-semibold">Rules: {mockResult.sections.rules.correctCount}/20 · {mockResult.sections.rules.passed ? "Pass" : "Needs 16"}</p>
+              </div>
+            ) : null}
             <p>Review each explanation one question at a time, then save progress or try again.</p>
             {canSaveProgress ? (
               <form action={saveQuizAttempt}>
@@ -114,7 +128,7 @@ export function PracticeQuiz({ canSaveProgress, emptyState, questions, returnTo,
       <Card key={question.id}>
         <CardHeader>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-green-800">
-            Question {navigation.questionNumber} · {question.stage}{question.categoryName ? ` · ${question.categoryName}` : ""}
+            {isMockExam ? `Section ${navigation.questionNumber <= 20 ? "1 of 2 · Signs" : "2 of 2 · Rules"} · ` : ""}Question {navigation.questionNumber} · {question.stage}{question.categoryName ? ` · ${question.categoryName}` : ""}
           </p>
           <h2 className="text-xl font-semibold leading-7 tracking-tight outline-none" id={`question-${question.id}-heading`} tabIndex={-1}>{question.prompt}</h2>
           {isMulti ? <p className="text-sm text-slate-600">Select all correct answers.</p> : null}
@@ -205,7 +219,12 @@ export function PracticeQuiz({ canSaveProgress, emptyState, questions, returnTo,
           {!navigation.isLast ? (
             <Button onClick={() => setActiveIndex(navigation.nextIndex)} type="button">Next question</Button>
           ) : !submitted ? (
-            <Button onClick={() => { setSubmitted(true); setActiveIndex(0); }} type="button">Check answers</Button>
+            <div className="space-y-2 text-right">
+              {isMockExam && answeredCount < questions.length ? <p className="text-sm text-amber-800">Answer all 40 questions before submitting.</p> : null}
+              <Button disabled={isMockExam && answeredCount < questions.length} onClick={() => { setSubmitted(true); setActiveIndex(0); }} type="button">
+                {isMockExam ? "Submit mock exam" : "Check answers"}
+              </Button>
+            </div>
           ) : null}
         </div>
       </div>

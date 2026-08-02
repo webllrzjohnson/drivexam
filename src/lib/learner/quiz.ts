@@ -7,7 +7,7 @@ export type QuizQuestionInput = {
   explanation: string;
   stage: LicenseStage;
   type: QuestionType;
-  category: { name: string } | null;
+  category: { name: string; slug?: string } | null;
   assets: Array<{ asset: { path: string; title: string | null; filename?: string } }>;
   choices: Array<{
     id: string;
@@ -35,6 +35,7 @@ export type QuizQuestionView = {
   stage: LicenseStage;
   type: QuestionType;
   categoryName: string | null;
+  categorySlug?: string;
   assets: Array<{ path: string; title: string }>;
   choices: QuizChoiceView[];
 };
@@ -103,6 +104,27 @@ export type QuizNavigationState = {
   nextIndex: number;
 };
 
+export type G1MockExam = {
+  ready: boolean;
+  questions: QuizQuestionView[];
+  sections: {
+    signs: QuizQuestionView[];
+    rules: QuizQuestionView[];
+  };
+  missing: {
+    signs: number;
+    rules: number;
+  };
+};
+
+export type G1MockExamScore = QuizScoreResult & {
+  passed: boolean;
+  sections: {
+    signs: QuizScoreResult & { passed: boolean };
+    rules: QuizScoreResult & { passed: boolean };
+  };
+};
+
 type PracticeQuestionSetInput = {
   requestedSet?: number;
   pageSize?: number;
@@ -156,6 +178,7 @@ export function buildQuizQuestionViews(questions: QuizQuestionInput[]): QuizQues
     stage: question.stage,
     type: question.type,
     categoryName: question.category?.name ?? null,
+    ...(question.category?.slug ? { categorySlug: question.category.slug } : {}),
     assets: question.assets.map(({ asset }) => ({ path: asset.path, title: asset.title ?? asset.filename ?? "Question image" })),
     choices: rotateByStableSeed([...question.choices].sort((a, b) => a.sortOrder - b.sortOrder), question.id)
       .map((choice) => ({
@@ -226,6 +249,76 @@ export function buildBalancedPracticeQuestionSet<T extends { categoryName: strin
   }
 
   return buildPracticeQuestionSet(balanced, { pageSize, requestedSet });
+}
+
+const g1MockExamSectionSize = 20;
+const g1MockExamPassCount = 16;
+const maxG1MockExamAttempt = 999;
+const g1MockExamRuleCategorySlugs = new Set([
+  "g1-right-of-way",
+  "g1-sharing-the-road",
+  "g1-safe-driving",
+  "g1-special-conditions",
+  "g1-turns-and-lane-changes",
+  "g1-freeway-and-highway",
+  "g1-parking",
+]);
+
+function isG1MockExamRule(question: QuizQuestionView) {
+  return question.stage === "G1" && Boolean(question.categorySlug && g1MockExamRuleCategorySlugs.has(question.categorySlug));
+}
+
+export function normalizeG1MockExamAttempt(value?: string) {
+  const parsed = Number.parseInt(value ?? "1", 10);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.min(parsed, maxG1MockExamAttempt) : 1;
+}
+
+export function getNextG1MockExamAttempt(attempt: number) {
+  return attempt >= maxG1MockExamAttempt ? 1 : attempt + 1;
+}
+
+export function buildG1MockExam(questions: QuizQuestionView[], { seed }: { seed: string }): G1MockExam {
+  const signs = rotateByStableSeed(
+    questions.filter((question) => question.stage === "G1" && question.categorySlug === "g1-signs-and-lights"),
+    `${seed}:signs`,
+  ).slice(0, g1MockExamSectionSize);
+  const rules = rotateByStableSeed(
+    questions.filter(isG1MockExamRule),
+    `${seed}:rules`,
+  ).slice(0, g1MockExamSectionSize);
+
+  return {
+    ready: signs.length === g1MockExamSectionSize && rules.length === g1MockExamSectionSize,
+    questions: [...signs, ...rules],
+    sections: { signs, rules },
+    missing: {
+      signs: Math.max(0, g1MockExamSectionSize - signs.length),
+      rules: Math.max(0, g1MockExamSectionSize - rules.length),
+    },
+  };
+}
+
+export function scoreG1MockExam(
+  questions: QuizQuestionView[],
+  selectedChoiceIdsByQuestion: Record<string, string[]>,
+): G1MockExamScore {
+  const signs = scoreQuizAnswers(
+    questions.filter((question) => question.categorySlug === "g1-signs-and-lights"),
+    selectedChoiceIdsByQuestion,
+  );
+  const rules = scoreQuizAnswers(
+    questions.filter(isG1MockExamRule),
+    selectedChoiceIdsByQuestion,
+  );
+  const score = scoreQuizAnswers(questions, selectedChoiceIdsByQuestion);
+  const signSection = { ...signs, passed: signs.totalCount === g1MockExamSectionSize && signs.correctCount >= g1MockExamPassCount };
+  const ruleSection = { ...rules, passed: rules.totalCount === g1MockExamSectionSize && rules.correctCount >= g1MockExamPassCount };
+
+  return {
+    ...score,
+    passed: signSection.passed && ruleSection.passed,
+    sections: { signs: signSection, rules: ruleSection },
+  };
 }
 
 const stageGuideCopy: Record<LicenseStage, Pick<PracticeStageGuide, "title" | "description" | "readinessTarget">> = {

@@ -3,14 +3,19 @@ import { describe, it } from "node:test";
 
 import {
   buildBalancedPracticeQuestionSet,
+  buildG1MockExam,
   buildQuizNavigationState,
   buildPracticeQuestionSet,
   buildPracticeStageGuide,
   buildRoadSignFlashcardGroups,
   buildRoadSignPracticeGuide,
   buildQuizQuestionViews,
+  getNextG1MockExamAttempt,
+  normalizeG1MockExamAttempt,
   scoreQuizAnswers,
+  scoreG1MockExam,
   type QuizQuestionInput,
+  type QuizQuestionView,
 } from "../src/lib/learner/quiz";
 
 const questions: QuizQuestionInput[] = [
@@ -42,6 +47,23 @@ const questions: QuizQuestionInput[] = [
     ],
   },
 ];
+
+function buildMockExamQuestion(id: string, categorySlug: string | null): QuizQuestionView {
+  return {
+    id,
+    prompt: `Mock exam question ${id}`,
+    explanation: "Review the relevant Ontario handbook rule.",
+    stage: "G1",
+    type: "MULTIPLE_CHOICE",
+    categoryName: categorySlug === "g1-signs-and-lights" ? "Signs and traffic lights" : "Rules of the road",
+    categorySlug,
+    assets: [],
+    choices: [
+      { id: `${id}-correct`, text: "Correct", isCorrect: true, asset: null },
+      { id: `${id}-wrong`, text: "Incorrect", isCorrect: false, asset: null },
+    ],
+  };
+}
 
 describe("learner quiz helpers", () => {
   it("builds safe learner-facing quiz views in choice order", () => {
@@ -195,6 +217,70 @@ describe("learner quiz helpers", () => {
     assert.deepEqual(firstSet.questions.slice(0, 3).map((question) => question.categoryName), ["Signs", "Rules", "Safety"]);
     assert.equal(new Set(firstSet.questions.map((question) => question.categoryName)).size, 3);
     assert.equal(firstSet.questions.some((question) => secondSet.questions.some((candidate) => candidate.id === question.id)), false);
+  });
+
+  it("builds a 40-question G1 mock exam with separate signs and rules sections", () => {
+    const pool = [
+      ...Array.from({ length: 24 }, (_, index) => buildMockExamQuestion(`sign-${index + 1}`, "g1-signs-and-lights")),
+      ...Array.from({ length: 30 }, (_, index) => buildMockExamQuestion(`rule-${index + 1}`, "g1-safe-driving")),
+    ];
+
+    const exam = buildG1MockExam(pool, { seed: "attempt-1" });
+    const repeated = buildG1MockExam(pool, { seed: "attempt-1" });
+
+    assert.equal(exam.ready, true);
+    assert.equal(exam.questions.length, 40);
+    assert.equal(exam.sections.signs.length, 20);
+    assert.equal(exam.sections.rules.length, 20);
+    assert.deepEqual(repeated, exam);
+    assert.ok(exam.sections.signs.every((question) => question.categorySlug === "g1-signs-and-lights"));
+    assert.ok(exam.sections.rules.every((question) => question.categorySlug !== "g1-signs-and-lights"));
+  });
+
+  it("fails closed when G1 questions do not have a recognized mock-exam category", () => {
+    const pool = [
+      ...Array.from({ length: 20 }, (_, index) => buildMockExamQuestion(`sign-${index + 1}`, "g1-signs-and-lights")),
+      ...Array.from({ length: 20 }, (_, index) => buildMockExamQuestion(`uncategorized-${index + 1}`, null)),
+    ];
+    const selection = Object.fromEntries(pool.map((question) => [question.id, [`${question.id}-correct`]]));
+
+    const exam = buildG1MockExam(pool, { seed: "fail-closed" });
+    const score = scoreG1MockExam(pool, selection);
+
+    assert.equal(exam.ready, false);
+    assert.equal(exam.sections.rules.length, 0);
+    assert.equal(exam.missing.rules, 20);
+    assert.equal(score.sections.rules.totalCount, 0);
+    assert.equal(score.passed, false);
+  });
+
+  it("normalizes and wraps bounded mock-exam attempt numbers", () => {
+    assert.equal(normalizeG1MockExamAttempt(undefined), 1);
+    assert.equal(normalizeG1MockExamAttempt("999"), 999);
+    assert.equal(normalizeG1MockExamAttempt("1000"), 999);
+    assert.equal(getNextG1MockExamAttempt(998), 999);
+    assert.equal(getNextG1MockExamAttempt(999), 1);
+  });
+
+  it("requires at least 16 correct answers in both G1 mock-exam sections", () => {
+    const pool = [
+      ...Array.from({ length: 20 }, (_, index) => buildMockExamQuestion(`sign-${index + 1}`, "g1-signs-and-lights")),
+      ...Array.from({ length: 20 }, (_, index) => buildMockExamQuestion(`rule-${index + 1}`, "g1-safe-driving")),
+    ];
+    const exam = buildG1MockExam(pool, { seed: "attempt-1" });
+    const selection = Object.fromEntries(exam.questions.map((question) => [question.id, [`${question.id}-correct`]]));
+    for (const question of exam.sections.rules.slice(15)) selection[question.id] = [`${question.id}-wrong`];
+
+    const result = scoreG1MockExam(exam.questions, selection);
+
+    assert.equal(result.sections.signs.correctCount, 20);
+    assert.equal(result.sections.signs.passed, true);
+    assert.equal(result.sections.rules.correctCount, 15);
+    assert.equal(result.sections.rules.passed, false);
+    assert.equal(result.passed, false);
+
+    selection[exam.sections.rules[15].id] = [`${exam.sections.rules[15].id}-correct`];
+    assert.equal(scoreG1MockExam(exam.questions, selection).passed, true);
   });
 
   it("builds dedicated road-sign practice guidance", () => {

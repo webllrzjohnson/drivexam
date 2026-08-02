@@ -12,6 +12,7 @@ This checklist is for deploying `drivexam` from `main` to a production Next.js h
   - 40 published full-G road-test preparation scenarios across 3 active G categories.
   - 8 G2 road-test checklist items.
   - 8 full-G road-test checklist items.
+- G1 learners can take an unofficial 40-question mock exam with separate 20-question signs and rules sections, delayed answer feedback, and a 16/20 pass threshold in each section.
 - PWA support includes the install manifest/icons, production-only service-worker registration, update and connection-status messaging, a network-first `/offline` fallback, and an explicit `/offline-practice` download flow.
 - The public offline pack contains 148 sanitized questions: 68 G1, 40 G2, and 40 Full G road-test preparation scenarios. Questions, choices, packs, and queued attempts use versioned contracts and durable public IDs.
 - Downloaded packs and local attempts are stored in IndexedDB. Guests can complete practice locally; verified learners can explicitly synchronize pending results after reconnecting.
@@ -117,9 +118,9 @@ npm run prisma:validate
 
 Current verified local gate:
 
-- `npm run test` passes 148 tests across 31 suites.
+- `npm run test` passes 155 tests across 32 suites.
 - `npm run lint` and `npm run build` pass without failures.
-- 39 Next.js pages are generated; `/offline-practice` is static while the two offline APIs remain dynamic.
+- 40 Next.js pages are generated; `/g1-mock-exam` is dynamic, `/offline-practice` is static, and the two offline APIs remain dynamic.
 - Prisma schema is valid.
 - `node --check public/sw.js` and `git diff --check` pass.
 - Running the seed twice preserves the same 148 question and 592 choice database IDs.
@@ -133,6 +134,7 @@ After deployment and migrations/seeding, test these routes on the production ori
 - `/`
 - `/practice?stage=G1`
 - `/practice?stage=G1&questionSet=2`
+- `/g1-mock-exam`
 - `/practice?stage=G2`
 - `/practice?stage=G`
 - `/offline-practice`

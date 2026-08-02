@@ -41,6 +41,12 @@ export function getQuestionReportReasonLabel(reason: QuestionReportReason) {
   return reasonLabels[reason];
 }
 
+export function getSafeQuestionReportReturnTo(value: FormDataEntryValue | null) {
+  if (typeof value !== "string") return "/practice";
+  if (/^\/practice(?:\?|$)/.test(value) || /^\/g1-mock-exam(?:\?|$)/.test(value)) return value;
+  return "/practice";
+}
+
 export function parseQuestionReportForm(formData: FormData): QuestionReportForm {
   const questionId = optionalTrim(formData.get("questionId"));
   if (!questionId) throw new Error("Choose a question to report.");

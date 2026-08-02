@@ -5,16 +5,11 @@ import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/auth/permissions";
 import { db } from "@/lib/db";
-import { parseQuestionReportForm } from "@/lib/question-reports";
-
-function safeReturnTo(value: FormDataEntryValue | null) {
-  if (typeof value !== "string" || !value.startsWith("/practice")) return "/practice";
-  return value;
-}
+import { getSafeQuestionReportReturnTo, parseQuestionReportForm } from "@/lib/question-reports";
 
 export async function createQuestionReport(formData: FormData) {
   const parsed = parseQuestionReportForm(formData);
-  const returnTo = safeReturnTo(formData.get("returnTo"));
+  const returnTo = getSafeQuestionReportReturnTo(formData.get("returnTo"));
   const user = await getCurrentUser();
   const question = await db.question.findFirst({ where: { id: parsed.questionId, status: "PUBLISHED" }, select: { id: true } });
   if (!question) throw new Error("Choose a published question to report.");
