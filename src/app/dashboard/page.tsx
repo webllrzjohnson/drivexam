@@ -5,6 +5,7 @@ import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth/permissions";
+import { shouldRequireLearnerOnboarding } from "@/lib/auth/redirects";
 import { db } from "@/lib/db";
 import { getMistakeReviewHistory } from "@/lib/learner/mistake-review";
 import { buildRoadTestChecklistProgressSummary } from "@/lib/learner/road-test-progress";
@@ -34,6 +35,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     where: { id: user.id },
     select: { currentStage: true, targetTestDate: true },
   });
+  if (shouldRequireLearnerOnboarding(user.role, learnerProfile?.currentStage ?? null)) redirect("/onboarding");
 
   const [attempts, checklistItems, mistakeHistory] = await Promise.all([
     db.quizAttempt.findMany({

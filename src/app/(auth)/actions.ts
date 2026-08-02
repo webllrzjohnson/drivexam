@@ -7,7 +7,7 @@ import { signIn, signOut } from "@/auth";
 import { hashPassword } from "@/lib/auth/password";
 import { normalizeEmail, validatePassword, isValidPasswordReset } from "@/lib/auth/inputs";
 import { getAppUrl, createSecureToken, getExpiryDate, hashToken } from "@/lib/auth/tokens";
-import { getPostSignInRedirect, isSafeRelativePath } from "@/lib/auth/redirects";
+import { getPostSignInRedirect, isSafeRelativePath, shouldRequireLearnerOnboarding } from "@/lib/auth/redirects";
 import { hasGoogleOAuthConfig } from "@/lib/auth/google-oauth";
 import { db } from "@/lib/db";
 import { sendEmail } from "@/lib/email/send-email";
@@ -39,9 +39,9 @@ export async function signInWithCredentials(_previousState: SignInState, formDat
     throw error;
   }
 
-  const user = await db.user.findUnique({ where: { email }, select: { role: true, emailVerified: true } });
+  const user = await db.user.findUnique({ where: { email }, select: { role: true, emailVerified: true, currentStage: true } });
   if (!user?.emailVerified) redirect("/verify-email");
-  redirect(getPostSignInRedirect(user.role, callbackUrl));
+  redirect(getPostSignInRedirect(user.role, callbackUrl, shouldRequireLearnerOnboarding(user.role, user.currentStage)));
 }
 
 export async function signUpWithEmail(_previousState: FormState, formData: FormData): Promise<FormState> {

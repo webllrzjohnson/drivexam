@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { normalizeLearnerProfileForm } from "../src/lib/learner/profile";
+import { getOnboardingDestination, normalizeLearnerProfileForm } from "../src/lib/learner/profile";
 
 describe("learner profile settings helpers", () => {
   it("normalizes stage and target test date form values", () => {
@@ -42,5 +42,11 @@ describe("learner profile settings helpers", () => {
     badDate.set("currentStage", "G");
     badDate.set("targetTestDate", "15/08/2026");
     assert.deepEqual(normalizeLearnerProfileForm(badDate), { ok: false, error: "Use a valid target test date." });
+  });
+
+  it("routes each completed setup to the right starting activity", () => {
+    assert.equal(getOnboardingDestination("G1"), "/g1-mock-exam");
+    assert.equal(getOnboardingDestination("G2"), "/road-test?stage=G2");
+    assert.equal(getOnboardingDestination("G"), "/road-test?stage=G");
   });
 });

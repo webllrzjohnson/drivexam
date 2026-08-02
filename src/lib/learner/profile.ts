@@ -7,6 +7,16 @@ export type LearnerProfileFormResult =
 const validStages = new Set<LicenseStage>(["G1", "G2", "G"]);
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
+const onboardingDestinations: Record<LicenseStage, string> = {
+  G1: "/g1-mock-exam",
+  G2: "/road-test?stage=G2",
+  G: "/road-test?stage=G",
+};
+
+export function getOnboardingDestination(stage: LicenseStage) {
+  return onboardingDestinations[stage];
+}
+
 export function normalizeLearnerProfileForm(formData: FormData): LearnerProfileFormResult {
   const currentStage = String(formData.get("currentStage") ?? "").trim();
   const targetTestDateValue = String(formData.get("targetTestDate") ?? "").trim();
